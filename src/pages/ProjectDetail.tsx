@@ -3,9 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { getProjects, getTrades, addTrade, updateTrade, getPayments, addPayment } from '../services/api';
 import { Project, Trade, Payment } from '../types';
-import { Button } from '../components/ui/button';
 import { ArrowLeft, Plus, AlertCircle, Trash2, Wallet, Building2 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../components/ui/card';
 import { format } from 'date-fns';
 import { ImageUpload } from '../components/ui/ImageUpload';
 import { LazyImage } from '../components/ui/LazyImage';
@@ -66,7 +64,7 @@ export default function ProjectDetail() {
     return () => unsub();
   }, [user, id, selectedTrade]);
 
-  if (!project) return <div className="p-8 text-amber-400 font-playfair">Loading Elite Matrix...</div>;
+  if (!project) return <div className="p-8 text-[#D4AF37] font-playfair uppercase tracking-widest text-xs">Loading Elite Matrix...</div>;
 
   const totalBudget = trades.reduce((sum, t) => sum + t.amount, 0);
   const totalAdvances = trades.reduce((sum, t) => sum + t.totalAdvances, 0);
@@ -128,17 +126,17 @@ export default function ProjectDetail() {
       animate="show"
       className="space-y-8 pb-10"
     >
-      <motion.div variants={item} className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 pb-4 border-b border-white/5">
-        <div className="flex items-center space-x-4">
+      <motion.div variants={item} className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 pb-6 border-b border-white/[0.04]">
+        <div className="flex items-center space-x-6">
           <Link to="/projects">
-            <Button variant="ghost" size="icon" className="text-amber-400 hover:text-white hover:bg-white/10 rounded-xl h-12 w-12 border border-white/5 bg-black/20">
+            <button className="h-12 w-12 rounded-full border border-white/10 flex items-center justify-center text-white/40 hover:text-[#D4AF37] hover:border-[#D4AF37]/30 transition-colors">
               <ArrowLeft className="h-5 w-5" />
-            </Button>
+            </button>
           </Link>
           <div>
-            <h1 className="text-4xl font-playfair font-black text-white tracking-tight">{project.name}</h1>
-            <p className="text-sm font-medium text-stone-300/60 mt-1 uppercase tracking-widest">
-              Identity: <span className="text-amber-200 font-bold">{project.clientName}</span> {project.contractorName ? `// Contractor: ${project.contractorName}` : ''}
+            <h1 className="text-4xl font-playfair font-black text-white uppercase tracking-[0.05em]">{project.name}</h1>
+            <p className="text-[10px] font-medium text-white/40 mt-2 uppercase tracking-[0.2em]">
+              Identity: <span className="text-[#D4AF37]">{project.clientName}</span> {project.contractorName ? `// Contractor: ${project.contractorName}` : ''}
             </p>
           </div>
         </div>
@@ -146,46 +144,46 @@ export default function ProjectDetail() {
       
       <motion.div variants={container} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
          <motion.div variants={item}>
-           <Card className="glass-card overflow-hidden group">
-            <CardHeader className="pb-2 relative z-10 border-b border-white/5 mb-4">
-              <CardTitle className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Project Budget</CardTitle>
-            </CardHeader>
-            <CardContent className="relative z-10">
+           <div className="elite-card p-8 relative overflow-hidden group">
+            <div className="pb-4 relative z-10 border-b border-white/[0.04] mb-6">
+              <h3 className="text-[10px] font-bold text-white/40 uppercase tracking-[0.2em]">Project Budget</h3>
+            </div>
+            <div className="relative z-10">
               <div className="text-4xl font-playfair font-black text-white tracking-tight">€ {totalBudget.toLocaleString()}</div>
-            </CardContent>
-            <div className="absolute inset-0 bg-gradient-to-br from-amber-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-          </Card>
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-br from-[#D4AF37]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+          </div>
         </motion.div>
         
         <motion.div variants={item}>
-         <Card className="glass-card overflow-hidden group">
-          <CardHeader className="pb-2 relative z-10 border-b border-white/5 mb-4">
-            <CardTitle className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Advances Paid</CardTitle>
-          </CardHeader>
-          <CardContent className="relative z-10">
-            <div className="text-4xl font-playfair font-black text-white tracking-tight">€ {totalAdvances.toLocaleString()}</div>
-            <div className="flex items-center gap-3 mt-3">
-              <div className="flex-1 bg-white/5 h-2 rounded-full overflow-hidden border border-white/10">
+         <div className="elite-card p-8 relative overflow-hidden group">
+          <div className="pb-4 relative z-10 border-b border-white/[0.04] mb-6">
+            <h3 className="text-[10px] font-bold text-white/40 uppercase tracking-[0.2em]">Advances Paid</h3>
+          </div>
+          <div className="relative z-10">
+            <div className="text-4xl font-playfair font-black text-[#D4AF37] tracking-tight drop-shadow-[0_0_15px_rgba(212,175,55,0.2)]">€ {totalAdvances.toLocaleString()}</div>
+            <div className="flex items-center gap-4 mt-6">
+              <div className="flex-1 bg-white/5 h-1 rounded-full overflow-hidden border border-white/10">
                   <div 
-                    className={`h-full rounded-full transition-all duration-500 shadow-[0_0_10px_rgba(79,70,229,0.5)] ${totalAdvances / totalBudget > 0.75 ? 'bg-gradient-to-r from-rose-600 to-rose-400' : 'bg-gradient-to-r from-emerald-600 to-emerald-400'}`}
+                    className={`h-full rounded-full transition-all duration-700 ${totalAdvances / totalBudget > 0.75 ? 'bg-rose-500' : 'bg-[#D4AF37]'}`}
                     style={{ width: `${Math.min(100, (totalAdvances / (totalBudget || 1)) * 100)}%` }}
                   ></div>
               </div>
-              <p className="text-xs font-black text-amber-200 w-8 text-right">
+              <p className="text-[10px] font-black text-[#D4AF37] w-10 text-right tracking-widest">
                 {totalBudget > 0 ? ((totalAdvances / totalBudget) * 100).toFixed(1) : 0}%
               </p>
             </div>
-          </CardContent>
-          <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-         </Card>
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+         </div>
         </motion.div>
       </motion.div>
 
-      <motion.div variants={item} className="flex flex-col md:flex-row items-start md:items-center justify-between mt-10 gap-4">
-        <h2 className="text-2xl font-playfair font-black text-white tracking-tight">Ledger Matrix</h2>
-        <Button onClick={() => setAddingTrade(!addingTrade)} className="bg-amber-700 hover:bg-amber-600 text-white rounded-xl shadow-[0_0_20px_rgba(79,70,229,0.3)] transition-all px-6">
-          <Plus className="h-4 w-4 mr-2" /> <span className="font-bold">Initialize Trade</span>
-        </Button>
+      <motion.div variants={item} className="flex flex-col md:flex-row items-start md:items-center justify-between mt-12 gap-4">
+        <h2 className="text-2xl font-playfair font-black text-white uppercase tracking-[0.1em]">Ledger Matrix</h2>
+        <button onClick={() => setAddingTrade(!addingTrade)} className="elite-button px-8 py-4 flex items-center justify-center uppercase tracking-[0.1em] text-[10px]">
+          <Plus className="h-4 w-4 mr-2" /> Initialize Trade
+        </button>
       </motion.div>
 
       {addingTrade && (
@@ -193,72 +191,72 @@ export default function ProjectDetail() {
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
         >
-          <Card className="glass-card border-amber-600/30 shadow-[0_0_30px_rgba(79,70,229,0.1)] relative overflow-hidden mb-6">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-amber-700/10 blur-[100px] rounded-full pointer-events-none" />
-            <CardContent className="pt-6 relative z-10">
-              <form onSubmit={handleAddTrade} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="elite-card p-8 md:p-10 relative overflow-hidden mb-8 border-[#D4AF37]/20">
+            <div className="absolute top-[-50px] right-[-50px] w-64 h-64 bg-[#D4AF37]/5 blur-[80px] rounded-full pointer-events-none" />
+            <div className="relative z-10">
+              <form onSubmit={handleAddTrade} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
                  <div>
-                    <label className="block text-[10px] font-bold text-amber-200 uppercase tracking-[0.2em] mb-2">Designation</label>
-                    <input required placeholder="e.g. Travaux Plombier" className="w-full text-sm border border-white/10 rounded-xl p-3.5 bg-black/40 text-white focus:border-amber-600 focus:ring-1 focus:ring-amber-600 outline-none transition-all placeholder:text-slate-600 shadow-inner"
+                    <label className="block text-[9px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2">Designation</label>
+                    <input required placeholder="e.g. Travaux Plombier" className="w-full bg-transparent border-b border-white/20 focus:border-[#D4AF37] pb-2 pt-1 text-sm text-white transition-colors outline-none placeholder:text-white/20"
                       value={newTrade.designation} onChange={e => setNewTrade({...newTrade, designation: e.target.value})} />
                  </div>
                  <div>
-                    <label className="block text-[10px] font-bold text-amber-200 uppercase tracking-[0.2em] mb-2">Supplier Entity</label>
-                    <input placeholder="Supplier Name" className="w-full text-sm border border-white/10 rounded-xl p-3.5 bg-black/40 text-white focus:border-amber-600 focus:ring-1 focus:ring-amber-600 outline-none transition-all placeholder:text-slate-600 shadow-inner"
+                    <label className="block text-[9px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2">Supplier Entity</label>
+                    <input placeholder="Supplier Name" className="w-full bg-transparent border-b border-white/20 focus:border-[#D4AF37] pb-2 pt-1 text-sm text-white transition-colors outline-none placeholder:text-white/20"
                       value={newTrade.supplierName} onChange={e => setNewTrade({...newTrade, supplierName: e.target.value})} />
                  </div>
                   <div>
-                    <label className="block text-[10px] font-bold text-amber-200 uppercase tracking-[0.2em] mb-2">Budget Allocation</label>
-                    <input type="number" required placeholder="0" className="w-full text-sm border border-white/10 rounded-xl p-3.5 bg-black/40 text-white focus:border-amber-600 focus:ring-1 focus:ring-amber-600 outline-none transition-all placeholder:text-slate-600 shadow-inner"
+                    <label className="block text-[9px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2">Budget Allocation</label>
+                    <input type="number" required placeholder="0" className="w-full bg-transparent border-b border-white/20 focus:border-[#D4AF37] pb-2 pt-1 text-sm text-white transition-colors outline-none placeholder:text-white/20"
                       value={newTrade.amount || ''} onChange={e => setNewTrade({...newTrade, amount: Number(e.target.value)})} />
                  </div>
-                 <div className="flex items-end space-x-3 pt-2">
-                    <Button type="submit" className="bg-amber-700 hover:bg-amber-600 text-white rounded-xl px-8 font-bold shadow-[0_0_15px_rgba(79,70,229,0.3)]">Deploy</Button>
-                    <Button type="button" variant="ghost" onClick={() => setAddingTrade(false)} className="rounded-xl text-slate-400 hover:text-white hover:bg-white/5">Cancel</Button>
+                 <div className="flex items-end space-x-6 pt-2">
+                    <button type="submit" className="elite-button px-10 py-3 uppercase text-[10px] tracking-[0.1em]">Deploy</button>
+                    <button type="button" onClick={() => setAddingTrade(false)} className="text-white/40 hover:text-white uppercase text-[10px] tracking-[0.1em] transition-colors pb-3">Cancel</button>
                  </div>
               </form>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </motion.div>
       )}
 
       {/* Mobile view for trades */}
       <div className="md:hidden space-y-4">
         {trades.length === 0 ? (
-          <div className="text-center py-12 font-medium text-slate-500 text-sm glass-card border-dashed border-white/10">No trades initialized yet.</div>
+          <div className="text-center py-16 font-medium text-white/40 text-[10px] uppercase tracking-[0.2em] elite-card border-dashed border-white/10">No trades initialized yet.</div>
         ) : (
           trades.map(trade => {
             const ratio = trade.amount > 0 ? trade.totalAdvances / trade.amount : 0;
             const isWarning = ratio > 0.75;
             
             return (
-              <div key={trade.id} className={`glass-card p-5 flex flex-col gap-4 relative overflow-hidden ${selectedTrade?.id === trade.id ? 'border-amber-600 shadow-[0_0_20px_rgba(79,70,229,0.2)]' : ''}`}>
-                {isWarning && <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-gradient-to-b from-rose-400 to-rose-600" />}
-                <div className="flex justify-between items-start pl-2">
+              <div key={trade.id} className={`elite-card p-6 flex flex-col gap-6 relative overflow-hidden ${selectedTrade?.id === trade.id ? 'border-[#D4AF37]/50 shadow-[0_0_30px_rgba(212,175,55,0.15)]' : ''}`}>
+                {isWarning && <div className="absolute top-0 left-0 bottom-0 w-1 bg-rose-500" />}
+                <div className="flex justify-between items-start">
                   <div>
-                    <h3 className="font-playfair font-black text-white text-lg">{trade.designation}</h3>
-                    <p className="text-[11px] font-medium tracking-widest uppercase text-stone-300/60 mt-1">{trade.supplierName || 'Unknown Entity'}</p>
+                    <h3 className="font-playfair font-black text-white text-lg uppercase tracking-[0.05em]">{trade.designation}</h3>
+                    <p className="text-[9px] font-bold tracking-[0.2em] uppercase text-[#D4AF37] mt-1">{trade.supplierName || 'Unknown Entity'}</p>
                   </div>
-                  <Button variant="outline" size="sm" className={`h-8 text-xs font-bold rounded-lg border-white/10 ${selectedTrade?.id === trade.id ? 'bg-amber-700 text-white' : 'bg-white/5 text-slate-300'}`} onClick={() => setSelectedTrade(selectedTrade?.id === trade.id ? null : trade)}>
+                  <button className={`px-4 py-2 text-[9px] uppercase tracking-[0.1em] font-bold rounded border transition-colors ${selectedTrade?.id === trade.id ? 'bg-[#D4AF37] text-black border-[#D4AF37]' : 'bg-transparent text-white/40 border-white/10 hover:border-white/30 hover:text-white'}`} onClick={() => setSelectedTrade(selectedTrade?.id === trade.id ? null : trade)}>
                     {selectedTrade?.id === trade.id ? 'Close' : 'Matrix'}
-                  </Button>
+                  </button>
                 </div>
-                <div className="grid grid-cols-2 gap-4 pl-2 bg-black/20 rounded-xl p-4 border border-white/5">
+                <div className="grid grid-cols-2 gap-4 bg-black/40 rounded p-4 border border-white/[0.02]">
                   <div>
-                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mb-1">Budget</p>
-                    <p className="font-bold text-white text-base">€ {trade.amount.toLocaleString()}</p>
+                    <p className="text-[9px] font-bold text-white/40 uppercase tracking-[0.2em] mb-1">Budget</p>
+                    <p className="font-bold text-white text-sm">€ {trade.amount.toLocaleString()}</p>
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mb-1">Advances</p>
-                    <p className="font-bold text-white text-base">€ {trade.totalAdvances.toLocaleString()}</p>
+                    <p className="text-[9px] font-bold text-white/40 uppercase tracking-[0.2em] mb-1">Advances</p>
+                    <p className="font-bold text-[#D4AF37] text-sm">€ {trade.totalAdvances.toLocaleString()}</p>
                   </div>
                 </div>
-                <div className="pl-2">
-                  <div className="flex items-center gap-3">
-                    <div className="flex-1 bg-white/5 h-2 rounded-full overflow-hidden border border-white/10">
-                      <div className={`h-full rounded-full shadow-[0_0_8px_rgba(0,0,0,0.5)] ${isWarning ? 'bg-gradient-to-r from-rose-600 to-rose-400 shadow-[0_0_10px_rgba(244,63,94,0.5)]' : 'bg-gradient-to-r from-amber-700 to-amber-400 shadow-[0_0_10px_rgba(79,70,229,0.5)]'}`} style={{ width: `${Math.min(100, ratio * 100)}%` }}></div>
+                <div>
+                  <div className="flex items-center gap-4">
+                    <div className="flex-1 bg-white/5 h-1 rounded-full overflow-hidden border border-white/10">
+                      <div className={`h-full rounded-full ${isWarning ? 'bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.5)]' : 'bg-[#D4AF37] shadow-[0_0_10px_rgba(212,175,55,0.5)]'}`} style={{ width: `${Math.min(100, ratio * 100)}%` }}></div>
                     </div>
-                    <span className={`text-[10px] tracking-wider w-8 text-right ${isWarning ? 'text-rose-400 font-black' : 'text-amber-200 font-bold'}`}>
+                    <span className={`text-[9px] tracking-widest w-10 text-right font-black ${isWarning ? 'text-rose-400' : 'text-[#D4AF37]'}`}>
                       {Math.round(ratio * 100)}%
                     </span>
                   </div>
@@ -270,49 +268,49 @@ export default function ProjectDetail() {
       </div>
 
       {/* Desktop view for trades */}
-      <motion.div variants={item} className="hidden md:flex glass-card overflow-hidden flex-col">
-        <div className="px-8 py-5 border-b border-white/10 bg-white/5">
-          <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">Financial Ledger by Trade</h3>
+      <motion.div variants={item} className="hidden md:flex elite-card overflow-hidden flex-col">
+        <div className="px-10 py-6 border-b border-white/[0.04] bg-black/40">
+          <h3 className="text-[9px] font-bold uppercase tracking-[0.2em] text-white/40">Financial Ledger by Trade</h3>
         </div>
         <div className="overflow-x-auto">
           <table className="min-w-full text-left border-collapse">
-            <thead className="bg-black/20">
-              <tr className="border-b border-white/5">
-                <th className="px-8 py-5 text-[10px] font-bold text-amber-200 uppercase tracking-[0.2em]">Designation</th>
-                <th className="px-8 py-5 text-[10px] font-bold text-amber-200 uppercase tracking-[0.2em]">Supplier Entity</th>
-                <th className="px-8 py-5 text-[10px] font-bold text-amber-200 uppercase tracking-[0.2em] text-right">Budget</th>
-                <th className="px-8 py-5 text-[10px] font-bold text-amber-200 uppercase tracking-[0.2em] text-right">Advances</th>
-                <th className="px-8 py-5 text-[10px] font-bold text-amber-200 uppercase tracking-[0.2em]">Risk Level</th>
-                <th className="px-8 py-5 text-right text-[10px] font-bold text-amber-200 uppercase tracking-[0.2em]">Actions</th>
+            <thead>
+              <tr className="border-b border-white/[0.04]">
+                <th className="px-10 py-6 text-[9px] font-bold text-[#D4AF37] uppercase tracking-[0.2em]">Designation</th>
+                <th className="px-10 py-6 text-[9px] font-bold text-[#D4AF37] uppercase tracking-[0.2em]">Supplier Entity</th>
+                <th className="px-10 py-6 text-[9px] font-bold text-[#D4AF37] uppercase tracking-[0.2em] text-right">Budget</th>
+                <th className="px-10 py-6 text-[9px] font-bold text-[#D4AF37] uppercase tracking-[0.2em] text-right">Advances</th>
+                <th className="px-10 py-6 text-[9px] font-bold text-[#D4AF37] uppercase tracking-[0.2em]">Risk Level</th>
+                <th className="px-10 py-6 text-right text-[9px] font-bold text-[#D4AF37] uppercase tracking-[0.2em]">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5 font-medium text-sm bg-black/10">
+            <tbody className="divide-y divide-white/[0.04]">
               {trades.length === 0 ? (
-                <tr><td colSpan={6} className="px-8 py-12 text-center text-sm font-medium text-slate-500 border-dashed border-white/10">No trades initialized in ledger.</td></tr>
+                <tr><td colSpan={6} className="px-10 py-20 text-center text-[10px] uppercase tracking-[0.2em] text-white/40">No trades initialized in ledger.</td></tr>
               ) : trades.map((trade) => {
                 const ratio = trade.amount > 0 ? trade.totalAdvances / trade.amount : 0;
                 const isWarning = ratio > 0.75;
                 
                 return (
-                  <tr key={trade.id} className={`transition-colors duration-300 ${selectedTrade?.id === trade.id ? 'bg-amber-600/10' : 'hover:bg-white/5'} ${isWarning && selectedTrade?.id !== trade.id ? 'bg-rose-500/5' : ''}`}>
-                    <td className="px-8 py-5 whitespace-nowrap font-playfair font-bold text-base text-white">{trade.designation}</td>
-                    <td className="px-8 py-5 whitespace-nowrap text-sm font-medium tracking-wide text-stone-300/60 uppercase">{trade.supplierName || '-'}</td>
-                    <td className="px-8 py-5 whitespace-nowrap text-sm text-white font-bold text-right">€ {trade.amount.toLocaleString()}</td>
-                    <td className="px-8 py-5 whitespace-nowrap text-sm text-slate-300 font-medium text-right">€ {trade.totalAdvances.toLocaleString()}</td>
-                    <td className="px-8 py-5 whitespace-nowrap text-sm">
-                      <div className="flex items-center gap-3">
-                        <div className="w-24 bg-white/5 border border-white/5 h-2 rounded-full overflow-hidden">
-                          <div className={`h-full rounded-full shadow-[0_0_8px_rgba(0,0,0,0.5)] ${isWarning ? 'bg-gradient-to-r from-rose-600 to-rose-400' : 'bg-gradient-to-r from-amber-700 to-amber-400'}`} style={{ width: `${Math.min(100, ratio * 100)}%` }}></div>
+                  <tr key={trade.id} className={`transition-colors duration-500 ${selectedTrade?.id === trade.id ? 'bg-[#D4AF37]/5' : 'hover:bg-white/[0.02]'} ${isWarning && selectedTrade?.id !== trade.id ? 'bg-rose-500/[0.02]' : ''}`}>
+                    <td className="px-10 py-6 whitespace-nowrap font-playfair font-black text-lg text-white tracking-[0.05em] uppercase">{trade.designation}</td>
+                    <td className="px-10 py-6 whitespace-nowrap text-[10px] font-bold tracking-[0.2em] text-white/40 uppercase">{trade.supplierName || '-'}</td>
+                    <td className="px-10 py-6 whitespace-nowrap text-sm text-white font-bold text-right">€ {trade.amount.toLocaleString()}</td>
+                    <td className="px-10 py-6 whitespace-nowrap text-sm text-[#D4AF37] font-bold text-right">€ {trade.totalAdvances.toLocaleString()}</td>
+                    <td className="px-10 py-6 whitespace-nowrap text-sm">
+                      <div className="flex items-center gap-4">
+                        <div className="w-24 bg-white/5 border border-white/5 h-1 rounded-full overflow-hidden">
+                          <div className={`h-full rounded-full shadow-[0_0_8px_rgba(0,0,0,0.5)] ${isWarning ? 'bg-rose-500' : 'bg-[#D4AF37]'}`} style={{ width: `${Math.min(100, ratio * 100)}%` }}></div>
                         </div>
-                        <span className={`text-[10px] tracking-wider font-bold w-8 ${isWarning ? 'text-rose-400' : 'text-amber-200'}`}>
+                        <span className={`text-[9px] tracking-widest font-black w-10 ${isWarning ? 'text-rose-400' : 'text-[#D4AF37]'}`}>
                           {Math.round(ratio * 100)}%
                         </span>
                       </div>
                     </td>
-                    <td className="px-8 py-5 whitespace-nowrap text-right text-sm">
-                      <Button variant="outline" size="sm" className={`h-9 px-4 text-xs font-bold rounded-xl border-white/10 transition-all ${selectedTrade?.id === trade.id ? 'bg-amber-700 text-white border-transparent shadow-[0_0_15px_rgba(79,70,229,0.4)]' : 'bg-black/20 text-slate-300 hover:text-white hover:bg-white/10'}`} onClick={() => setSelectedTrade(selectedTrade?.id === trade.id ? null : trade)}>
+                    <td className="px-10 py-6 whitespace-nowrap text-right text-sm">
+                      <button className={`px-6 py-2 text-[9px] uppercase tracking-[0.1em] font-bold transition-all border ${selectedTrade?.id === trade.id ? 'bg-[#D4AF37] text-black border-[#D4AF37] shadow-[0_0_15px_rgba(212,175,55,0.4)]' : 'bg-transparent text-white/40 border-white/10 hover:text-white hover:border-white/30'}`} onClick={() => setSelectedTrade(selectedTrade?.id === trade.id ? null : trade)}>
                         {selectedTrade?.id === trade.id ? 'Close Matrix' : 'Manage'}
-                      </Button>
+                      </button>
                     </td>
                   </tr>
                 );
@@ -323,81 +321,81 @@ export default function ProjectDetail() {
       </motion.div>
 
       {selectedTrade && (
-         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
-         <Card className="mt-8 glass-card border-amber-600/30 shadow-[0_0_40px_rgba(79,70,229,0.15)] relative overflow-hidden">
-           <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-amber-700/5 blur-[120px] rounded-full pointer-events-none" />
-           <CardHeader className="bg-black/20 border-b border-white/5 relative z-10 px-8 py-6">
-             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-amber-600/10 border border-amber-600/20 flex items-center justify-center text-amber-400">
+         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+         <div className="mt-12 elite-card border-[#D4AF37]/30 shadow-[0_0_40px_rgba(212,175,55,0.1)] relative overflow-hidden">
+           <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-[#D4AF37]/5 blur-[120px] rounded-full pointer-events-none" />
+           <div className="bg-black/40 border-b border-white/[0.04] relative z-10 px-10 py-8">
+             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div className="flex items-center gap-6">
+                  <div className="w-14 h-14 rounded bg-black border border-white/10 flex items-center justify-center text-[#D4AF37]">
                     <Wallet className="h-6 w-6" />
                   </div>
                   <div>
-                    <CardTitle className="text-2xl font-playfair font-black text-white">{selectedTrade.designation}</CardTitle>
-                    <CardDescription className="text-stone-300/60 font-medium uppercase tracking-widest text-[10px] mt-1">Payment Matrix / Advance Records</CardDescription>
+                    <h2 className="text-3xl font-playfair font-black text-white uppercase tracking-[0.05em]">{selectedTrade.designation}</h2>
+                    <p className="text-white/40 font-bold uppercase tracking-[0.2em] text-[9px] mt-2">Payment Matrix / Advance Records</p>
                   </div>
                 </div>
-                <Button onClick={() => setAddingPayment(!addingPayment)} className="bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl shadow-[0_0_15px_rgba(16,185,129,0.3)] transition-all px-6 py-5">
-                  <Plus className="h-4 w-4 mr-2" /> <span className="font-bold">Record Advance</span>
-                </Button>
+                <button onClick={() => setAddingPayment(!addingPayment)} className="bg-white text-black hover:bg-white/90 border border-transparent shadow-[0_0_20px_rgba(255,255,255,0.2)] transition-all px-8 py-4 uppercase text-[10px] tracking-[0.1em] font-bold flex items-center justify-center">
+                  <Plus className="h-4 w-4 mr-2" /> Record Advance
+                </button>
              </div>
-           </CardHeader>
+           </div>
            
-           <CardContent className="pt-8 px-8 relative z-10">
+           <div className="pt-10 px-10 pb-10 relative z-10">
              {addingPayment && (
-                <motion.form initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} onSubmit={handleAddPayment} className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8 p-6 border border-emerald-500/20 rounded-2xl bg-emerald-500/5 shadow-inner">
+                <motion.form initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} onSubmit={handleAddPayment} className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12 p-8 border border-white/10 rounded-lg bg-black/40">
                   <div>
-                    <label className="block text-[10px] font-bold text-emerald-300 uppercase tracking-[0.2em] mb-2">Timestamp</label>
-                    <input type="date" required className="w-full bg-black/40 backdrop-blur-md border border-white/10 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl p-3.5 text-sm text-white transition-all outline-none"
+                    <label className="block text-[9px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2">Timestamp</label>
+                    <input type="date" required className="w-full bg-transparent border-b border-white/20 focus:border-[#D4AF37] pb-2 pt-1 text-sm text-white transition-colors outline-none [color-scheme:dark]"
                       value={newPayment.date} onChange={e => setNewPayment({...newPayment, date: e.target.value})} />
                   </div>
                   <div>
-                    <label className="block text-[10px] font-bold text-emerald-300 uppercase tracking-[0.2em] mb-2">Amount Transferred</label>
-                    <input type="number" required className="w-full bg-black/40 backdrop-blur-md border border-white/10 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl p-3.5 text-sm text-white transition-all outline-none"
-                      value={newPayment.amount || ''} onChange={e => setNewPayment({...newPayment, amount: Number(e.target.value)})} />
+                    <label className="block text-[9px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2">Amount Transferred</label>
+                    <input type="number" required className="w-full bg-transparent border-b border-white/20 focus:border-[#D4AF37] pb-2 pt-1 text-sm text-white transition-colors outline-none placeholder:text-white/20"
+                      value={newPayment.amount || ''} onChange={e => setNewPayment({...newPayment, amount: Number(e.target.value)})} placeholder="0" />
                   </div>
                   <div>
-                    <label className="block text-[10px] font-bold text-emerald-300 uppercase tracking-[0.2em] mb-2">Reference Note</label>
-                    <input className="w-full bg-black/40 backdrop-blur-md border border-white/10 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl p-3.5 text-sm text-white transition-all outline-none"
-                      value={newPayment.designation} onChange={e => setNewPayment({...newPayment, designation: e.target.value})} />
+                    <label className="block text-[9px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2">Reference Note</label>
+                    <input className="w-full bg-transparent border-b border-white/20 focus:border-[#D4AF37] pb-2 pt-1 text-sm text-white transition-colors outline-none placeholder:text-white/20"
+                      value={newPayment.designation} onChange={e => setNewPayment({...newPayment, designation: e.target.value})} placeholder="e.g. Invoice #123" />
                   </div>
-                  <div className="md:col-span-4 mt-2">
-                    <label className="block text-[10px] font-bold text-emerald-300 uppercase tracking-[0.2em] mb-2">Document Proof (Image Receipt)</label>
+                  <div className="md:col-span-4 mt-4">
+                    <label className="block text-[9px] font-bold text-white/40 uppercase tracking-[0.2em] mb-4">Document Proof (Image Receipt)</label>
                     <ImageUpload 
                       onImageSelected={(file) => setReceiptFile(file)} 
                       onClear={() => setReceiptFile(null)} 
                       isLoading={isSavingPayment}
                     />
                   </div>
-                  <div className="md:col-span-4 flex items-end space-x-3 pt-2 border-t border-white/5 mt-2">
-                    <Button type="submit" disabled={isSavingPayment} className="bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl px-8 font-bold shadow-[0_0_15px_rgba(16,185,129,0.3)]">
+                  <div className="md:col-span-4 flex items-end space-x-6 pt-6 mt-4 border-t border-white/[0.04]">
+                    <button type="submit" disabled={isSavingPayment} className="bg-white text-black hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed px-10 py-4 uppercase text-[10px] tracking-[0.1em] font-bold shadow-[0_0_15px_rgba(255,255,255,0.2)] transition-all">
                       {isSavingPayment ? 'Processing...' : 'Confirm Transfer'}
-                    </Button>
-                    <Button type="button" variant="ghost" onClick={() => { setAddingPayment(false); setReceiptFile(null); }} disabled={isSavingPayment} className="rounded-xl text-slate-400 hover:text-white hover:bg-white/5">Cancel</Button>
+                    </button>
+                    <button type="button" onClick={() => { setAddingPayment(false); setReceiptFile(null); }} disabled={isSavingPayment} className="text-white/40 hover:text-white uppercase text-[10px] tracking-[0.1em] transition-colors pb-3">Cancel</button>
                   </div>
                 </motion.form>
              )}
 
              <div className="space-y-4">
                {payments.length === 0 ? (
-                 <p className="text-sm font-medium text-slate-500 text-center py-8 border border-dashed border-white/10 rounded-2xl bg-black/10">No transfers recorded in this ledger.</p>
+                 <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40 text-center py-16 border border-dashed border-white/10 rounded-lg bg-black/20">No transfers recorded in this ledger.</p>
                ) : (
                  payments.map(payment => (
-                   <div key={payment.id} className="flex flex-col p-6 rounded-2xl border border-white/5 bg-white/5 hover:bg-white/10 transition-colors shadow-lg">
+                   <div key={payment.id} className="flex flex-col p-8 rounded-lg border border-white/[0.04] bg-white/[0.02] hover:bg-white/[0.04] transition-colors">
                      <div className="flex justify-between items-start">
-                       <div className="flex items-center space-x-5">
-                         <div className="h-12 w-12 rounded-xl bg-amber-600/10 text-amber-400 flex items-center justify-center border border-amber-600/20 shadow-inner">
-                           <Wallet className="h-6 w-6" />
+                       <div className="flex items-center space-x-6">
+                         <div className="h-12 w-12 rounded bg-black text-[#D4AF37] flex items-center justify-center border border-white/10">
+                           <Wallet className="h-5 w-5" />
                          </div>
                          <div>
-                           <p className="text-base font-playfair font-bold text-white">Advance Transferred</p>
-                           <p className="text-xs font-medium uppercase tracking-widest text-stone-300/60 mt-1">{format(payment.date, 'MMM d, yyyy')} {payment.designation ? `// ${payment.designation}` : ''}</p>
+                           <p className="text-lg font-playfair font-black text-white uppercase tracking-[0.05em]">Advance Transferred</p>
+                           <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#D4AF37] mt-2">{format(payment.date, 'MMM d, yyyy')} {payment.designation ? `// ${payment.designation}` : ''}</p>
                          </div>
                        </div>
-                       <span className="font-playfair font-black text-2xl text-emerald-400 tracking-tight drop-shadow-[0_0_8px_rgba(16,185,129,0.4)]">€ {payment.amount.toLocaleString()}</span>
+                       <span className="font-playfair font-black text-3xl text-white tracking-tight">€ {payment.amount.toLocaleString()}</span>
                      </div>
                      {payment.receiptUrl && (
-                       <div className="mt-4 ml-16 w-40 h-40 rounded-xl overflow-hidden border border-white/10 shadow-lg group relative">
+                       <div className="mt-6 ml-18 w-48 h-48 rounded overflow-hidden border border-white/10 shadow-xl group relative">
                          <a href={payment.receiptUrl} target="_blank" rel="noopener noreferrer">
                            <LazyImage src={payment.receiptUrl} alt="Receipt" className="w-full h-full object-cover" />
                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
@@ -408,8 +406,8 @@ export default function ProjectDetail() {
                  ))
                )}
              </div>
-           </CardContent>
-         </Card>
+           </div>
+         </div>
          </motion.div>
       )}
 

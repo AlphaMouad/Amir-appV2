@@ -59,7 +59,12 @@ export default function Dashboard() {
   }, [user]);
 
   if (loading) {
-    return <div className="flex justify-center items-center h-full text-amber-400 font-playfair">Loading Elite Dashboard...</div>;
+    return (
+      <div className="flex flex-col justify-center items-center h-full">
+        <div className="w-12 h-12 border-t-2 border-[#D4AF37] border-r-2 rounded-full animate-spin mb-4" />
+        <span className="elite-text-gold font-playfair uppercase tracking-[0.2em] text-sm animate-pulse">Initializing Matrix...</span>
+      </div>
+    );
   }
 
   // Calculate metrics
@@ -93,123 +98,121 @@ export default function Dashboard() {
     >
       <motion.div variants={item} className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
         <div>
-          <h1 className="text-4xl font-playfair font-black tracking-tight text-white mb-2">Overview</h1>
-          <p className="text-stone-300/60 font-medium">Welcome back, {user?.displayName?.split(' ')[0] || 'User'}. Here is your financial summary.</p>
+          <h1 className="text-4xl font-playfair font-black tracking-[0.05em] text-white uppercase mb-2">Overview</h1>
+          <p className="elite-text-silver">Welcome back, {user?.displayName?.split(' ')[0] || 'User'}. Here is your financial summary.</p>
         </div>
-        <div className="bg-amber-600/10 border border-amber-600/20 px-4 py-2 rounded-xl backdrop-blur-md">
-          <span className="text-sm font-bold text-amber-200 uppercase tracking-widest">{new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</span>
+        <div className="bg-black/50 border border-white/[0.05] px-5 py-2 rounded-lg backdrop-blur-md">
+          <span className="text-xs font-bold text-white/50 uppercase tracking-[0.2em]">{new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</span>
         </div>
       </motion.div>
       
       <motion.div variants={container} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <motion.div variants={item}>
-          <Card className="glass-card overflow-hidden group">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10 border-b border-white/5 mb-4">
-              <CardTitle className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em]">Projects</CardTitle>
-              <div className="w-10 h-10 rounded-xl bg-amber-600/10 border border-amber-600/20 flex items-center justify-center group-hover:bg-amber-600/20 transition-colors duration-300 shadow-[0_0_15px_rgba(79,70,229,0.2)]">
-                <Building className="h-5 w-5 text-amber-400" />
+          <Card className="elite-card group">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10 border-b border-white/[0.04] mb-4">
+              <CardTitle className="text-[10px] font-bold text-white/40 uppercase tracking-[0.2em]">Projects</CardTitle>
+              <div className="w-10 h-10 rounded-lg bg-black border border-white/5 flex items-center justify-center group-hover:border-[#D4AF37]/30 transition-colors duration-500">
+                <Building className="h-4 w-4 text-[#D4AF37]" />
               </div>
             </CardHeader>
             <CardContent className="relative z-10">
               <div className="text-4xl font-playfair font-black text-white tracking-tight">{totalProjects}</div>
-              <p className="text-sm text-amber-200 font-medium mt-1">{activeProjects} active</p>
+              <p className="text-xs text-[#D4AF37]/80 font-medium tracking-wide mt-2">{activeProjects} ACTIVE</p>
             </CardContent>
-            <div className="absolute inset-0 bg-gradient-to-br from-amber-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           </Card>
         </motion.div>
 
         <motion.div variants={item}>
-          <Card className="glass-card overflow-hidden group">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10 border-b border-white/5 mb-4">
-              <CardTitle className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em]">Global Budget</CardTitle>
-              <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center group-hover:bg-emerald-500/20 transition-colors duration-300 shadow-[0_0_15px_rgba(16,185,129,0.2)]">
-                <DollarSign className="h-5 w-5 text-emerald-400" />
+          <Card className="elite-card group">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10 border-b border-white/[0.04] mb-4">
+              <CardTitle className="text-[10px] font-bold text-white/40 uppercase tracking-[0.2em]">Global Budget</CardTitle>
+              <div className="w-10 h-10 rounded-lg bg-black border border-white/5 flex items-center justify-center group-hover:border-[#D4AF37]/30 transition-colors duration-500">
+                <DollarSign className="h-4 w-4 text-emerald-500" />
               </div>
             </CardHeader>
             <CardContent className="relative z-10">
-              <div className="text-4xl font-playfair font-black text-white tracking-tight">€{totalBudget.toLocaleString()}</div>
-              <p className="text-sm text-emerald-300 font-medium mt-1">Total allocated</p>
+              <div className="text-3xl lg:text-4xl font-playfair font-black text-white tracking-tight">€{totalBudget.toLocaleString()}</div>
+              <p className="text-xs text-emerald-500/80 font-medium tracking-wide mt-2">TOTAL ALLOCATED</p>
             </CardContent>
-            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           </Card>
         </motion.div>
 
         <motion.div variants={item}>
-          <Card className="glass-card overflow-hidden group">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10 border-b border-white/5 mb-4">
-              <CardTitle className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em]">Total Advances</CardTitle>
-              <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center group-hover:bg-blue-500/20 transition-colors duration-300 shadow-[0_0_15px_rgba(59,130,246,0.2)]">
-                <TrendingUp className="h-5 w-5 text-blue-400" />
+          <Card className="elite-card group">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10 border-b border-white/[0.04] mb-4">
+              <CardTitle className="text-[10px] font-bold text-white/40 uppercase tracking-[0.2em]">Total Advances</CardTitle>
+              <div className="w-10 h-10 rounded-lg bg-black border border-white/5 flex items-center justify-center group-hover:border-[#D4AF37]/30 transition-colors duration-500">
+                <TrendingUp className="h-4 w-4 text-white/60" />
               </div>
             </CardHeader>
             <CardContent className="relative z-10">
-              <div className="text-4xl font-playfair font-black text-white tracking-tight">€{totalAdvances.toLocaleString()}</div>
-              <div className="flex items-center gap-3 mt-2">
-                <div className="flex-1 bg-white/5 h-2 rounded-full overflow-hidden border border-white/10">
-                  <div className="bg-gradient-to-r from-blue-600 to-blue-400 h-full rounded-full shadow-[0_0_10px_rgba(59,130,246,0.5)]" style={{ width: `${Math.min(100, (totalAdvances / (totalBudget || 1)) * 100)}%` }} />
+              <div className="text-3xl lg:text-4xl font-playfair font-black text-white tracking-tight">€{totalAdvances.toLocaleString()}</div>
+              <div className="flex items-center gap-3 mt-3">
+                <div className="flex-1 bg-black h-1 rounded-full overflow-hidden border border-white/5">
+                  <div className="bg-gradient-to-r from-white/20 to-white/60 h-full rounded-full" style={{ width: `${Math.min(100, (totalAdvances / (totalBudget || 1)) * 100)}%` }} />
                 </div>
-                <p className="text-xs text-blue-300 font-bold w-8 text-right">
+                <p className="text-[10px] text-white/60 font-bold w-8 text-right tracking-widest">
                   {totalBudget > 0 ? Math.round((totalAdvances / totalBudget) * 100) : 0}%
                 </p>
               </div>
             </CardContent>
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           </Card>
         </motion.div>
 
         <motion.div variants={item}>
-          <Card className="glass-card overflow-hidden group border-rose-500/30 shadow-[0_8px_32px_rgba(244,63,94,0.1)]">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10 border-b border-rose-500/10 mb-4">
-              <CardTitle className="text-xs font-bold text-rose-400 uppercase tracking-[0.2em]">Risk Alerts</CardTitle>
-              <div className="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center group-hover:bg-rose-500/20 transition-colors duration-300 shadow-[0_0_15px_rgba(244,63,94,0.3)]">
-                <AlertCircle className="h-5 w-5 text-rose-400" />
+          <Card className="elite-card group border-rose-900/30">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10 border-b border-white/[0.04] mb-4">
+              <CardTitle className="text-[10px] font-bold text-white/40 uppercase tracking-[0.2em]">Risk Alerts</CardTitle>
+              <div className="w-10 h-10 rounded-lg bg-black border border-white/5 flex items-center justify-center group-hover:border-rose-500/30 transition-colors duration-500">
+                <AlertCircle className="h-4 w-4 text-rose-500" />
               </div>
             </CardHeader>
             <CardContent className="relative z-10">
-              <div className="text-4xl font-playfair font-black text-rose-400 tracking-tight drop-shadow-[0_0_10px_rgba(244,63,94,0.4)]">{tradesWithWarnings.length}</div>
-              <p className="text-sm text-rose-300 font-medium mt-1">Advances &gt; 75%</p>
+              <div className="text-4xl font-playfair font-black text-rose-500 tracking-tight">{tradesWithWarnings.length}</div>
+              <p className="text-xs text-rose-500/80 font-medium tracking-wide mt-2">ADVANCES &gt; 75%</p>
             </CardContent>
-            <div className="absolute inset-0 bg-gradient-to-br from-rose-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           </Card>
         </motion.div>
       </motion.div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6 pb-6">
         <motion.div variants={item} className="lg:col-span-2">
-          <Card className="glass-card h-full">
-            <CardHeader className="border-b border-white/5 pb-4">
-              <CardTitle className="text-xl font-playfair font-black text-white">Financial Matrix</CardTitle>
-              <CardDescription className="text-stone-300/60 font-medium">Budget vs Advances tracking across active projects</CardDescription>
+          <Card className="elite-card h-full">
+            <CardHeader className="border-b border-white/[0.04] pb-5">
+              <CardTitle className="text-lg font-playfair font-black text-white uppercase tracking-[0.1em]">Financial Matrix</CardTitle>
+              <CardDescription className="text-white/40 text-xs font-medium tracking-wide mt-1">BUDGET VS ADVANCES TRACKING ACROSS ACTIVE PROJECTS</CardDescription>
             </CardHeader>
-            <CardContent className="h-[350px] pt-6">
+            <CardContent className="h-[350px] pt-8">
               <ResponsiveContainer width="100%" height="100%" minHeight={0} minWidth={0}>
-                <BarChart data={projectChartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
-                  <XAxis dataKey="name" fontSize={11} tickLine={false} axisLine={false} tick={{fill: '#94a3b8'}} dy={10} />
-                  <YAxis fontSize={11} tickLine={false} axisLine={false} tickFormatter={(value) => `€${value / 1000}k`} tick={{fill: '#94a3b8'}} />
+                <BarChart data={projectChartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }} barGap={2}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.02)" />
+                  <XAxis dataKey="name" fontSize={9} tickLine={false} axisLine={false} tick={{fill: 'rgba(255,255,255,0.4)'}} dy={15} />
+                  <YAxis fontSize={9} tickLine={false} axisLine={false} tickFormatter={(value) => `€${value / 1000}k`} tick={{fill: 'rgba(255,255,255,0.4)'}} />
                   <Tooltip 
                     cursor={{fill: 'rgba(255,255,255,0.02)'}} 
                     contentStyle={{
-                      backgroundColor: 'rgba(11, 15, 25, 0.8)', 
-                      backdropFilter: 'blur(16px)', 
-                      borderRadius: '16px', 
-                      border: '1px solid rgba(255,255,255,0.1)', 
-                      boxShadow: '0 20px 40px -10px rgba(0,0,0,0.5)', 
-                      padding: '16px',
-                      color: 'white'
+                      backgroundColor: 'rgba(0, 0, 0, 0.9)', 
+                      backdropFilter: 'blur(20px)', 
+                      borderRadius: '8px', 
+                      border: '1px solid rgba(255,255,255,0.05)', 
+                      padding: '12px',
+                      color: 'white',
+                      fontSize: '11px',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.1em'
                     }} 
                   />
-                  <Legend iconType="circle" wrapperStyle={{fontSize: '12px', color: '#cbd5e1', paddingTop: '20px'}} />
-                  <Bar dataKey="Budget" fill="url(#colorBudget)" radius={[6, 6, 6, 6]} maxBarSize={32} />
-                  <Bar dataKey="Advances" fill="url(#colorAdvances)" radius={[6, 6, 6, 6]} maxBarSize={32} />
+                  <Legend iconType="circle" wrapperStyle={{fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'rgba(255,255,255,0.4)', paddingTop: '30px'}} />
+                  <Bar dataKey="Budget" fill="url(#colorBudget)" radius={[2, 2, 0, 0]} maxBarSize={20} />
+                  <Bar dataKey="Advances" fill="url(#colorAdvances)" radius={[2, 2, 0, 0]} maxBarSize={20} />
                   <defs>
                     <linearGradient id="colorBudget" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#818cf8" stopOpacity={1}/>
-                      <stop offset="100%" stopColor="#4f46e5" stopOpacity={1}/>
+                      <stop offset="0%" stopColor="#4A4A4A" stopOpacity={1}/>
+                      <stop offset="100%" stopColor="#1A1A1A" stopOpacity={1}/>
                     </linearGradient>
                     <linearGradient id="colorAdvances" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#34d399" stopOpacity={1}/>
-                      <stop offset="100%" stopColor="#10b981" stopOpacity={1}/>
+                      <stop offset="0%" stopColor="#D4AF37" stopOpacity={1}/>
+                      <stop offset="100%" stopColor="#8C6D1F" stopOpacity={1}/>
                     </linearGradient>
                   </defs>
                 </BarChart>
@@ -219,19 +222,19 @@ export default function Dashboard() {
         </motion.div>
 
         <motion.div variants={item}>
-          <Card className="glass-card h-full">
-            <CardHeader className="border-b border-white/5 pb-4">
-              <CardTitle className="text-xl font-playfair font-black text-white">Critical Ledger</CardTitle>
-              <CardDescription className="text-rose-300/60 font-medium">Trades approaching limit</CardDescription>
+          <Card className="elite-card h-full">
+            <CardHeader className="border-b border-white/[0.04] pb-5">
+              <CardTitle className="text-lg font-playfair font-black text-rose-500 uppercase tracking-[0.1em]">Critical Ledger</CardTitle>
+              <CardDescription className="text-white/40 text-xs font-medium tracking-wide mt-1">TRADES APPROACHING LIMIT</CardDescription>
             </CardHeader>
             <CardContent className="pt-6">
               {tradesWithWarnings.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 text-center">
-                  <div className="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mb-4 border border-emerald-500/20 shadow-[0_0_30px_rgba(16,185,129,0.15)]">
-                     <Building className="h-10 w-10 text-emerald-400 opacity-80" />
+                <div className="flex flex-col items-center justify-center py-16 text-center">
+                  <div className="w-16 h-16 bg-black border border-white/10 rounded-full flex items-center justify-center mb-6">
+                     <Building className="h-6 w-6 text-emerald-500 opacity-60" />
                   </div>
-                  <p className="text-lg font-playfair font-bold text-white neon-green">Ledger Clear!</p>
-                  <p className="text-sm text-emerald-200/60 mt-1">No trades exceed risk thresholds.</p>
+                  <p className="text-sm font-playfair tracking-[0.2em] text-white uppercase">Ledger Clear</p>
+                  <p className="text-[10px] text-white/40 mt-2 uppercase tracking-widest">No trades exceed risk thresholds</p>
                 </div>
               ) : (
                 <div className="space-y-4 max-h-[350px] overflow-y-auto pr-2 custom-scrollbar">
@@ -240,22 +243,22 @@ export default function Dashboard() {
                     const percentage = Math.round((trade.totalAdvances / trade.amount) * 100);
                     
                     return (
-                      <div key={trade.id} className="flex items-start space-x-4 p-4 bg-white/5 rounded-2xl border border-rose-500/20 shadow-lg hover:bg-white/10 transition-colors duration-300 relative overflow-hidden group">
-                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-rose-400 to-rose-600 shadow-[0_0_10px_rgba(244,63,94,0.8)]"></div>
-                        <div className="p-2.5 bg-rose-500/10 rounded-xl border border-rose-500/20 shrink-0 shadow-[inset_0_1px_2px_rgba(255,255,255,0.1)]">
-                          <AlertCircle className="h-5 w-5 text-rose-400" />
+                      <div key={trade.id} className="flex flex-col p-4 bg-black border border-white/[0.04] rounded-lg relative overflow-hidden group">
+                        <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-rose-600"></div>
+                        <div className="flex justify-between items-start mb-3">
+                          <div>
+                            <p className="text-xs font-bold text-white uppercase tracking-wider">{trade.designation}</p>
+                            <p className="text-[9px] text-white/40 uppercase tracking-[0.2em] mt-1">{project?.name || 'Unknown Project'}</p>
+                          </div>
+                          <AlertCircle className="h-4 w-4 text-rose-500 opacity-80" />
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-bold text-white truncate">{trade.designation}</p>
-                          <p className="text-xs text-stone-300/60 truncate mb-2">{project?.name || 'Unknown Project'}</p>
-                          
-                          <div className="w-full bg-black/40 rounded-full h-2 mb-1.5 border border-white/5 overflow-hidden">
-                            <div className="bg-gradient-to-r from-rose-600 to-rose-400 h-full rounded-full shadow-[0_0_8px_rgba(244,63,94,0.6)]" style={{ width: `${Math.min(100, percentage)}%` }}></div>
-                          </div>
-                          <div className="flex justify-between items-center mt-1">
-                            <span className="text-xs font-black text-rose-400">{percentage}%</span>
-                            <span className="text-[10px] text-slate-400 font-medium tracking-wide">€{trade.totalAdvances.toLocaleString()} / €{trade.amount.toLocaleString()}</span>
-                          </div>
+                        
+                        <div className="w-full bg-white/5 rounded-full h-1 mb-2">
+                          <div className="bg-rose-500 h-full rounded-full" style={{ width: `${Math.min(100, percentage)}%` }}></div>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-[10px] font-bold text-rose-500 tracking-widest">{percentage}%</span>
+                          <span className="text-[9px] text-white/40 font-medium tracking-widest">€{trade.totalAdvances.toLocaleString()} / €{trade.amount.toLocaleString()}</span>
                         </div>
                       </div>
                     );

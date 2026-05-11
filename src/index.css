@@ -20,34 +20,33 @@
 
 @layer base {
   :root {
-    --background: 0 0% 4%; /* #0A0A0A Onyx */
-    --foreground: 0 0% 96%;
+    --background: 0 0% 0%; /* Pure Black */
+    --foreground: 0 0% 100%; /* Pure White */
 
-    --primary: 43 57% 44%; /* #B08D31 AMG Gold */
-    --primary-foreground: 0 0% 100%;
+    --primary: 43 65% 55%; /* #D4AF37 Gold */
+    --primary-foreground: 0 0% 0%;
 
-    --secondary: 0 0% 10%; /* #1A1A1A Ebony */
-    --secondary-foreground: 43 57% 44%;
+    --secondary: 0 0% 7%; /* Noir Grey */
+    --secondary-foreground: 0 0% 80%; /* Silver */
 
-    --border: 0 0% 15%;
-    --input: 0 0% 15%;
-    --ring: 43 57% 44%;
+    --border: 0 0% 12%;
+    --input: 0 0% 7%;
+    --ring: 43 65% 55%;
 
-    --radius: 1rem; /* Sleeker, less rounded for high-end luxury */
+    --radius: 0.5rem; /* 8px - Sharp, elegant, minimalist */
   }
 
   body {
-    @apply bg-[#0A0A0A] text-slate-200 antialiased;
+    @apply bg-black text-white antialiased;
     font-family: 'Montserrat', sans-serif;
-    background-image: 
-      radial-gradient(circle at 15% 50%, rgba(176, 141, 49, 0.05) 0%, transparent 50%),
-      radial-gradient(circle at 85% 30%, rgba(255, 255, 255, 0.02) 0%, transparent 50%);
+    /* Extremely subtle luxury vignette */
+    background-image: radial-gradient(circle at center, #0a0a0a 0%, #000000 100%);
     background-attachment: fixed;
+    letter-spacing: 0.01em;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Playfair Display', serif;
-    letter-spacing: 0.02em;
   }
 }
 
@@ -55,65 +54,65 @@
   .font-montserrat { font-family: 'Montserrat', sans-serif; }
   .font-playfair { font-family: 'Playfair Display', serif; }
   
-  .glass {
-    @apply bg-[#111111]/80 backdrop-blur-[20px] border border-white/5 shadow-[0_8px_32px_0_rgba(0,0,0,0.8)];
+  /* Elite Noir Glass */
+  .elite-glass {
+    @apply bg-black/40 backdrop-blur-[40px] border border-white/[0.06] shadow-[0_30px_60px_-15px_rgba(0,0,0,1)];
   }
   
-  .glass-card {
-    @apply bg-[#141414]/90 backdrop-blur-[24px] border border-[#2A2A2A] shadow-[0_8px_32px_0_rgba(0,0,0,0.6)] transition-all duration-500 rounded-2xl;
+  /* Elite Card - Slabs of dark metal/glass */
+  .elite-card {
+    @apply bg-[#050505]/80 backdrop-blur-[30px] border border-white/[0.04] shadow-[0_8px_30px_rgb(0,0,0)] transition-all duration-700 rounded-xl overflow-hidden;
   }
   
-  .glass-card:hover {
-    @apply border-[#B08D31]/40 shadow-[0_12px_40px_0_rgba(176,141,49,0.15)] bg-[#1A1A1A];
-  }
-  
-  .glass-nav {
-    @apply bg-[#0A0A0A]/90 backdrop-blur-[24px] border-b border-white/5 shadow-[0_4px_24px_rgba(0,0,0,0.5)];
-  }
-  
-  .glass-sidebar {
-    @apply bg-[#0A0A0A]/95 backdrop-blur-[24px] border-r border-white/5 shadow-[4px_0_24px_0_rgba(0,0,0,0.5)];
+  .elite-card:hover {
+    @apply border-white/[0.1] shadow-[0_20px_50px_rgba(212,175,55,0.05)] bg-[#0a0a0a]/90;
   }
 
-  .neon-text {
-    @apply text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.2)];
+  /* Shimmering Metallic Gold Text */
+  .elite-text-gold {
+    @apply bg-clip-text text-transparent bg-gradient-to-br from-[#FFF3CD] via-[#D4AF37] to-[#8C6D1F] drop-shadow-[0_2px_10px_rgba(212,175,55,0.2)];
+  }
+
+  /* Muted Silver Text for secondary info */
+  .elite-text-silver {
+    @apply text-slate-400 font-light tracking-wide;
+  }
+
+  /* Luxury Gold Buttons */
+  .elite-button {
+    @apply relative overflow-hidden bg-gradient-to-r from-[#D4AF37] to-[#AA8024] text-black font-semibold rounded-lg shadow-[0_0_20px_rgba(212,175,55,0.3)] transition-all duration-500;
   }
   
-  .neon-green {
-    @apply text-emerald-500 drop-shadow-[0_0_8px_rgba(16,185,129,0.3)];
+  .elite-button:hover {
+    @apply shadow-[0_0_30px_rgba(212,175,55,0.6)] brightness-110;
   }
 
-  .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-[#D4AF37] to-[#AA8024];
-  }
-  
-  .gold-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-[#D4AF37] to-[#AA8024];
+  /* Outline Gold Buttons */
+  .elite-button-outline {
+    @apply bg-black text-[#D4AF37] border border-[#D4AF37]/50 rounded-lg shadow-[0_0_15px_rgba(212,175,55,0.1)] transition-all duration-500 hover:bg-[#D4AF37]/10 hover:border-[#D4AF37];
   }
 
-  /* Hide scrollbar for Chrome, Safari and Opera */
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
+  /* Deep Ruby Warning */
+  .elite-ruby {
+    @apply text-rose-500 drop-shadow-[0_0_15px_rgba(244,63,94,0.3)];
   }
 
-  /* Hide scrollbar for IE, Edge and Firefox */
-  .no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+  /* Deep Emerald Success */
+  .elite-emerald {
+    @apply text-emerald-500 drop-shadow-[0_0_15px_rgba(16,185,129,0.3)];
   }
 
-  /* Custom elite scrollbar */
+  /* Hide scrollbar completely for absolute sleekness */
   ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 2px;
   }
   ::-webkit-scrollbar-track {
-    @apply bg-transparent;
+    @apply bg-black;
   }
   ::-webkit-scrollbar-thumb {
-    @apply bg-white/10 rounded-full border border-white/5;
+    @apply bg-white/10;
   }
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-white/20;
+    @apply bg-[#D4AF37]/50;
   }
 }

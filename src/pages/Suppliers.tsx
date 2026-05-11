@@ -3,8 +3,6 @@ import { useAuth } from '../contexts/AuthContext';
 import { getAllTrades, getProjects, addPayment, updateTrade, getPayments } from '../services/api';
 import { Trade, Project, Payment } from '../types';
 import { Building2, Search, Wallet, Plus } from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '../components/ui/card';
-import { Button } from '../components/ui/button';
 import { format } from 'date-fns';
 import { ImageUpload } from '../components/ui/ImageUpload';
 import { LazyImage } from '../components/ui/LazyImage';
@@ -150,7 +148,7 @@ export default function Suppliers() {
     return suppliers.filter(sup => sup.name.toLowerCase().includes(s));
   }, [suppliers, search]);
 
-  if (loading) return <div className="p-8 text-center text-amber-400 font-playfair">Loading Global Ledger...</div>;
+  if (loading) return <div className="p-8 text-center text-[#D4AF37] font-playfair uppercase tracking-widest text-xs">Loading Global Ledger...</div>;
 
   return (
     <motion.div 
@@ -159,18 +157,18 @@ export default function Suppliers() {
       animate="show"
       className="space-y-8 pb-10"
     >
-      <motion.div variants={item} className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-white/5 pb-4">
+      <motion.div variants={item} className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-white/[0.04] pb-6">
         <div>
-          <h1 className="text-4xl font-playfair font-black tracking-tight text-white mb-2">Global Ledger</h1>
-          <p className="text-stone-300/60 font-medium">Manage contractors and track capital distribution</p>
+          <h1 className="text-4xl font-playfair font-black tracking-[0.05em] uppercase text-white mb-2">Global Ledger</h1>
+          <p className="elite-text-silver tracking-wide">Manage contractors and track capital distribution</p>
         </div>
         
         <div className="relative w-full md:w-80">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+          <Search className="absolute left-0 top-1/2 -translate-y-1/2 h-4 w-4 text-white/20" />
           <input 
             type="text" 
-            placeholder="Search entities..." 
-            className="w-full pl-11 pr-4 py-3 bg-black/40 backdrop-blur-md border border-white/10 focus:border-amber-600 focus:ring-1 focus:ring-amber-600 rounded-xl text-sm text-white transition-all outline-none placeholder:text-slate-600 shadow-inner"
+            placeholder="SEARCH ENTITIES..." 
+            className="w-full pl-8 pr-4 py-3 bg-transparent border-b border-white/20 focus:border-[#D4AF37] text-sm text-white transition-colors outline-none placeholder:text-white/20 uppercase tracking-[0.1em]"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -185,28 +183,28 @@ export default function Suppliers() {
 
             return (
               <motion.div variants={item} key={supplier.name} layout>
-                <Card className="glass-card overflow-hidden group border-white/10">
-                  <div className="bg-black/20 backdrop-blur-xl border-b border-white/5 p-6 md:p-8 relative z-10">
-                    <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-                      <div className="flex items-center gap-5">
-                        <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-amber-600/20 to-stone-800/20 border border-amber-600/30 flex items-center justify-center shrink-0 shadow-[0_0_20px_rgba(79,70,229,0.15)] group-hover:scale-110 group-hover:bg-amber-600/30 transition-all duration-500">
-                          <Building2 className="h-8 w-8 text-amber-400 group-hover:text-white transition-colors" />
+                <div className="elite-card overflow-hidden group">
+                  <div className="bg-black/40 border-b border-white/[0.04] p-8 md:p-10 relative z-10">
+                    <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+                      <div className="flex items-center gap-6">
+                        <div className="h-16 w-16 rounded border border-white/10 flex items-center justify-center shrink-0 group-hover:border-[#D4AF37]/40 transition-colors duration-700">
+                          <Building2 className="h-6 w-6 text-white/20 group-hover:text-[#D4AF37] transition-colors duration-700" />
                         </div>
                         <div>
-                          <h2 className="text-2xl font-playfair font-black text-white tracking-tight">{supplier.name}</h2>
-                          <p className="text-xs font-bold uppercase tracking-[0.2em] text-stone-300/60 mt-1">{supplier.trades.length} Active Allocations</p>
+                          <h2 className="text-3xl font-playfair font-black text-white tracking-[0.05em] uppercase">{supplier.name}</h2>
+                          <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#D4AF37] mt-2">{supplier.trades.length} Active Allocations</p>
                         </div>
                       </div>
                       
-                      <div className="flex gap-8 items-center bg-black/20 p-4 rounded-2xl border border-white/5">
+                      <div className="flex gap-10 items-center bg-white/[0.02] p-6 rounded border border-white/[0.04]">
                         <div className="text-right">
-                          <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-slate-500 mb-1">Global Budget</p>
-                          <p className="text-xl font-playfair font-black text-white">€ {supplier.totalBudget.toLocaleString()}</p>
+                          <p className="text-[9px] uppercase tracking-[0.2em] font-bold text-white/40 mb-2">Global Budget</p>
+                          <p className="text-2xl font-playfair font-black text-white">€ {supplier.totalBudget.toLocaleString()}</p>
                         </div>
-                        <div className="w-px h-10 bg-white/10"></div>
+                        <div className="w-px h-12 bg-white/10"></div>
                         <div className="text-right">
-                          <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-slate-500 mb-1">Total Advances</p>
-                          <p className={`text-xl font-playfair font-black drop-shadow-[0_0_8px_rgba(255,255,255,0.2)] ${isWarning ? 'text-rose-400' : 'text-emerald-400'}`}>
+                          <p className="text-[9px] uppercase tracking-[0.2em] font-bold text-white/40 mb-2">Total Advances</p>
+                          <p className={`text-2xl font-playfair font-black ${isWarning ? 'text-rose-400' : 'text-[#D4AF37]'}`}>
                             € {supplier.totalAdvances.toLocaleString()}
                           </p>
                         </div>
@@ -214,20 +212,20 @@ export default function Suppliers() {
                     </div>
                   </div>
 
-                  <CardContent className="p-0">
+                  <div className="p-0 bg-transparent">
                     <div className="overflow-x-auto">
                       <table className="min-w-full text-left border-collapse">
-                        <thead className="bg-white/5 border-b border-white/5">
+                        <thead className="border-b border-white/[0.04]">
                           <tr>
-                            <th className="px-8 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Project Origin</th>
-                            <th className="px-8 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Designation</th>
-                            <th className="px-8 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] text-right">Budget</th>
-                            <th className="px-8 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] text-right">Advances</th>
-                            <th className="px-8 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Risk Status</th>
-                            <th className="px-8 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] text-right">Actions</th>
+                            <th className="px-10 py-6 text-[9px] font-bold text-[#D4AF37] uppercase tracking-[0.2em]">Project Origin</th>
+                            <th className="px-10 py-6 text-[9px] font-bold text-[#D4AF37] uppercase tracking-[0.2em]">Designation</th>
+                            <th className="px-10 py-6 text-[9px] font-bold text-[#D4AF37] uppercase tracking-[0.2em] text-right">Budget</th>
+                            <th className="px-10 py-6 text-[9px] font-bold text-[#D4AF37] uppercase tracking-[0.2em] text-right">Advances</th>
+                            <th className="px-10 py-6 text-[9px] font-bold text-[#D4AF37] uppercase tracking-[0.2em]">Risk Status</th>
+                            <th className="px-10 py-6 text-[9px] font-bold text-[#D4AF37] uppercase tracking-[0.2em] text-right">Actions</th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-white/5 font-medium text-sm bg-black/10">
+                        <tbody className="divide-y divide-white/[0.04]">
                           {supplier.trades.map((trade) => {
                             const trRatio = trade.amount > 0 ? trade.totalAdvances / trade.amount : 0;
                             const trWarning = trRatio > 0.75;
@@ -235,97 +233,97 @@ export default function Suppliers() {
                             
                             return (
                               <React.Fragment key={trade.id}>
-                                <tr className={`transition-colors duration-300 ${isExpanded ? 'bg-amber-600/10' : 'hover:bg-white/5'}`}>
-                                  <td className="px-8 py-5 whitespace-nowrap text-sm text-stone-300/60 font-medium tracking-wide">{trade.projectName}</td>
-                                  <td className="px-8 py-5 whitespace-nowrap text-sm font-playfair font-bold text-white text-base">{trade.designation}</td>
-                                  <td className="px-8 py-5 whitespace-nowrap text-sm text-white font-bold text-right">€ {trade.amount.toLocaleString()}</td>
-                                  <td className="px-8 py-5 whitespace-nowrap text-sm text-slate-300 text-right">€ {trade.totalAdvances.toLocaleString()}</td>
-                                  <td className="px-8 py-5 whitespace-nowrap text-sm">
-                                    <div className="flex items-center gap-3">
-                                      <div className="w-20 bg-white/5 border border-white/5 h-1.5 rounded-full overflow-hidden shadow-inner">
-                                        <div className={`h-full shadow-[0_0_8px_rgba(0,0,0,0.5)] ${trWarning ? 'bg-gradient-to-r from-rose-600 to-rose-400' : 'bg-gradient-to-r from-amber-700 to-amber-400'}`} style={{ width: `${Math.min(100, trRatio * 100)}%` }}></div>
+                                <tr className={`transition-colors duration-500 ${isExpanded ? 'bg-[#D4AF37]/5' : 'hover:bg-white/[0.02]'}`}>
+                                  <td className="px-10 py-6 whitespace-nowrap text-[10px] text-white/40 uppercase tracking-[0.2em] font-bold">{trade.projectName}</td>
+                                  <td className="px-10 py-6 whitespace-nowrap text-lg font-playfair font-black text-white uppercase tracking-[0.05em]">{trade.designation}</td>
+                                  <td className="px-10 py-6 whitespace-nowrap text-sm text-white font-bold text-right">€ {trade.amount.toLocaleString()}</td>
+                                  <td className="px-10 py-6 whitespace-nowrap text-sm text-[#D4AF37] font-bold text-right">€ {trade.totalAdvances.toLocaleString()}</td>
+                                  <td className="px-10 py-6 whitespace-nowrap text-sm">
+                                    <div className="flex items-center gap-4">
+                                      <div className="w-24 bg-white/5 border border-white/5 h-1 rounded-full overflow-hidden">
+                                        <div className={`h-full ${trWarning ? 'bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.5)]' : 'bg-[#D4AF37] shadow-[0_0_8px_rgba(212,175,55,0.5)]'}`} style={{ width: `${Math.min(100, trRatio * 100)}%` }}></div>
                                       </div>
-                                      <span className={`text-[10px] font-bold tracking-wider ${trWarning ? 'text-rose-400' : 'text-slate-400'}`}>
+                                      <span className={`text-[9px] font-black tracking-widest w-10 ${trWarning ? 'text-rose-400' : 'text-[#D4AF37]'}`}>
                                         {Math.round(trRatio * 100)}%
                                       </span>
                                     </div>
                                   </td>
-                                  <td className="px-8 py-5 whitespace-nowrap text-right text-sm">
-                                    <Button variant={isExpanded ? "default" : "outline"} size="sm" className={`h-9 px-4 text-xs font-bold rounded-xl border-white/10 transition-all ${isExpanded ? 'bg-amber-700 text-white shadow-[0_0_15px_rgba(79,70,229,0.4)] border-transparent' : 'bg-black/20 text-slate-300 hover:bg-white/10 hover:text-white'}`} onClick={() => setSelectedTrade(isExpanded ? null : trade)}>
+                                  <td className="px-10 py-6 whitespace-nowrap text-right text-sm">
+                                    <button className={`px-6 py-2 text-[9px] uppercase tracking-[0.1em] font-bold transition-all border ${isExpanded ? 'bg-[#D4AF37] text-black border-[#D4AF37] shadow-[0_0_15px_rgba(212,175,55,0.4)]' : 'bg-transparent text-white/40 border-white/10 hover:bg-white/5 hover:text-white hover:border-white/30'}`} onClick={() => setSelectedTrade(isExpanded ? null : trade)}>
                                       {isExpanded ? 'Close Matrix' : 'Manage'}
-                                    </Button>
+                                    </button>
                                   </td>
                                 </tr>
                                 {isExpanded && (
                                   <tr>
                                     <td colSpan={6} className="p-0 border-b-0">
-                                      <div className="p-8 bg-stone-900/10 border-y border-amber-600/20 shadow-inner relative overflow-hidden">
-                                        <div className="absolute top-[-50%] left-[-10%] w-[40%] h-[200%] bg-amber-600/5 blur-[80px] pointer-events-none" />
+                                      <div className="p-10 bg-black border-y border-[#D4AF37]/30 relative overflow-hidden">
+                                        <div className="absolute top-[0%] right-[0%] w-[500px] h-[500px] bg-[#D4AF37]/5 blur-[100px] pointer-events-none" />
                                         
-                                        <div className="flex items-center justify-between mb-6 relative z-10">
+                                        <div className="flex items-center justify-between mb-10 relative z-10">
                                            <div>
-                                             <h4 className="font-playfair font-black text-white text-lg">Transfer Records: {trade.designation}</h4>
-                                             <p className="text-xs uppercase tracking-widest text-stone-300/60 font-bold mt-1">Originating from {trade.projectName}</p>
+                                             <h4 className="font-playfair font-black text-white text-2xl uppercase tracking-[0.05em]">{trade.designation} <span className="text-[#D4AF37]">/</span> Transfers</h4>
+                                             <p className="text-[9px] uppercase tracking-[0.2em] text-white/40 font-bold mt-2">Originating from {trade.projectName}</p>
                                            </div>
-                                           <Button onClick={() => setAddingPayment(!addingPayment)} size="sm" className="bg-emerald-600 hover:bg-emerald-500 text-white shadow-[0_0_15px_rgba(16,185,129,0.3)] rounded-xl h-10 px-4">
-                                             <Plus className="h-4 w-4 mr-2" /> <span className="font-bold">Record Advance</span>
-                                           </Button>
+                                           <button onClick={() => setAddingPayment(!addingPayment)} className="bg-white text-black hover:bg-white/90 shadow-[0_0_20px_rgba(255,255,255,0.2)] px-8 py-4 uppercase text-[10px] tracking-[0.1em] font-bold flex items-center transition-all border border-transparent">
+                                             <Plus className="h-4 w-4 mr-2" /> Record Advance
+                                           </button>
                                         </div>
                                         
                                         {addingPayment && (
-                                           <motion.form initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} onSubmit={handleAddPayment} className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8 p-6 border border-emerald-500/20 rounded-2xl bg-emerald-500/5 shadow-inner relative z-10">
+                                           <motion.form initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} onSubmit={handleAddPayment} className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12 p-8 border border-white/10 rounded-lg bg-black/40 relative z-10">
                                              <div>
-                                               <label className="block text-[10px] font-bold text-emerald-300 uppercase tracking-[0.2em] mb-2">Timestamp</label>
-                                               <input type="date" required className="w-full bg-black/40 backdrop-blur-md border border-white/10 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl p-3.5 text-sm text-white transition-all outline-none"
+                                               <label className="block text-[9px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2">Timestamp</label>
+                                               <input type="date" required className="w-full bg-transparent border-b border-white/20 focus:border-[#D4AF37] pb-2 pt-1 text-sm text-white transition-colors outline-none [color-scheme:dark]"
                                                  value={newPayment.date} onChange={e => setNewPayment({...newPayment, date: e.target.value})} />
                                              </div>
                                              <div>
-                                               <label className="block text-[10px] font-bold text-emerald-300 uppercase tracking-[0.2em] mb-2">Amount</label>
-                                               <input type="number" required className="w-full bg-black/40 backdrop-blur-md border border-white/10 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl p-3.5 text-sm text-white transition-all outline-none"
-                                                 value={newPayment.amount || ''} onChange={e => setNewPayment({...newPayment, amount: Number(e.target.value)})} />
+                                               <label className="block text-[9px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2">Amount Transferred</label>
+                                               <input type="number" required className="w-full bg-transparent border-b border-white/20 focus:border-[#D4AF37] pb-2 pt-1 text-sm text-white transition-colors outline-none placeholder:text-white/20"
+                                                 value={newPayment.amount || ''} onChange={e => setNewPayment({...newPayment, amount: Number(e.target.value)})} placeholder="0" />
                                              </div>
                                              <div>
-                                               <label className="block text-[10px] font-bold text-emerald-300 uppercase tracking-[0.2em] mb-2">Reference Note</label>
-                                               <input className="w-full bg-black/40 backdrop-blur-md border border-white/10 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl p-3.5 text-sm text-white transition-all outline-none"
-                                                 value={newPayment.designation} onChange={e => setNewPayment({...newPayment, designation: e.target.value})} />
+                                               <label className="block text-[9px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2">Reference Note</label>
+                                               <input className="w-full bg-transparent border-b border-white/20 focus:border-[#D4AF37] pb-2 pt-1 text-sm text-white transition-colors outline-none placeholder:text-white/20"
+                                                 value={newPayment.designation} onChange={e => setNewPayment({...newPayment, designation: e.target.value})} placeholder="e.g. Invoice #123" />
                                              </div>
-                                              <div className="md:col-span-4 mt-2">
-                                                <label className="block text-[10px] font-bold text-emerald-300 uppercase tracking-[0.2em] mb-2">Document Proof (Image Receipt)</label>
+                                              <div className="md:col-span-4 mt-4">
+                                                <label className="block text-[9px] font-bold text-white/40 uppercase tracking-[0.2em] mb-4">Document Proof (Image Receipt)</label>
                                                 <ImageUpload 
                                                   onImageSelected={(file) => setReceiptFile(file)} 
                                                   onClear={() => setReceiptFile(null)} 
                                                   isLoading={isSavingPayment}
                                                 />
                                               </div>
-                                              <div className="md:col-span-4 flex items-end space-x-3 pt-2 border-t border-white/5 mt-2">
-                                                <Button type="submit" size="sm" disabled={isSavingPayment} className="bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl px-8 h-10 font-bold shadow-[0_0_15px_rgba(16,185,129,0.3)]">
+                                              <div className="md:col-span-4 flex items-end space-x-6 pt-6 mt-4 border-t border-white/[0.04]">
+                                                <button type="submit" disabled={isSavingPayment} className="bg-white text-black hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed px-10 py-4 font-bold shadow-[0_0_15px_rgba(255,255,255,0.2)] uppercase tracking-[0.1em] text-[10px] transition-all">
                                                   {isSavingPayment ? 'Processing...' : 'Confirm Transfer'}
-                                                </Button>
-                                                <Button type="button" variant="ghost" size="sm" onClick={() => { setAddingPayment(false); setReceiptFile(null); }} disabled={isSavingPayment} className="rounded-xl h-10 text-slate-400 hover:text-white hover:bg-white/5">Cancel</Button>
+                                                </button>
+                                                <button type="button" onClick={() => { setAddingPayment(false); setReceiptFile(null); }} disabled={isSavingPayment} className="text-white/40 hover:text-white uppercase tracking-[0.1em] text-[10px] transition-colors pb-3">Cancel</button>
                                               </div>
                                            </motion.form>
                                         )}
 
                                         <div className="space-y-4 relative z-10">
                                           {payments.length === 0 ? (
-                                            <p className="text-sm font-medium text-slate-500 text-center py-8 border border-dashed border-white/10 rounded-2xl bg-black/20">No transfers recorded in this ledger.</p>
+                                            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40 text-center py-16 border border-dashed border-white/10 rounded-lg bg-black/20">No transfers recorded in this matrix.</p>
                                           ) : (
                                             payments.map(payment => (
-                                              <div key={payment.id} className="flex flex-col p-6 rounded-2xl border border-white/5 bg-white/5 hover:bg-white/10 transition-colors shadow-lg">
+                                              <div key={payment.id} className="flex flex-col p-8 rounded-lg border border-white/[0.04] bg-white/[0.02] hover:bg-white/[0.04] transition-colors">
                                                 <div className="flex justify-between items-start">
-                                                  <div className="flex items-center space-x-5">
-                                                    <div className="h-12 w-12 rounded-xl bg-amber-600/10 text-amber-400 flex items-center justify-center border border-amber-600/20 shadow-inner">
-                                                      <Wallet className="h-6 w-6" />
+                                                  <div className="flex items-center space-x-6">
+                                                    <div className="h-12 w-12 rounded bg-black text-[#D4AF37] flex items-center justify-center border border-white/10">
+                                                      <Wallet className="h-5 w-5" />
                                                     </div>
                                                     <div>
-                                                      <p className="text-base font-playfair font-bold text-white">Advance Transferred</p>
-                                                      <p className="text-xs font-medium uppercase tracking-widest text-stone-300/60 mt-1">{format(payment.date, 'MMM d, yyyy')} {payment.designation ? `// ${payment.designation}` : ''}</p>
+                                                      <p className="text-lg font-playfair font-black text-white uppercase tracking-[0.05em]">Advance Transferred</p>
+                                                      <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#D4AF37] mt-2">{format(payment.date, 'MMM d, yyyy')} {payment.designation ? `// ${payment.designation}` : ''}</p>
                                                     </div>
                                                   </div>
-                                                  <span className="font-playfair font-black text-2xl text-emerald-400 tracking-tight drop-shadow-[0_0_8px_rgba(16,185,129,0.4)]">€ {payment.amount.toLocaleString()}</span>
+                                                  <span className="font-playfair font-black text-3xl text-white tracking-tight">€ {payment.amount.toLocaleString()}</span>
                                                 </div>
                                                 {payment.receiptUrl && (
-                                                  <div className="mt-4 ml-16 w-40 h-40 rounded-xl overflow-hidden border border-white/10 shadow-lg group relative">
+                                                  <div className="mt-6 ml-18 w-48 h-48 rounded overflow-hidden border border-white/10 shadow-xl group relative">
                                                     <a href={payment.receiptUrl} target="_blank" rel="noopener noreferrer">
                                                       <LazyImage src={payment.receiptUrl} alt="Receipt" className="w-full h-full object-cover" />
                                                       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
@@ -346,20 +344,20 @@ export default function Suppliers() {
                         </tbody>
                       </table>
                     </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               </motion.div>
             );
           })}
         </AnimatePresence>
 
         {filteredSuppliers.length === 0 && (
-          <motion.div variants={item} className="text-center py-20 glass-card border border-dashed border-white/20">
-            <div className="mx-auto h-20 w-20 bg-white/5 rounded-full flex items-center justify-center mb-6 border border-white/10 shadow-inner">
-              <Building2 className="h-10 w-10 text-slate-500" />
+          <motion.div variants={item} className="text-center py-32 elite-card border border-dashed border-white/10">
+            <div className="mx-auto h-20 w-20 bg-black rounded-full flex items-center justify-center mb-6 border border-white/10">
+              <Building2 className="h-8 w-8 text-white/20" />
             </div>
-            <h3 className="text-xl font-playfair font-black text-white">Entity Not Found</h3>
-            <p className="mt-2 text-sm font-medium text-stone-300/60">No suppliers match your current matrix parameters.</p>
+            <h3 className="text-xl font-playfair font-black text-white uppercase tracking-[0.1em]">Entity Not Found</h3>
+            <p className="mt-3 text-xs tracking-wide text-white/40">No suppliers match your current matrix parameters.</p>
           </motion.div>
         )}
       </motion.div>
