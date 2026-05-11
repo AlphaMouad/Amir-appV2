@@ -25,10 +25,8 @@ export function ImageUpload({ onImageSelected, onClear, isLoading = false }: Ima
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-    
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      const file = e.dataTransfer.files[0];
-      handleFile(file);
+      handleFile(e.dataTransfer.files[0]);
     }
   }, [onImageSelected]);
 
@@ -45,9 +43,7 @@ export function ImageUpload({ onImageSelected, onClear, isLoading = false }: Ima
       return;
     }
     const reader = new FileReader();
-    reader.onload = (e) => {
-      setPreview(e.target?.result as string);
-    };
+    reader.onload = (e) => setPreview(e.target?.result as string);
     reader.readAsDataURL(file);
     onImageSelected(file);
   };
@@ -60,17 +56,18 @@ export function ImageUpload({ onImageSelected, onClear, isLoading = false }: Ima
 
   if (preview) {
     return (
-      <div className="relative w-full h-32 rounded-xl overflow-hidden border border-slate-200 shadow-sm group">
-        <img src={preview} alt="Preview" className="w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+      <div className="relative w-full h-36 rounded-xl overflow-hidden group" style={{ border: '1px solid rgba(255,255,255,0.1)' }}>
+        <img src={preview} alt="Receipt preview" className="w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/55 transition-all duration-300 flex items-center justify-center">
           {isLoading ? (
-            <Loader2 className="h-6 w-6 text-white animate-spin" />
+            <Loader2 className="h-5 w-5 text-white animate-spin opacity-0 group-hover:opacity-100 transition-opacity" />
           ) : (
             <button
               onClick={clearImage}
-              className="p-2 bg-white/20 hover:bg-white/40 backdrop-blur-sm rounded-full text-white transition-colors"
+              className="opacity-0 group-hover:opacity-100 transition-all duration-200 p-2.5 rounded-full border border-white/20 text-white"
+              style={{ background: 'rgba(0,0,0,0.7)' }}
             >
-              <X className="h-5 w-5" />
+              <X className="h-4 w-4" />
             </button>
           )}
         </div>
@@ -80,9 +77,12 @@ export function ImageUpload({ onImageSelected, onClear, isLoading = false }: Ima
 
   return (
     <div
-      className={`relative w-full h-32 rounded-xl border-2 border-dashed transition-all duration-200 flex flex-col items-center justify-center overflow-hidden
-        ${dragActive ? 'border-amber-600 bg-indigo-50/50' : 'border-slate-200 bg-slate-50 hover:bg-slate-100/50 hover:border-slate-300'}
-      `}
+      className="relative w-full h-36 rounded-xl flex flex-col items-center justify-center overflow-hidden cursor-pointer transition-all duration-300"
+      style={{
+        border: dragActive ? '1px solid rgba(212,175,55,0.55)' : '1px dashed rgba(255,255,255,0.1)',
+        background: dragActive ? 'rgba(212,175,55,0.04)' : 'rgba(255,255,255,0.01)',
+        boxShadow: dragActive ? '0 0 20px rgba(212,175,55,0.08)' : 'none',
+      }}
       onDragEnter={handleDrag}
       onDragLeave={handleDrag}
       onDragOver={handleDrag}
@@ -95,12 +95,18 @@ export function ImageUpload({ onImageSelected, onClear, isLoading = false }: Ima
         className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
         disabled={isLoading}
       />
-      <div className="flex flex-col items-center justify-center pointer-events-none text-slate-500 space-y-2">
-        <UploadCloud className={`h-8 w-8 ${dragActive ? 'text-amber-600' : 'text-slate-400'}`} />
-        <span className="text-xs font-medium text-center px-4">
-          <span className="text-amber-700 font-semibold">Click to upload</span> or drag and drop<br />
-          SVG, PNG, JPG or GIF
-        </span>
+      <div className="flex flex-col items-center gap-3 pointer-events-none text-center px-4">
+        <UploadCloud
+          className="h-7 w-7 transition-colors duration-300"
+          style={{ color: dragActive ? '#D4AF37' : 'rgba(255,255,255,0.2)' }}
+        />
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-[0.15em]" style={{ color: 'rgba(255,255,255,0.3)' }}>
+            <span style={{ color: dragActive ? '#D4AF37' : 'rgba(255,255,255,0.5)' }}>Upload receipt</span>
+            {' '}or drag & drop
+          </p>
+          <p className="text-[9px] mt-1 tracking-wide" style={{ color: 'rgba(255,255,255,0.18)' }}>PNG, JPG, GIF</p>
+        </div>
       </div>
     </div>
   );

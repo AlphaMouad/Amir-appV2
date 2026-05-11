@@ -2,7 +2,6 @@ import React from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { LayoutDashboard, FolderKanban, LogOut, Building2, User } from 'lucide-react';
-import { Button } from './ui/button';
 import { motion, AnimatePresence } from 'motion/react';
 
 export default function Layout() {
@@ -16,98 +15,156 @@ export default function Layout() {
   ];
 
   return (
-    <div className="min-h-screen flex font-montserrat text-white pb-20 md:pb-0 relative overflow-hidden bg-black">
-      
+    <div className="min-h-screen flex font-montserrat text-white pb-24 md:pb-0 relative overflow-hidden bg-black">
+
       {/* Desktop Sidebar */}
-      <aside className="w-72 elite-glass border-y-0 border-l-0 hidden md:flex flex-col shrink-0 sticky top-0 h-screen z-20">
-        <div className="p-8 mb-4">
+      <aside className="w-72 hidden md:flex flex-col shrink-0 sticky top-0 h-screen z-20 overflow-hidden elite-glass border-y-0 border-l-0">
+        {/* Ambient top glow */}
+        <div
+          className="absolute top-0 left-0 right-0 h-56 pointer-events-none"
+          style={{ background: 'rgba(212,175,55,0.04)', filter: 'blur(80px)', borderRadius: '0 0 50% 50%' }}
+        />
+
+        {/* Brand */}
+        <div className="p-7 pb-3 relative z-10">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-lg bg-black border border-[#D4AF37]/20 flex items-center justify-center shadow-[0_0_15px_rgba(212,175,55,0.1)]">
-              <span className="font-playfair font-black text-2xl elite-text-gold">V</span>
+            <div
+              className="w-11 h-11 rounded-xl bg-black flex items-center justify-center shrink-0"
+              style={{
+                border: '1px solid rgba(212,175,55,0.22)',
+                boxShadow: '0 0 20px rgba(212,175,55,0.08), inset 0 1px 0 rgba(255,255,255,0.04)',
+              }}
+            >
+              <span className="font-playfair font-black text-xl elite-text-gold">V</span>
             </div>
             <div>
-              <h1 className="text-xl font-playfair font-black tracking-[0.1em] text-white uppercase">
+              <h1 className="text-[1.1rem] font-playfair font-black tracking-[0.1em] text-white uppercase leading-none">
                 Elite<span className="elite-text-gold font-medium">Finance</span>
               </h1>
-              <p className="text-[9px] text-[#D4AF37]/60 uppercase tracking-[0.3em] mt-1 font-bold">Management</p>
+              <p className="text-[8px] uppercase tracking-[0.35em] mt-1.5 font-bold" style={{ color: 'rgba(212,175,55,0.4)' }}>
+                Management
+              </p>
             </div>
           </div>
         </div>
-        
-        <nav className="flex-1 px-6 space-y-3">
-          <div className="text-[10px] font-bold text-white/30 uppercase tracking-[0.2em] mb-6 px-2">Menu</div>
+
+        <div className="mx-7 my-1 h-px relative z-10" style={{ background: 'rgba(255,255,255,0.04)' }} />
+
+        {/* Navigation */}
+        <nav className="flex-1 px-4 pt-5 space-y-0.5 relative z-10">
+          <p className="text-[8px] font-bold uppercase tracking-[0.28em] mb-3 px-3" style={{ color: 'rgba(255,255,255,0.18)' }}>
+            Navigation
+          </p>
           {navItems.map((item) => {
-            const isActive = location.pathname === item.path || (item.path !== '/' && location.pathname.startsWith(item.path));
+            const isActive =
+              location.pathname === item.path ||
+              (item.path !== '/' && location.pathname.startsWith(item.path));
             return (
               <Link
                 key={item.path}
                 to={item.path}
-                className={`flex items-center gap-4 px-4 py-4 text-sm font-medium rounded-lg transition-all duration-500 relative group overflow-hidden ${
-                  isActive 
-                    ? 'text-white' 
-                    : 'elite-text-silver hover:text-white'
+                className={`flex items-center gap-3.5 px-3.5 py-3 text-[13px] font-medium rounded-xl transition-colors duration-200 relative group ${
+                  isActive ? 'text-white' : 'hover:text-white/70'
                 }`}
+                style={{ color: isActive ? 'white' : 'rgba(255,255,255,0.28)' }}
               >
                 {isActive && (
-                  <motion.div 
-                    layoutId="activeNavIndicator"
-                    className="absolute inset-0 bg-gradient-to-r from-[#D4AF37]/10 to-transparent border-l-2 border-[#D4AF37]"
+                  <motion.div
+                    layoutId="sidebarActiveNav"
+                    className="absolute inset-0 rounded-xl"
+                    style={{
+                      background: 'linear-gradient(135deg, rgba(212,175,55,0.09) 0%, rgba(212,175,55,0.02) 100%)',
+                      borderLeft: '2px solid #D4AF37',
+                    }}
                     initial={false}
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    transition={{ type: 'spring', stiffness: 350, damping: 30 }}
                   />
                 )}
-                <item.icon className={`h-5 w-5 relative z-10 transition-colors duration-500 ${isActive ? 'text-[#D4AF37]' : 'text-white/40 group-hover:text-white/80'}`} />
+                {!isActive && (
+                  <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200" style={{ background: 'rgba(255,255,255,0.02)' }} />
+                )}
+                <item.icon
+                  className="h-4.5 w-4.5 relative z-10 shrink-0 transition-colors duration-200"
+                  style={{ color: isActive ? '#D4AF37' : 'rgba(255,255,255,0.22)' }}
+                  size={18}
+                />
                 <span className="relative z-10 tracking-wide">{item.label}</span>
               </Link>
             );
           })}
         </nav>
 
-        <div className="p-6 mt-auto border-t border-white/[0.04] bg-black/60">
-          <div className="flex items-center gap-4 mb-6">
-            <div className="w-10 h-10 rounded-full bg-black border border-white/10 flex items-center justify-center text-white shadow-inner overflow-hidden">
+        <div className="mx-7 h-px relative z-10" style={{ background: 'rgba(255,255,255,0.04)' }} />
+
+        {/* User profile */}
+        <div className="p-5 relative z-10">
+          <div className="flex items-center gap-3 mb-4">
+            <div
+              className="w-9 h-9 rounded-full bg-black flex items-center justify-center overflow-hidden shrink-0"
+              style={{ border: '1px solid rgba(255,255,255,0.1)' }}
+            >
               {user?.photoURL ? (
                 <img src={user.photoURL} alt="Profile" className="w-full h-full object-cover opacity-80" />
               ) : (
-                <User className="h-5 w-5 text-white/50" />
+                <User size={14} style={{ color: 'rgba(255,255,255,0.4)' }} />
               )}
             </div>
-            <div className="text-sm truncate">
-              <p className="font-semibold text-white truncate tracking-wide">{user?.displayName || 'User'}</p>
-              <p className="text-white/40 text-xs truncate tracking-wider">{user?.email}</p>
+            <div className="min-w-0 flex-1">
+              <p className="font-semibold text-white text-[13px] truncate tracking-wide">
+                {user?.displayName || 'User'}
+              </p>
+              <p className="text-[10px] truncate mt-0.5" style={{ color: 'rgba(255,255,255,0.28)', letterSpacing: '0.05em' }}>
+                {user?.email}
+              </p>
             </div>
           </div>
-          <button onClick={logout} className="elite-button-outline w-full py-3 flex items-center justify-center text-xs tracking-[0.1em] uppercase">
-            <LogOut className="h-4 w-4 mr-3" />
+          <button
+            onClick={logout}
+            className="elite-button-outline w-full py-2.5 flex items-center justify-center gap-2.5 text-[10px] tracking-[0.14em] uppercase font-bold"
+          >
+            <LogOut size={13} />
             Secure Logout
           </button>
         </div>
       </aside>
 
       {/* Mobile Top Header */}
-      <header className="elite-glass h-20 flex items-center justify-between px-6 md:hidden fixed top-0 left-0 right-0 z-20 border-b border-white/[0.04]">
+      <header
+        className="md:hidden fixed top-0 left-0 right-0 z-20 h-[60px] flex items-center justify-between px-5 elite-glass border-y-0 border-x-0"
+        style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}
+      >
         <div className="flex items-center gap-3">
-           <div className="w-10 h-10 rounded-lg bg-black border border-[#D4AF37]/20 flex items-center justify-center shadow-[0_0_15px_rgba(212,175,55,0.1)]">
-              <span className="font-playfair font-black text-xl elite-text-gold">V</span>
-            </div>
-            <h1 className="text-lg font-playfair font-black tracking-[0.1em] text-white uppercase">
-              Elite<span className="elite-text-gold font-medium">Finance</span>
-            </h1>
+          <div
+            className="w-8 h-8 rounded-lg bg-black flex items-center justify-center"
+            style={{ border: '1px solid rgba(212,175,55,0.2)', boxShadow: '0 0 14px rgba(212,175,55,0.07)' }}
+          >
+            <span className="font-playfair font-black text-base elite-text-gold">V</span>
+          </div>
+          <h1 className="text-[1.05rem] font-playfair font-black tracking-[0.08em] text-white uppercase">
+            Elite<span className="elite-text-gold font-medium">Finance</span>
+          </h1>
         </div>
-        <button onClick={logout} className="rounded-full h-10 w-10 bg-black border border-white/10 flex items-center justify-center hover:border-rose-500/50 hover:text-rose-500 transition-colors">
-           <LogOut className="h-4 w-4 text-white/60" />
+        <button
+          onClick={logout}
+          className="h-8 w-8 rounded-lg flex items-center justify-center transition-colors duration-200 hover:text-rose-400"
+          style={{
+            background: 'rgba(0,0,0,0.4)',
+            border: '1px solid rgba(255,255,255,0.06)',
+          }}
+        >
+          <LogOut size={13} style={{ color: 'rgba(255,255,255,0.4)' }} />
         </button>
       </header>
 
-      {/* Main Content Area */}
-      <main className="flex-1 w-full max-w-7xl mx-auto p-4 md:p-10 pt-28 md:pt-10 min-h-[calc(100vh-5rem)] md:min-h-screen relative z-10">
+      {/* Main Content */}
+      <main className="flex-1 w-full max-w-7xl mx-auto p-4 md:p-10 pt-[76px] md:pt-10 relative z-10">
         <AnimatePresence mode="wait">
           <motion.div
             key={location.pathname}
-            initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }}
+            initial={{ opacity: 0, y: 16, filter: 'blur(8px)' }}
             animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-            exit={{ opacity: 0, y: -20, filter: 'blur(10px)' }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            exit={{ opacity: 0, y: -12, filter: 'blur(8px)' }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             className="h-full"
           >
             <Outlet />
@@ -115,25 +172,55 @@ export default function Layout() {
         </AnimatePresence>
       </main>
 
-      {/* Mobile Bottom Navigation */}
-      <nav className="md:hidden fixed bottom-6 left-4 right-4 elite-card z-30 px-6 py-4 flex items-center justify-between bg-black/80">
-         {navItems.map((item) => {
-            const isActive = location.pathname === item.path || (item.path !== '/' && location.pathname.startsWith(item.path));
+      {/* Mobile Bottom Navigation — Floating Pill */}
+      <nav className="md:hidden fixed bottom-5 left-4 right-4 z-30">
+        <div
+          className="rounded-2xl flex items-center justify-around px-2 py-2.5"
+          style={{
+            background: 'rgba(8, 8, 8, 0.93)',
+            backdropFilter: 'blur(40px)',
+            WebkitBackdropFilter: 'blur(40px)',
+            border: '1px solid rgba(255, 255, 255, 0.07)',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255,255,255,0.04)',
+          }}
+        >
+          {navItems.map((item) => {
+            const isActive =
+              location.pathname === item.path ||
+              (item.path !== '/' && location.pathname.startsWith(item.path));
             return (
               <Link
                 key={item.path}
                 to={item.path}
-                className={`flex flex-col items-center gap-1 p-2 transition-all duration-500 relative ${
-                  isActive ? 'text-[#D4AF37]' : 'text-white/40 hover:text-white/80'
-                }`}
+                className="flex-1 flex flex-col items-center gap-1 py-2 px-1 rounded-xl relative"
               >
-                <item.icon className={`h-6 w-6 relative z-10 transition-colors duration-500`} />
-                <span className="text-[9px] font-bold relative z-10 tracking-[0.1em] uppercase mt-1">{item.label}</span>
+                {isActive && (
+                  <motion.div
+                    layoutId="mobileNavActive"
+                    className="absolute inset-0 rounded-xl"
+                    style={{
+                      background: 'rgba(212,175,55,0.1)',
+                      border: '1px solid rgba(212,175,55,0.2)',
+                    }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 32 }}
+                  />
+                )}
+                <item.icon
+                  className="relative z-10 transition-colors duration-200"
+                  size={19}
+                  style={{ color: isActive ? '#D4AF37' : 'rgba(255,255,255,0.22)' }}
+                />
+                <span
+                  className="text-[8px] font-bold uppercase tracking-[0.12em] relative z-10 transition-colors duration-200"
+                  style={{ color: isActive ? '#D4AF37' : 'rgba(255,255,255,0.18)' }}
+                >
+                  {item.label}
+                </span>
               </Link>
             );
           })}
+        </div>
       </nav>
     </div>
   );
 }
-
