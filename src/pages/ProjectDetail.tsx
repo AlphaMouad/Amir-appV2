@@ -113,8 +113,9 @@ export default function ProjectDetail() {
       setAddingPayment(false);
       setNewPayment({ amount: 0, date: new Date().toISOString().substring(0, 10), designation: '' });
       setReceiptFile(null);
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
+      alert('Error recording advance. Make sure Firebase Storage is enabled and rules are configured. Details: ' + err.message);
     } finally {
       setIsSavingPayment(false);
     }

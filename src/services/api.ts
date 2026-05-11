@@ -1,6 +1,5 @@
 import { collection, doc, query, where, getDocs, setDoc, updateDoc, deleteDoc, serverTimestamp, orderBy, onSnapshot, getDocFromServer, collectionGroup } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { db, storage } from '../lib/firebase';
+import { db } from '../lib/firebase';
 import { handleFirestoreError, OperationType } from './errorHandler';
 import { Project, Trade, Payment } from '../types';
 
@@ -144,10 +143,24 @@ export const addPayment = async (projectId: string, tradeId: string, data: Omit<
     const docRef = doc(collection(db, path));
     
     let receiptUrl = undefined;
-    if (receiptImageFile && data.ownerId) {
-       const storageRef = ref(storage, `users/${data.ownerId}/receipts/${docRef.id}_${receiptImageFile.name}`);
-       const snapshot = await uploadBytes(storageRef, receiptImageFile);
-       receiptUrl = await getDownloadURL(snapshot.ref);
+    if (receiptImageFile) {
+       const imgbbApiKey = import.meta.env.VITE_IMGBB_API_KEY;
+       if (!imgbbApiKey) throw new Error("VITE_IMGBB_API_KEY is not configured in Vercel Environment Variables.");
+
+       const formData = new FormData();
+       formData.append('image', receiptImageFile);
+
+       const response = await fetch(`https://api.imgbb.com/1/upload?key=${imgbbApiKey}`, {
+         method: 'POST',
+         body: formData
+       });
+       
+       if (!response.ok) {
+          throw new Error("ImgBB Upload Failed. Check your API Key.");
+       }
+       
+       const json = await response.json();
+       receiptUrl = json.data.url;
     }
 
     await setDoc(docRef, {

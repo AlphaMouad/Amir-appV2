@@ -38,13 +38,19 @@ export default function Dashboard() {
       setProjects(data);
       projectsLoaded = true;
       if (tradesLoaded) setLoading(false);
-    }, console.error);
+    }, (error) => {
+      console.error(error);
+      setLoading(false);
+    });
 
     const unsubTrades = getAllTrades(user.uid, (data) => {
       setTrades(data);
       tradesLoaded = true;
       if (projectsLoaded) setLoading(false);
-    }, console.error);
+    }, (error) => {
+      console.error(error);
+      setLoading(false);
+    });
 
     return () => {
       unsubProjects();
