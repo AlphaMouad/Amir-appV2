@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import { getProjects, addProject, deleteProject } from '../services/api';
 import { Project } from '../types';
 import { Plus, Building2, Trash2, ArrowRight } from 'lucide-react';
@@ -19,6 +20,7 @@ const item = {
 
 export default function ProjectList() {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [projects, setProjects] = useState<Project[]>([]);
   const [isCreating, setIsCreating] = useState(false);
   const [newProject, setNewProject] = useState({ name: '', clientName: '', contractorName: '' });
@@ -58,15 +60,15 @@ export default function ProjectList() {
         style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}
       >
         <div>
-          <h1 className="text-4xl font-playfair font-black tracking-[0.05em] text-white uppercase mb-2">Projects</h1>
-          <p className="elite-text-silver tracking-wide">Manage your elite portfolio</p>
+          <h1 className="text-4xl font-playfair font-black tracking-[0.05em] text-white uppercase mb-2">{t('proj_title')}</h1>
+          <p className="elite-text-silver tracking-wide">{t('proj_subtitle')}</p>
         </div>
         <button
           onClick={() => setIsCreating(!isCreating)}
           className="elite-button px-7 py-3.5 flex items-center justify-center uppercase tracking-[0.1em] text-[11px] gap-2"
         >
           <Plus size={15} />
-          New Project
+          {t('proj_new')}
         </button>
       </motion.div>
 
@@ -85,12 +87,12 @@ export default function ProjectList() {
             style={{ background: 'rgba(212,175,55,0.05)', filter: 'blur(80px)' }}
           />
           <h2 className="text-xl font-playfair font-black mb-8 text-white uppercase tracking-[0.1em] relative z-10">
-            Initialize Portfolio Asset
+            {t('proj_form_title')}
           </h2>
           <form onSubmit={handleCreate} className="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
             <div>
               <label className="block text-[9px] font-bold uppercase tracking-[0.22em] mb-2.5" style={{ color: 'rgba(255,255,255,0.38)' }}>
-                Asset Name
+                {t('proj_field_name')}
               </label>
               <input
                 type="text"
@@ -103,7 +105,7 @@ export default function ProjectList() {
             </div>
             <div>
               <label className="block text-[9px] font-bold uppercase tracking-[0.22em] mb-2.5" style={{ color: 'rgba(255,255,255,0.38)' }}>
-                Client Identity
+                {t('proj_field_client')}
               </label>
               <input
                 type="text"
@@ -116,7 +118,7 @@ export default function ProjectList() {
             </div>
             <div>
               <label className="block text-[9px] font-bold uppercase tracking-[0.22em] mb-2.5" style={{ color: 'rgba(255,255,255,0.38)' }}>
-                Contractor (Optional)
+                {t('proj_field_contractor')}
               </label>
               <input
                 type="text"
@@ -128,7 +130,7 @@ export default function ProjectList() {
             </div>
             <div className="md:col-span-3 flex items-center gap-6 pt-4" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
               <button type="submit" className="elite-button px-9 py-3 uppercase text-[11px] tracking-[0.1em]">
-                Deploy Asset
+                {t('proj_deploy')}
               </button>
               <button
                 type="button"
@@ -136,7 +138,7 @@ export default function ProjectList() {
                 className="text-[11px] uppercase tracking-[0.1em] transition-colors duration-200 hover:text-white"
                 style={{ color: 'rgba(255,255,255,0.35)' }}
               >
-                Cancel
+                {t('proj_cancel')}
               </button>
             </div>
           </form>
@@ -180,14 +182,14 @@ export default function ProjectList() {
                       {project.createdAt ? format(project.createdAt, 'MMM d, yyyy') : '—'}
                     </span>
                     <span className={project.status === 'ongoing' ? 'elite-badge-gold' : 'elite-badge-muted'}>
-                      {project.status === 'ongoing' ? 'Active' : project.status}
+                      {project.status === 'ongoing' ? t('proj_status_active') : project.status}
                     </span>
                   </div>
 
                   <div className="flex items-center justify-between gap-3 pt-5" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
                     <Link to={`/projects/${project.id}`} className="flex-1">
                       <button className="elite-button-outline w-full py-2.5 flex items-center justify-center uppercase text-[10px] tracking-[0.18em] gap-2">
-                        Open
+                        {t('proj_open')}
                         <ArrowRight size={12} />
                       </button>
                     </Link>
@@ -203,7 +205,7 @@ export default function ProjectList() {
                         e.currentTarget.style.color = 'rgba(255,255,255,0.18)';
                       }}
                       onClick={async () => {
-                        if (confirm('Delete this project?')) {
+                        if (confirm(t('proj_delete_confirm'))) {
                           try { await deleteProject(project.id); }
                           catch (err: any) { alert('Error deleting project: ' + err.message); }
                         }
@@ -238,16 +240,16 @@ export default function ProjectList() {
                 <Building2 size={28} className="transition-colors duration-600 group-hover:text-[#D4AF37]" style={{ color: 'rgba(255,255,255,0.18)' }} />
               </div>
               <h3 className="text-xl font-playfair font-black text-white uppercase tracking-[0.1em] relative z-10">
-                Empty Portfolio
+                {t('proj_empty_title')}
               </h3>
               <p className="mt-3 max-w-xs text-center relative z-10 text-[12px] tracking-wide font-light" style={{ color: 'rgba(255,255,255,0.35)' }}>
-                Initialize your first villa construction asset to begin financial tracking.
+                {t('proj_empty_sub')}
               </p>
               <button
                 onClick={() => setIsCreating(true)}
                 className="elite-button mt-10 px-10 py-4 uppercase text-[11px] tracking-[0.1em]"
               >
-                Initialize Asset
+                {t('proj_init')}
               </button>
             </div>
           </motion.div>

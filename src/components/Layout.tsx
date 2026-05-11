@@ -1,18 +1,39 @@
 import React from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { LayoutDashboard, FolderKanban, LogOut, Building2, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 export default function Layout() {
   const { user, logout } = useAuth();
+  const { t, lang, setLang } = useLanguage();
   const location = useLocation();
 
   const navItems = [
-    { label: 'Dashboard', path: '/', icon: LayoutDashboard },
-    { label: 'Projects', path: '/projects', icon: FolderKanban },
-    { label: 'Suppliers', path: '/suppliers', icon: Building2 },
+    { label: t('nav_dashboard'), path: '/', icon: LayoutDashboard },
+    { label: t('nav_projects'), path: '/projects', icon: FolderKanban },
+    { label: t('nav_suppliers'), path: '/suppliers', icon: Building2 },
   ];
+
+  const LangToggle = ({ compact }: { compact?: boolean }) => (
+    <div className={`flex items-center gap-1 ${compact ? '' : 'mb-3'}`}>
+      {(['fr', 'en'] as const).map((l) => (
+        <button
+          key={l}
+          onClick={() => setLang(l)}
+          className={`${compact ? 'px-2.5 py-1' : 'flex-1 py-1.5'} rounded-lg text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-200`}
+          style={{
+            background: lang === l ? 'rgba(212,175,55,0.12)' : 'rgba(255,255,255,0.02)',
+            border: `1px solid ${lang === l ? 'rgba(212,175,55,0.3)' : 'rgba(255,255,255,0.06)'}`,
+            color: lang === l ? '#D4AF37' : 'rgba(255,255,255,0.22)',
+          }}
+        >
+          {l}
+        </button>
+      ))}
+    </div>
+  );
 
   return (
     <div className="min-h-screen flex font-montserrat text-white pb-24 md:pb-0 relative overflow-hidden bg-black">
@@ -53,7 +74,7 @@ export default function Layout() {
         {/* Navigation */}
         <nav className="flex-1 px-4 pt-5 space-y-0.5 relative z-10">
           <p className="text-[8px] font-bold uppercase tracking-[0.28em] mb-3 px-3" style={{ color: 'rgba(255,255,255,0.18)' }}>
-            Navigation
+            {t('nav_navigation')}
           </p>
           {navItems.map((item) => {
             const isActive =
@@ -98,6 +119,7 @@ export default function Layout() {
 
         {/* User profile */}
         <div className="p-5 relative z-10">
+          <LangToggle />
           <div className="flex items-center gap-3 mb-4">
             <div
               className="w-9 h-9 rounded-full bg-black flex items-center justify-center overflow-hidden shrink-0"
@@ -123,7 +145,7 @@ export default function Layout() {
             className="elite-button-outline w-full py-2.5 flex items-center justify-center gap-2.5 text-[10px] tracking-[0.14em] uppercase font-bold"
           >
             <LogOut size={13} />
-            Secure Logout
+            {t('nav_logout')}
           </button>
         </div>
       </aside>
@@ -144,16 +166,19 @@ export default function Layout() {
             Elite<span className="elite-text-gold font-medium">Finance</span>
           </h1>
         </div>
-        <button
-          onClick={logout}
-          className="h-8 w-8 rounded-lg flex items-center justify-center transition-colors duration-200 hover:text-rose-400"
-          style={{
-            background: 'rgba(0,0,0,0.4)',
-            border: '1px solid rgba(255,255,255,0.06)',
-          }}
-        >
-          <LogOut size={13} style={{ color: 'rgba(255,255,255,0.4)' }} />
-        </button>
+        <div className="flex items-center gap-2">
+          <LangToggle compact />
+          <button
+            onClick={logout}
+            className="h-8 w-8 rounded-lg flex items-center justify-center transition-colors duration-200 hover:text-rose-400"
+            style={{
+              background: 'rgba(0,0,0,0.4)',
+              border: '1px solid rgba(255,255,255,0.06)',
+            }}
+          >
+            <LogOut size={13} style={{ color: 'rgba(255,255,255,0.4)' }} />
+          </button>
+        </div>
       </header>
 
       {/* Main Content */}

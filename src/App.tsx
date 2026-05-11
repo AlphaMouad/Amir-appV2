@@ -6,6 +6,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
 import ProjectList from './pages/ProjectList';
@@ -15,6 +16,7 @@ import { motion } from 'motion/react';
 
 const Login = () => {
   const { login } = useAuth();
+  const { t, lang, setLang } = useLanguage();
 
   return (
     <div className="relative flex h-screen items-center justify-center overflow-hidden bg-black">
@@ -32,6 +34,24 @@ const Login = () => {
       {/* Ambient gold orbs */}
       <div className="absolute top-1/4 -left-1/4 w-[900px] h-[900px] rounded-full pointer-events-none" style={{ background: 'rgba(212,175,55,0.04)', filter: 'blur(180px)' }} />
       <div className="absolute -bottom-1/4 right-1/4 w-[600px] h-[600px] rounded-full pointer-events-none" style={{ background: 'rgba(212,175,55,0.025)', filter: 'blur(140px)' }} />
+
+      {/* Language toggle */}
+      <div className="absolute top-5 right-5 flex items-center gap-1 z-20">
+        {(['fr', 'en'] as const).map((l) => (
+          <button
+            key={l}
+            onClick={() => setLang(l)}
+            className="px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-200"
+            style={{
+              background: lang === l ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.03)',
+              border: `1px solid ${lang === l ? 'rgba(212,175,55,0.35)' : 'rgba(255,255,255,0.07)'}`,
+              color: lang === l ? '#D4AF37' : 'rgba(255,255,255,0.25)',
+            }}
+          >
+            {l}
+          </button>
+        ))}
+      </div>
 
       <motion.div
         initial={{ opacity: 0, y: 28 }}
@@ -55,7 +75,6 @@ const Login = () => {
           >
             <span className="font-playfair font-black text-4xl elite-text-gold">V</span>
           </div>
-          {/* Corner brackets */}
           <div className="absolute -top-1.5 -left-1.5 w-4 h-4 border-t-2 border-l-2 border-[#D4AF37]/50" />
           <div className="absolute -top-1.5 -right-1.5 w-4 h-4 border-t-2 border-r-2 border-[#D4AF37]/50" />
           <div className="absolute -bottom-1.5 -left-1.5 w-4 h-4 border-b-2 border-l-2 border-[#D4AF37]/50" />
@@ -72,11 +91,11 @@ const Login = () => {
             Elite<span className="elite-text-gold">Finance</span>
           </h1>
           <p className="text-[9px] font-bold uppercase tracking-[0.4em] mb-8" style={{ color: 'rgba(212,175,55,0.45)' }}>
-            Construction Finance
+            {t('auth_subtitle')}
           </p>
           <span className="gold-divider block w-16 mx-auto mb-8" />
           <p className="text-[13px] leading-relaxed tracking-wide mb-10 font-light" style={{ color: 'rgba(255,255,255,0.3)' }}>
-            Access your premium financial management portal to track budgets, advances, and project ledgers.
+            {t('auth_desc')}
           </p>
         </motion.div>
 
@@ -93,7 +112,7 @@ const Login = () => {
             <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
             <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
           </svg>
-          Continue with Google
+          {t('auth_cta')}
         </motion.button>
 
         <motion.p
@@ -103,7 +122,7 @@ const Login = () => {
           className="mt-6 text-[9px] uppercase tracking-[0.22em] font-medium"
           style={{ color: 'rgba(255,255,255,0.14)' }}
         >
-          Protected by Firebase Authentication
+          {t('auth_secure')}
         </motion.p>
       </motion.div>
     </div>
@@ -112,6 +131,7 @@ const Login = () => {
 
 const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth();
+  const { t } = useLanguage();
 
   if (loading) {
     return (
@@ -119,7 +139,7 @@ const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
         <div className="flex flex-col items-center gap-5">
           <div className="w-10 h-10 border-t-2 border-r-2 border-[#D4AF37] rounded-full animate-spin" />
           <span className="font-playfair text-[10px] uppercase tracking-[0.35em] animate-pulse-soft" style={{ color: 'rgba(212,175,55,0.5)' }}>
-            Initializing...
+            {t('auth_initializing')}
           </span>
         </div>
       </div>
@@ -132,17 +152,19 @@ const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<PrivateRoute><Layout /></PrivateRoute>}>
-            <Route index element={<Dashboard />} />
-            <Route path="projects" element={<ProjectList />} />
-            <Route path="projects/:id" element={<ProjectDetail />} />
-            <Route path="suppliers" element={<Suppliers />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </AuthProvider>
+    <LanguageProvider>
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<PrivateRoute><Layout /></PrivateRoute>}>
+              <Route index element={<Dashboard />} />
+              <Route path="projects" element={<ProjectList />} />
+              <Route path="projects/:id" element={<ProjectDetail />} />
+              <Route path="suppliers" element={<Suppliers />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
+    </LanguageProvider>
   );
 }

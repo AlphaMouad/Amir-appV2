@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import { getProjects, getAllTrades } from '../services/api';
 import { Project, Trade } from '../types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
@@ -19,6 +20,7 @@ const item = {
 
 export default function Dashboard() {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [projects, setProjects] = useState<Project[]>([]);
   const [trades, setTrades] = useState<Trade[]>([]);
   const [loading, setLoading] = useState(true);
@@ -81,37 +83,37 @@ export default function Dashboard() {
 
   const kpiCards = [
     {
-      label: 'Projects',
+      label: t('dash_kpi_projects'),
       value: totalProjects,
-      sub: `${activeProjects} Active`,
+      sub: `${activeProjects} ${t('dash_kpi_active')}`,
       subColor: '#D4AF37',
       icon: <Building size={16} style={{ color: '#D4AF37' }} />,
       accentHover: 'rgba(212,175,55,0.28)',
     },
     {
-      label: 'Global Budget',
+      label: t('dash_kpi_budget'),
       value: `€${totalBudget.toLocaleString()}`,
-      sub: 'Total Allocated',
+      sub: t('dash_kpi_allocated'),
       subColor: '#34d399',
       icon: <DollarSign size={16} style={{ color: '#34d399' }} />,
       accentHover: 'rgba(52,211,153,0.28)',
     },
     {
-      label: 'Total Advances',
+      label: t('dash_kpi_advances'),
       value: `€${totalAdvances.toLocaleString()}`,
-      sub: null,
-      subColor: null,
+      sub: `€${(totalBudget - totalAdvances).toLocaleString()} ${t('dash_kpi_remaining')}`,
+      subColor: 'rgba(255,255,255,0.35)',
       icon: <TrendingUp size={16} style={{ color: 'rgba(255,255,255,0.5)' }} />,
       progress: utilizationPct,
       accentHover: 'rgba(255,255,255,0.15)',
     },
     {
-      label: 'Risk Alerts',
-      value: tradesWithWarnings.length,
-      sub: 'Advances > 75%',
+      label: t('dash_kpi_risk'),
+      value: tradesWithWarnings.length > 0 ? tradesWithWarnings.length : t('dash_kpi_no_risk'),
+      sub: t('dash_kpi_risk_sub'),
       subColor: '#f87171',
       icon: <AlertCircle size={16} style={{ color: '#f87171' }} />,
-      valueColor: tradesWithWarnings.length > 0 ? '#f87171' : 'white',
+      valueColor: tradesWithWarnings.length > 0 ? '#f87171' : '#34d399',
       accentHover: 'rgba(248,113,113,0.25)',
     },
   ];
@@ -122,9 +124,9 @@ export default function Dashboard() {
       {/* Header */}
       <motion.div variants={item} className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
         <div>
-          <h1 className="text-4xl font-playfair font-black tracking-[0.05em] text-white uppercase mb-2">Overview</h1>
+          <h1 className="text-4xl font-playfair font-black tracking-[0.05em] text-white uppercase mb-2">{t('dash_title')}</h1>
           <p className="elite-text-silver">
-            Welcome back, {user?.displayName?.split(' ')[0] || 'User'}. Here is your financial summary.
+            {t('dash_welcome')}, {user?.displayName?.split(' ')[0] || 'User'}. {t('dash_summary')}
           </p>
         </div>
         <div
@@ -193,17 +195,17 @@ export default function Dashboard() {
           <Card className="elite-card h-full">
             <CardHeader style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', padding: '24px 24px 20px' }}>
               <CardTitle className="text-lg font-playfair font-black text-white uppercase tracking-[0.1em]">
-                Financial Matrix
+                {t('dash_chart_title')}
               </CardTitle>
               <CardDescription className="text-[10px] font-medium tracking-wide mt-1 uppercase" style={{ color: 'rgba(255,255,255,0.35)' }}>
-                Budget vs Advances tracking across active projects
+                {t('dash_chart_sub')}
               </CardDescription>
             </CardHeader>
             <CardContent style={{ height: 340, padding: '28px 12px 12px' }}>
               {projectChartData.length === 0 ? (
                 <div className="h-full flex items-center justify-center">
                   <p className="text-[10px] uppercase tracking-[0.2em] font-bold" style={{ color: 'rgba(255,255,255,0.2)' }}>
-                    No project data yet
+                    {t('dash_no_data')}
                   </p>
                 </div>
               ) : (
@@ -264,10 +266,10 @@ export default function Dashboard() {
           <Card className="elite-card h-full">
             <CardHeader style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', padding: '24px 24px 20px' }}>
               <CardTitle className="text-lg font-playfair font-black uppercase tracking-[0.1em]" style={{ color: '#f87171' }}>
-                Critical Ledger
+                {t('dash_ledger_title')}
               </CardTitle>
               <CardDescription className="text-[10px] font-medium tracking-wide mt-1 uppercase" style={{ color: 'rgba(255,255,255,0.35)' }}>
-                Trades approaching limit
+                {t('dash_ledger_sub')}
               </CardDescription>
             </CardHeader>
             <CardContent style={{ padding: '20px 20px' }}>
@@ -279,9 +281,9 @@ export default function Dashboard() {
                   >
                     <Building size={22} style={{ color: 'rgba(52,211,153,0.55)' }} />
                   </div>
-                  <p className="text-sm font-playfair tracking-[0.2em] text-white uppercase">Ledger Clear</p>
+                  <p className="text-sm font-playfair tracking-[0.2em] text-white uppercase">{t('dash_ledger_clear')}</p>
                   <p className="text-[9px] mt-2 uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.3)' }}>
-                    No trades exceed risk thresholds
+                    {t('dash_ledger_clear_sub')}
                   </p>
                 </div>
               ) : (

@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import { getProjects, getTrades, addTrade, updateTrade, getPayments, addPayment } from '../services/api';
 import { Project, Trade, Payment } from '../types';
 import { ArrowLeft, Plus, AlertCircle, Wallet, Building2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { ImageUpload } from '../components/ui/ImageUpload';
 import { LazyImage } from '../components/ui/LazyImage';
+import ImageLightbox from '../components/ui/ImageLightbox';
 import { checkAndSendAlert } from '../services/email';
 import { motion } from 'motion/react';
 
@@ -23,8 +25,10 @@ const item = {
 export default function ProjectDetail() {
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
+  const { t } = useLanguage();
 
   const [project, setProject] = useState<Project | null>(null);
+  const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
   const [trades, setTrades] = useState<Trade[]>([]);
   const [selectedTrade, setSelectedTrade] = useState<Trade | null>(null);
   const [payments, setPayments] = useState<Payment[]>([]);
@@ -68,7 +72,7 @@ export default function ProjectDetail() {
         <div className="flex flex-col items-center gap-4">
           <div className="w-8 h-8 border-t-2 border-r-2 border-[#D4AF37] rounded-full animate-spin" />
           <span className="font-playfair text-[10px] uppercase tracking-[0.3em] animate-pulse-soft" style={{ color: 'rgba(212,175,55,0.5)' }}>
-            Loading...
+            {t('auth_loading')}
           </span>
         </div>
       </div>
@@ -152,9 +156,9 @@ export default function ProjectDetail() {
               {project.name}
             </h1>
             <p className="text-[10px] font-medium mt-2 uppercase tracking-[0.2em]" style={{ color: 'rgba(255,255,255,0.35)' }}>
-              Client: <span style={{ color: '#D4AF37' }}>{project.clientName}</span>
+              {t('detail_client')}: <span style={{ color: '#D4AF37' }}>{project.clientName}</span>
               {project.contractorName && (
-                <span style={{ color: 'rgba(255,255,255,0.35)' }}> &nbsp;·&nbsp; Contractor: {project.contractorName}</span>
+                <span style={{ color: 'rgba(255,255,255,0.35)' }}> &nbsp;·&nbsp; {t('detail_contractor')}: {project.contractorName}</span>
               )}
             </p>
           </div>
@@ -162,12 +166,12 @@ export default function ProjectDetail() {
       </motion.div>
 
       {/* Stats */}
-      <motion.div variants={container} className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+      <motion.div variants={container} className="grid grid-cols-1 sm:grid-cols-3 gap-5">
         <motion.div variants={item}>
           <div className="elite-card p-7 relative overflow-hidden group">
             <div className="pb-3 mb-5 relative z-10" style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
               <h3 className="text-[9px] font-bold uppercase tracking-[0.22em]" style={{ color: 'rgba(255,255,255,0.38)' }}>
-                Project Budget
+                {t('detail_budget_card')}
               </h3>
             </div>
             <div className="relative z-10">
@@ -183,7 +187,7 @@ export default function ProjectDetail() {
           <div className="elite-card p-7 relative overflow-hidden group">
             <div className="pb-3 mb-5 relative z-10" style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
               <h3 className="text-[9px] font-bold uppercase tracking-[0.22em]" style={{ color: 'rgba(255,255,255,0.38)' }}>
-                Advances Paid
+                {t('detail_advances_card')}
               </h3>
             </div>
             <div className="relative z-10">
@@ -205,16 +209,38 @@ export default function ProjectDetail() {
             <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-600 pointer-events-none rounded-xl" style={{ background: 'linear-gradient(135deg, rgba(52,211,153,0.03) 0%, transparent 60%)' }} />
           </div>
         </motion.div>
+
+        <motion.div variants={item}>
+          <div className="elite-card p-7 relative overflow-hidden group">
+            <div className="pb-3 mb-5 relative z-10" style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+              <h3 className="text-[9px] font-bold uppercase tracking-[0.22em]" style={{ color: 'rgba(255,255,255,0.38)' }}>
+                {t('detail_remaining_card')}
+              </h3>
+            </div>
+            <div className="relative z-10">
+              <div
+                className="text-3xl md:text-4xl font-playfair font-black tracking-tight"
+                style={{ color: totalBudget - totalAdvances < 0 ? '#f87171' : '#34d399', textShadow: `0 0 15px ${totalBudget - totalAdvances < 0 ? 'rgba(248,113,113,0.2)' : 'rgba(52,211,153,0.2)'}` }}
+              >
+                € {(totalBudget - totalAdvances).toLocaleString()}
+              </div>
+              <p className="text-[10px] font-bold mt-3 uppercase tracking-[0.1em]" style={{ color: 'rgba(255,255,255,0.28)' }}>
+                {t('detail_utilization')}: {totalBudget > 0 ? ((totalAdvances / totalBudget) * 100).toFixed(1) : 0}%
+              </p>
+            </div>
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-600 pointer-events-none rounded-xl" style={{ background: 'linear-gradient(135deg, rgba(52,211,153,0.03) 0%, transparent 60%)' }} />
+          </div>
+        </motion.div>
       </motion.div>
 
       {/* Trades Header */}
       <motion.div variants={item} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <h2 className="text-2xl font-playfair font-black text-white uppercase tracking-[0.1em]">Ledger Matrix</h2>
+        <h2 className="text-2xl font-playfair font-black text-white uppercase tracking-[0.1em]">{t('detail_ledger_title')}</h2>
         <button
           onClick={() => setAddingTrade(!addingTrade)}
           className="elite-button px-7 py-3 flex items-center gap-2 uppercase tracking-[0.1em] text-[10px]"
         >
-          <Plus size={14} /> Initialize Trade
+          <Plus size={14} /> {t('detail_add_trade')}
         </button>
       </motion.div>
 
@@ -230,21 +256,21 @@ export default function ProjectDetail() {
               <form onSubmit={handleAddTrade} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                 <div>
                   <label className="block text-[9px] font-bold uppercase tracking-[0.22em] mb-2.5" style={{ color: 'rgba(255,255,255,0.38)' }}>
-                    Designation
+                    {t('detail_trade_designation')}
                   </label>
                   <input required placeholder="e.g. Travaux Plombier" className="elite-input"
                     value={newTrade.designation} onChange={(e) => setNewTrade({ ...newTrade, designation: e.target.value })} />
                 </div>
                 <div>
                   <label className="block text-[9px] font-bold uppercase tracking-[0.22em] mb-2.5" style={{ color: 'rgba(255,255,255,0.38)' }}>
-                    Supplier Entity
+                    {t('detail_trade_supplier')}
                   </label>
-                  <input placeholder="Supplier Name" className="elite-input"
+                  <input placeholder="e.g. AMG Building" className="elite-input"
                     value={newTrade.supplierName} onChange={(e) => setNewTrade({ ...newTrade, supplierName: e.target.value })} />
                 </div>
                 <div>
                   <label className="block text-[9px] font-bold uppercase tracking-[0.22em] mb-2.5" style={{ color: 'rgba(255,255,255,0.38)' }}>
-                    Budget Allocation
+                    {t('detail_trade_budget')}
                   </label>
                   <input type="number" required placeholder="0" className="elite-input"
                     value={newTrade.amount || ''} onChange={(e) => setNewTrade({ ...newTrade, amount: Number(e.target.value) })} />
@@ -255,7 +281,7 @@ export default function ProjectDetail() {
                     disabled={isSavingTrade}
                     className="elite-button px-8 py-3 uppercase text-[10px] tracking-[0.1em] disabled:opacity-60 disabled:cursor-not-allowed"
                   >
-                    {isSavingTrade ? 'Saving...' : 'Deploy'}
+                    {isSavingTrade ? t('detail_trade_saving') : t('detail_trade_deploy')}
                   </button>
                   <button
                     type="button"
@@ -264,7 +290,7 @@ export default function ProjectDetail() {
                     className="text-[10px] uppercase tracking-[0.1em] transition-colors hover:text-white pb-0.5 disabled:opacity-40"
                     style={{ color: 'rgba(255,255,255,0.35)' }}
                   >
-                    Cancel
+                    {t('detail_trade_cancel')}
                   </button>
                 </div>
               </form>
@@ -280,7 +306,7 @@ export default function ProjectDetail() {
             className="elite-card text-center py-14 text-[10px] uppercase tracking-[0.2em] font-bold"
             style={{ border: '1px dashed rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.3)' }}
           >
-            No trades initialized yet.
+            {t('detail_no_trades')}
           </div>
         ) : (
           trades.map((trade) => {
@@ -310,18 +336,22 @@ export default function ProjectDetail() {
                     }
                     onClick={() => setSelectedTrade(isSelected ? null : trade)}
                   >
-                    {isSelected ? 'Close' : 'Manage'}
+                    {isSelected ? t('detail_close') : t('detail_manage')}
                   </button>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3 rounded-lg p-4" style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.03)' }}>
+                <div className="grid grid-cols-3 gap-3 rounded-lg p-4" style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.03)' }}>
                   <div>
-                    <p className="text-[9px] font-bold uppercase tracking-[0.2em] mb-1.5" style={{ color: 'rgba(255,255,255,0.38)' }}>Budget</p>
+                    <p className="text-[9px] font-bold uppercase tracking-[0.2em] mb-1.5" style={{ color: 'rgba(255,255,255,0.38)' }}>{t('detail_th_budget')}</p>
                     <p className="font-bold text-white text-sm">€ {trade.amount.toLocaleString()}</p>
                   </div>
                   <div>
-                    <p className="text-[9px] font-bold uppercase tracking-[0.2em] mb-1.5" style={{ color: 'rgba(255,255,255,0.38)' }}>Advances</p>
+                    <p className="text-[9px] font-bold uppercase tracking-[0.2em] mb-1.5" style={{ color: 'rgba(255,255,255,0.38)' }}>{t('detail_th_advances')}</p>
                     <p className="font-bold text-sm" style={{ color: '#D4AF37' }}>€ {trade.totalAdvances.toLocaleString()}</p>
+                  </div>
+                  <div>
+                    <p className="text-[9px] font-bold uppercase tracking-[0.2em] mb-1.5" style={{ color: 'rgba(255,255,255,0.38)' }}>{t('detail_th_remaining')}</p>
+                    <p className="font-bold text-sm" style={{ color: trade.amount - trade.totalAdvances < 0 ? '#f87171' : '#34d399' }}>€ {(trade.amount - trade.totalAdvances).toLocaleString()}</p>
                   </div>
                 </div>
 
@@ -345,16 +375,16 @@ export default function ProjectDetail() {
       {/* Desktop Trades Table */}
       <motion.div variants={item} className="hidden md:flex elite-card overflow-hidden flex-col">
         <div className="px-8 py-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', background: 'rgba(0,0,0,0.3)' }}>
-          <h3 className="text-[9px] font-bold uppercase tracking-[0.22em]" style={{ color: 'rgba(255,255,255,0.35)' }}>Financial Ledger by Trade</h3>
+          <h3 className="text-[9px] font-bold uppercase tracking-[0.22em]" style={{ color: 'rgba(255,255,255,0.35)' }}>{t('detail_ledger_title')}</h3>
         </div>
         <div className="overflow-x-auto">
           <table className="min-w-full text-left border-collapse">
             <thead>
               <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                {['Designation', 'Supplier Entity', 'Budget', 'Advances', 'Risk Level', 'Actions'].map((h, i) => (
+                {[t('detail_th_designation'), t('detail_th_supplier'), t('detail_th_budget'), t('detail_th_advances'), t('detail_th_remaining'), t('detail_th_risk'), t('detail_th_actions')].map((h, i) => (
                   <th
                     key={h}
-                    className={`px-7 py-5 text-[9px] font-bold uppercase tracking-[0.22em] ${i >= 2 && i <= 3 ? 'text-right' : ''}`}
+                    className={`px-7 py-5 text-[9px] font-bold uppercase tracking-[0.22em] ${i >= 2 && i <= 4 ? 'text-right' : ''}`}
                     style={{ color: '#D4AF37' }}
                   >
                     {h}
@@ -365,8 +395,8 @@ export default function ProjectDetail() {
             <tbody>
               {trades.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-8 py-20 text-center text-[10px] uppercase tracking-[0.22em] font-bold" style={{ color: 'rgba(255,255,255,0.3)' }}>
-                    No trades initialized in ledger.
+                  <td colSpan={7} className="px-8 py-20 text-center text-[10px] uppercase tracking-[0.22em] font-bold" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                    {t('detail_no_trades')}
                   </td>
                 </tr>
               ) : (
@@ -374,6 +404,7 @@ export default function ProjectDetail() {
                   const ratio = trade.amount > 0 ? trade.totalAdvances / trade.amount : 0;
                   const isWarning = ratio > 0.75;
                   const isSelected = selectedTrade?.id === trade.id;
+                  const remaining = trade.amount - trade.totalAdvances;
 
                   return (
                     <tr
@@ -403,6 +434,9 @@ export default function ProjectDetail() {
                       <td className="px-7 py-5 whitespace-nowrap text-sm font-bold text-right" style={{ color: '#D4AF37' }}>
                         € {trade.totalAdvances.toLocaleString()}
                       </td>
+                      <td className="px-7 py-5 whitespace-nowrap text-sm font-bold text-right" style={{ color: remaining < 0 ? '#f87171' : '#34d399' }}>
+                        € {remaining.toLocaleString()}
+                      </td>
                       <td className="px-7 py-5 whitespace-nowrap">
                         <div className="flex items-center gap-3">
                           <div className="w-24 elite-progress-track">
@@ -427,7 +461,7 @@ export default function ProjectDetail() {
                           onMouseLeave={(e) => { if (!isSelected) { e.currentTarget.style.color = 'rgba(255,255,255,0.4)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; } }}
                           onClick={() => setSelectedTrade(isSelected ? null : trade)}
                         >
-                          {isSelected ? 'Close' : 'Manage'}
+                          {isSelected ? t('detail_close') : t('detail_manage')}
                         </button>
                       </td>
                     </tr>
@@ -469,7 +503,7 @@ export default function ProjectDetail() {
                       {selectedTrade.designation}
                     </h2>
                     <p className="text-[9px] uppercase tracking-[0.2em] font-bold mt-1.5" style={{ color: 'rgba(255,255,255,0.35)' }}>
-                      Payment Records · Advance History
+                      {t('detail_payment_sub')}
                     </p>
                   </div>
                 </div>
@@ -480,7 +514,7 @@ export default function ProjectDetail() {
                   onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.9)'; }}
                   onMouseLeave={(e) => { e.currentTarget.style.background = 'white'; }}
                 >
-                  <Plus size={14} /> Record Advance
+                  <Plus size={14} /> {t('detail_record_advance')}
                 </button>
               </div>
             </div>
@@ -497,28 +531,28 @@ export default function ProjectDetail() {
                 >
                   <div>
                     <label className="block text-[9px] font-bold uppercase tracking-[0.22em] mb-2.5" style={{ color: 'rgba(255,255,255,0.38)' }}>
-                      Date
+                      {t('detail_field_date')}
                     </label>
                     <input type="date" required className="elite-input [color-scheme:dark]"
                       value={newPayment.date} onChange={(e) => setNewPayment({ ...newPayment, date: e.target.value })} />
                   </div>
                   <div>
                     <label className="block text-[9px] font-bold uppercase tracking-[0.22em] mb-2.5" style={{ color: 'rgba(255,255,255,0.38)' }}>
-                      Amount Transferred
+                      {t('detail_field_amount')}
                     </label>
                     <input type="number" required placeholder="0" className="elite-input"
                       value={newPayment.amount || ''} onChange={(e) => setNewPayment({ ...newPayment, amount: Number(e.target.value) })} />
                   </div>
                   <div>
                     <label className="block text-[9px] font-bold uppercase tracking-[0.22em] mb-2.5" style={{ color: 'rgba(255,255,255,0.38)' }}>
-                      Reference Note
+                      {t('detail_field_ref')}
                     </label>
                     <input placeholder="e.g. Invoice #123" className="elite-input"
                       value={newPayment.designation} onChange={(e) => setNewPayment({ ...newPayment, designation: e.target.value })} />
                   </div>
                   <div className="md:col-span-3">
                     <label className="block text-[9px] font-bold uppercase tracking-[0.22em] mb-3" style={{ color: 'rgba(255,255,255,0.38)' }}>
-                      Document Proof
+                      {t('detail_field_receipt')}
                     </label>
                     <ImageUpload onImageSelected={(f) => setReceiptFile(f)} onClear={() => setReceiptFile(null)} isLoading={isSavingPayment} />
                   </div>
@@ -529,7 +563,7 @@ export default function ProjectDetail() {
                       className="flex items-center gap-2.5 px-9 py-3.5 font-bold text-[10px] uppercase tracking-[0.12em] rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                       style={{ background: 'white', color: '#000', boxShadow: '0 0 16px rgba(255,255,255,0.12)' }}
                     >
-                      {isSavingPayment ? 'Processing...' : 'Confirm Transfer'}
+                      {isSavingPayment ? t('detail_processing') : t('detail_confirm')}
                     </button>
                     <button
                       type="button"
@@ -538,7 +572,7 @@ export default function ProjectDetail() {
                       className="text-[10px] uppercase tracking-[0.1em] transition-colors hover:text-white"
                       style={{ color: 'rgba(255,255,255,0.35)' }}
                     >
-                      Cancel
+                      {t('detail_trade_cancel')}
                     </button>
                   </div>
                 </motion.form>
@@ -551,7 +585,7 @@ export default function ProjectDetail() {
                     className="text-[10px] font-bold uppercase tracking-[0.22em] text-center py-14 rounded-xl"
                     style={{ color: 'rgba(255,255,255,0.3)', border: '1px dashed rgba(255,255,255,0.08)', background: 'rgba(0,0,0,0.2)' }}
                   >
-                    No transfers recorded.
+                    {t('detail_no_payments')}
                   </p>
                 ) : (
                   payments.map((payment) => (
@@ -572,7 +606,7 @@ export default function ProjectDetail() {
                           </div>
                           <div>
                             <p className="text-[1rem] font-playfair font-black text-white uppercase tracking-[0.04em]">
-                              Advance Transferred
+                              {t('detail_advance_label')}
                             </p>
                             <p className="text-[9px] font-bold uppercase tracking-[0.2em] mt-1.5" style={{ color: '#D4AF37' }}>
                               {format(payment.date, 'MMM d, yyyy')}
@@ -585,12 +619,18 @@ export default function ProjectDetail() {
                         </span>
                       </div>
                       {payment.receiptUrl && (
-                        <div className="mt-5 w-44 h-44 rounded-xl overflow-hidden group relative" style={{ border: '1px solid rgba(255,255,255,0.1)' }}>
-                          <a href={payment.receiptUrl} target="_blank" rel="noopener noreferrer">
-                            <LazyImage src={payment.receiptUrl} alt="Receipt" className="w-full h-full" />
-                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/25 transition-colors duration-200" />
-                          </a>
-                        </div>
+                        <button
+                          className="mt-5 w-44 h-44 rounded-xl overflow-hidden group relative text-left"
+                          style={{ border: '1px solid rgba(255,255,255,0.1)' }}
+                          onClick={() => setLightboxSrc(payment.receiptUrl!)}
+                        >
+                          <LazyImage src={payment.receiptUrl} alt={t('img_receipt')} className="w-full h-full" />
+                          <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/40 transition-colors duration-200">
+                            <span className="opacity-0 group-hover:opacity-100 text-[9px] font-bold uppercase tracking-[0.2em] text-white transition-opacity duration-200">
+                              {t('img_tap_zoom')}
+                            </span>
+                          </div>
+                        </button>
                       )}
                     </div>
                   ))
@@ -600,6 +640,8 @@ export default function ProjectDetail() {
           </div>
         </motion.div>
       )}
+
+      <ImageLightbox src={lightboxSrc} onClose={() => setLightboxSrc(null)} />
     </motion.div>
   );
 }
