@@ -32,15 +32,20 @@ export default function ProjectList() {
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user || !newProject.name || !newProject.clientName) return;
-    await addProject({
-      name: newProject.name,
-      clientName: newProject.clientName,
-      contractorName: newProject.contractorName,
-      status: 'ongoing',
-      ownerId: user.uid,
-    });
-    setNewProject({ name: '', clientName: '', contractorName: '' });
-    setIsCreating(false);
+    try {
+      await addProject({
+        name: newProject.name,
+        clientName: newProject.clientName,
+        contractorName: newProject.contractorName,
+        status: 'ongoing',
+        ownerId: user.uid,
+      });
+      setNewProject({ name: '', clientName: '', contractorName: '' });
+      setIsCreating(false);
+    } catch (err: any) {
+      console.error(err);
+      alert('Error creating project: ' + err.message);
+    }
   };
 
   return (
@@ -197,8 +202,11 @@ export default function ProjectList() {
                         e.currentTarget.style.borderColor = 'transparent';
                         e.currentTarget.style.color = 'rgba(255,255,255,0.18)';
                       }}
-                      onClick={() => {
-                        if (confirm('Delete this project?')) deleteProject(project.id);
+                      onClick={async () => {
+                        if (confirm('Delete this project?')) {
+                          try { await deleteProject(project.id); }
+                          catch (err: any) { alert('Error deleting project: ' + err.message); }
+                        }
                       }}
                     >
                       <Trash2 size={15} />

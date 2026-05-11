@@ -50,6 +50,14 @@ export default function Suppliers() {
     return () => unsub();
   }, [user, selectedTrade]);
 
+  // Keep selectedTrade in sync when trades update (e.g. after a payment)
+  useEffect(() => {
+    if (selectedTrade) {
+      const fresh = trades.find((t) => t.id === selectedTrade.id);
+      if (fresh) setSelectedTrade({ ...fresh, projectName: (selectedTrade as any).projectName });
+    }
+  }, [trades]);
+
   const handleAddPayment = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user || !selectedTrade) return;

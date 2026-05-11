@@ -31,6 +31,7 @@ export default function ProjectDetail() {
 
   const [addingTrade, setAddingTrade] = useState(false);
   const [newTrade, setNewTrade] = useState({ designation: '', amount: 0, supplierName: '', quantity: 1 });
+  const [isSavingTrade, setIsSavingTrade] = useState(false);
 
   const [addingPayment, setAddingPayment] = useState(false);
   const [newPayment, setNewPayment] = useState({ amount: 0, date: new Date().toISOString().substring(0, 10), designation: '' });
@@ -46,6 +47,14 @@ export default function ProjectDetail() {
     const unsubT = getTrades(id, user.uid, setTrades, console.error);
     return () => { unsubP(); unsubT(); };
   }, [user, id]);
+
+  // Keep selectedTrade in sync when trades update (e.g. after a payment)
+  useEffect(() => {
+    if (selectedTrade) {
+      const fresh = trades.find((t) => t.id === selectedTrade.id);
+      if (fresh) setSelectedTrade(fresh);
+    }
+  }, [trades]);
 
   useEffect(() => {
     if (!user || !id || !selectedTrade) return;
@@ -72,16 +81,24 @@ export default function ProjectDetail() {
   const handleAddTrade = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user || !id || !newTrade.designation) return;
-    await addTrade(id, {
-      designation: newTrade.designation,
-      amount: Number(newTrade.amount),
-      quantity: Number(newTrade.quantity),
-      supplierName: newTrade.supplierName,
-      totalAdvances: 0,
-      ownerId: user.uid,
-    });
-    setAddingTrade(false);
-    setNewTrade({ designation: '', amount: 0, supplierName: '', quantity: 1 });
+    setIsSavingTrade(true);
+    try {
+      await addTrade(id, {
+        designation: newTrade.designation,
+        amount: Number(newTrade.amount),
+        quantity: Number(newTrade.quantity),
+        supplierName: newTrade.supplierName,
+        totalAdvances: 0,
+        ownerId: user.uid,
+      });
+      setAddingTrade(false);
+      setNewTrade({ designation: '', amount: 0, supplierName: '', quantity: 1 });
+    } catch (err: any) {
+      console.error(err);
+      alert('Error creating trade: ' + err.message);
+    } finally {
+      setIsSavingTrade(false);
+    }
   };
 
   const handleAddPayment = async (e: React.FormEvent) => {
@@ -233,8 +250,20 @@ export default function ProjectDetail() {
                     value={newTrade.amount || ''} onChange={(e) => setNewTrade({ ...newTrade, amount: Number(e.target.value) })} />
                 </div>
                 <div className="flex items-end gap-5 pb-0.5">
-                  <button type="submit" className="elite-button px-8 py-3 uppercase text-[10px] tracking-[0.1em]">Deploy</button>
-                  <button type="button" onClick={() => setAddingTrade(false)} className="text-[10px] uppercase tracking-[0.1em] transition-colors hover:text-white pb-0.5" style={{ color: 'rgba(255,255,255,0.35)' }}>
+                  <button
+                    type="submit"
+                    disabled={isSavingTrade}
+                    className="elite-button px-8 py-3 uppercase text-[10px] tracking-[0.1em] disabled:opacity-60 disabled:cursor-not-allowed"
+                  >
+                    {isSavingTrade ? 'Saving...' : 'Deploy'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setAddingTrade(false)}
+                    disabled={isSavingTrade}
+                    className="text-[10px] uppercase tracking-[0.1em] transition-colors hover:text-white pb-0.5 disabled:opacity-40"
+                    style={{ color: 'rgba(255,255,255,0.35)' }}
+                  >
                     Cancel
                   </button>
                 </div>
