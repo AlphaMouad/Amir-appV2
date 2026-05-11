@@ -17,11 +17,11 @@ const Login = () => {
   return (
     <div className="flex h-screen items-center justify-center bg-slate-50">
       <div className="text-center">
-        <h1 className="text-2xl font-bold tracking-tight text-indigo-600 mb-4">VILLA<span className="text-slate-900 italic">FINANCE</span></h1>
+        <h1 className="text-2xl font-bold tracking-tight text-amber-700 mb-4">VILLA<span className="text-slate-900 italic">FINANCE</span></h1>
         <p className="text-slate-500 mb-8 max-w-sm">Sign in with your Google account to access the finance management portal.</p>
         <button 
           onClick={login}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded transition-colors"
+          className="bg-amber-700 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded transition-colors"
         >
           Sign In with Google
         </button>

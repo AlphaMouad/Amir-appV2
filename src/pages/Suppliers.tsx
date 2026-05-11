@@ -150,7 +150,7 @@ export default function Suppliers() {
     return suppliers.filter(sup => sup.name.toLowerCase().includes(s));
   }, [suppliers, search]);
 
-  if (loading) return <div className="p-8 text-center text-indigo-400 font-outfit">Loading Global Ledger...</div>;
+  if (loading) return <div className="p-8 text-center text-amber-400 font-playfair">Loading Global Ledger...</div>;
 
   return (
     <motion.div 
@@ -161,8 +161,8 @@ export default function Suppliers() {
     >
       <motion.div variants={item} className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-white/5 pb-4">
         <div>
-          <h1 className="text-4xl font-outfit font-black tracking-tight text-white mb-2">Global Ledger</h1>
-          <p className="text-indigo-200/60 font-medium">Manage contractors and track capital distribution</p>
+          <h1 className="text-4xl font-playfair font-black tracking-tight text-white mb-2">Global Ledger</h1>
+          <p className="text-stone-300/60 font-medium">Manage contractors and track capital distribution</p>
         </div>
         
         <div className="relative w-full md:w-80">
@@ -170,7 +170,7 @@ export default function Suppliers() {
           <input 
             type="text" 
             placeholder="Search entities..." 
-            className="w-full pl-11 pr-4 py-3 bg-black/40 backdrop-blur-md border border-white/10 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-xl text-sm text-white transition-all outline-none placeholder:text-slate-600 shadow-inner"
+            className="w-full pl-11 pr-4 py-3 bg-black/40 backdrop-blur-md border border-white/10 focus:border-amber-600 focus:ring-1 focus:ring-amber-600 rounded-xl text-sm text-white transition-all outline-none placeholder:text-slate-600 shadow-inner"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -189,24 +189,24 @@ export default function Suppliers() {
                   <div className="bg-black/20 backdrop-blur-xl border-b border-white/5 p-6 md:p-8 relative z-10">
                     <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                       <div className="flex items-center gap-5">
-                        <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-indigo-500/20 to-violet-600/20 border border-indigo-500/30 flex items-center justify-center shrink-0 shadow-[0_0_20px_rgba(79,70,229,0.15)] group-hover:scale-110 group-hover:bg-indigo-500/30 transition-all duration-500">
-                          <Building2 className="h-8 w-8 text-indigo-400 group-hover:text-white transition-colors" />
+                        <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-amber-600/20 to-stone-800/20 border border-amber-600/30 flex items-center justify-center shrink-0 shadow-[0_0_20px_rgba(79,70,229,0.15)] group-hover:scale-110 group-hover:bg-amber-600/30 transition-all duration-500">
+                          <Building2 className="h-8 w-8 text-amber-400 group-hover:text-white transition-colors" />
                         </div>
                         <div>
-                          <h2 className="text-2xl font-outfit font-black text-white tracking-tight">{supplier.name}</h2>
-                          <p className="text-xs font-bold uppercase tracking-[0.2em] text-indigo-200/60 mt-1">{supplier.trades.length} Active Allocations</p>
+                          <h2 className="text-2xl font-playfair font-black text-white tracking-tight">{supplier.name}</h2>
+                          <p className="text-xs font-bold uppercase tracking-[0.2em] text-stone-300/60 mt-1">{supplier.trades.length} Active Allocations</p>
                         </div>
                       </div>
                       
                       <div className="flex gap-8 items-center bg-black/20 p-4 rounded-2xl border border-white/5">
                         <div className="text-right">
                           <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-slate-500 mb-1">Global Budget</p>
-                          <p className="text-xl font-outfit font-black text-white">€ {supplier.totalBudget.toLocaleString()}</p>
+                          <p className="text-xl font-playfair font-black text-white">€ {supplier.totalBudget.toLocaleString()}</p>
                         </div>
                         <div className="w-px h-10 bg-white/10"></div>
                         <div className="text-right">
                           <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-slate-500 mb-1">Total Advances</p>
-                          <p className={`text-xl font-outfit font-black drop-shadow-[0_0_8px_rgba(255,255,255,0.2)] ${isWarning ? 'text-rose-400' : 'text-emerald-400'}`}>
+                          <p className={`text-xl font-playfair font-black drop-shadow-[0_0_8px_rgba(255,255,255,0.2)] ${isWarning ? 'text-rose-400' : 'text-emerald-400'}`}>
                             € {supplier.totalAdvances.toLocaleString()}
                           </p>
                         </div>
@@ -235,15 +235,15 @@ export default function Suppliers() {
                             
                             return (
                               <React.Fragment key={trade.id}>
-                                <tr className={`transition-colors duration-300 ${isExpanded ? 'bg-indigo-500/10' : 'hover:bg-white/5'}`}>
-                                  <td className="px-8 py-5 whitespace-nowrap text-sm text-indigo-200/60 font-medium tracking-wide">{trade.projectName}</td>
-                                  <td className="px-8 py-5 whitespace-nowrap text-sm font-outfit font-bold text-white text-base">{trade.designation}</td>
+                                <tr className={`transition-colors duration-300 ${isExpanded ? 'bg-amber-600/10' : 'hover:bg-white/5'}`}>
+                                  <td className="px-8 py-5 whitespace-nowrap text-sm text-stone-300/60 font-medium tracking-wide">{trade.projectName}</td>
+                                  <td className="px-8 py-5 whitespace-nowrap text-sm font-playfair font-bold text-white text-base">{trade.designation}</td>
                                   <td className="px-8 py-5 whitespace-nowrap text-sm text-white font-bold text-right">€ {trade.amount.toLocaleString()}</td>
                                   <td className="px-8 py-5 whitespace-nowrap text-sm text-slate-300 text-right">€ {trade.totalAdvances.toLocaleString()}</td>
                                   <td className="px-8 py-5 whitespace-nowrap text-sm">
                                     <div className="flex items-center gap-3">
                                       <div className="w-20 bg-white/5 border border-white/5 h-1.5 rounded-full overflow-hidden shadow-inner">
-                                        <div className={`h-full shadow-[0_0_8px_rgba(0,0,0,0.5)] ${trWarning ? 'bg-gradient-to-r from-rose-600 to-rose-400' : 'bg-gradient-to-r from-indigo-600 to-indigo-400'}`} style={{ width: `${Math.min(100, trRatio * 100)}%` }}></div>
+                                        <div className={`h-full shadow-[0_0_8px_rgba(0,0,0,0.5)] ${trWarning ? 'bg-gradient-to-r from-rose-600 to-rose-400' : 'bg-gradient-to-r from-amber-700 to-amber-400'}`} style={{ width: `${Math.min(100, trRatio * 100)}%` }}></div>
                                       </div>
                                       <span className={`text-[10px] font-bold tracking-wider ${trWarning ? 'text-rose-400' : 'text-slate-400'}`}>
                                         {Math.round(trRatio * 100)}%
@@ -251,7 +251,7 @@ export default function Suppliers() {
                                     </div>
                                   </td>
                                   <td className="px-8 py-5 whitespace-nowrap text-right text-sm">
-                                    <Button variant={isExpanded ? "default" : "outline"} size="sm" className={`h-9 px-4 text-xs font-bold rounded-xl border-white/10 transition-all ${isExpanded ? 'bg-indigo-600 text-white shadow-[0_0_15px_rgba(79,70,229,0.4)] border-transparent' : 'bg-black/20 text-slate-300 hover:bg-white/10 hover:text-white'}`} onClick={() => setSelectedTrade(isExpanded ? null : trade)}>
+                                    <Button variant={isExpanded ? "default" : "outline"} size="sm" className={`h-9 px-4 text-xs font-bold rounded-xl border-white/10 transition-all ${isExpanded ? 'bg-amber-700 text-white shadow-[0_0_15px_rgba(79,70,229,0.4)] border-transparent' : 'bg-black/20 text-slate-300 hover:bg-white/10 hover:text-white'}`} onClick={() => setSelectedTrade(isExpanded ? null : trade)}>
                                       {isExpanded ? 'Close Matrix' : 'Manage'}
                                     </Button>
                                   </td>
@@ -259,13 +259,13 @@ export default function Suppliers() {
                                 {isExpanded && (
                                   <tr>
                                     <td colSpan={6} className="p-0 border-b-0">
-                                      <div className="p-8 bg-indigo-900/10 border-y border-indigo-500/20 shadow-inner relative overflow-hidden">
-                                        <div className="absolute top-[-50%] left-[-10%] w-[40%] h-[200%] bg-indigo-500/5 blur-[80px] pointer-events-none" />
+                                      <div className="p-8 bg-stone-900/10 border-y border-amber-600/20 shadow-inner relative overflow-hidden">
+                                        <div className="absolute top-[-50%] left-[-10%] w-[40%] h-[200%] bg-amber-600/5 blur-[80px] pointer-events-none" />
                                         
                                         <div className="flex items-center justify-between mb-6 relative z-10">
                                            <div>
-                                             <h4 className="font-outfit font-black text-white text-lg">Transfer Records: {trade.designation}</h4>
-                                             <p className="text-xs uppercase tracking-widest text-indigo-200/60 font-bold mt-1">Originating from {trade.projectName}</p>
+                                             <h4 className="font-playfair font-black text-white text-lg">Transfer Records: {trade.designation}</h4>
+                                             <p className="text-xs uppercase tracking-widest text-stone-300/60 font-bold mt-1">Originating from {trade.projectName}</p>
                                            </div>
                                            <Button onClick={() => setAddingPayment(!addingPayment)} size="sm" className="bg-emerald-600 hover:bg-emerald-500 text-white shadow-[0_0_15px_rgba(16,185,129,0.3)] rounded-xl h-10 px-4">
                                              <Plus className="h-4 w-4 mr-2" /> <span className="font-bold">Record Advance</span>
@@ -314,15 +314,15 @@ export default function Suppliers() {
                                               <div key={payment.id} className="flex flex-col p-6 rounded-2xl border border-white/5 bg-white/5 hover:bg-white/10 transition-colors shadow-lg">
                                                 <div className="flex justify-between items-start">
                                                   <div className="flex items-center space-x-5">
-                                                    <div className="h-12 w-12 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center border border-indigo-500/20 shadow-inner">
+                                                    <div className="h-12 w-12 rounded-xl bg-amber-600/10 text-amber-400 flex items-center justify-center border border-amber-600/20 shadow-inner">
                                                       <Wallet className="h-6 w-6" />
                                                     </div>
                                                     <div>
-                                                      <p className="text-base font-outfit font-bold text-white">Advance Transferred</p>
-                                                      <p className="text-xs font-medium uppercase tracking-widest text-indigo-200/60 mt-1">{format(payment.date, 'MMM d, yyyy')} {payment.designation ? `// ${payment.designation}` : ''}</p>
+                                                      <p className="text-base font-playfair font-bold text-white">Advance Transferred</p>
+                                                      <p className="text-xs font-medium uppercase tracking-widest text-stone-300/60 mt-1">{format(payment.date, 'MMM d, yyyy')} {payment.designation ? `// ${payment.designation}` : ''}</p>
                                                     </div>
                                                   </div>
-                                                  <span className="font-outfit font-black text-2xl text-emerald-400 tracking-tight drop-shadow-[0_0_8px_rgba(16,185,129,0.4)]">€ {payment.amount.toLocaleString()}</span>
+                                                  <span className="font-playfair font-black text-2xl text-emerald-400 tracking-tight drop-shadow-[0_0_8px_rgba(16,185,129,0.4)]">€ {payment.amount.toLocaleString()}</span>
                                                 </div>
                                                 {payment.receiptUrl && (
                                                   <div className="mt-4 ml-16 w-40 h-40 rounded-xl overflow-hidden border border-white/10 shadow-lg group relative">
@@ -358,8 +358,8 @@ export default function Suppliers() {
             <div className="mx-auto h-20 w-20 bg-white/5 rounded-full flex items-center justify-center mb-6 border border-white/10 shadow-inner">
               <Building2 className="h-10 w-10 text-slate-500" />
             </div>
-            <h3 className="text-xl font-outfit font-black text-white">Entity Not Found</h3>
-            <p className="mt-2 text-sm font-medium text-indigo-200/60">No suppliers match your current matrix parameters.</p>
+            <h3 className="text-xl font-playfair font-black text-white">Entity Not Found</h3>
+            <p className="mt-2 text-sm font-medium text-stone-300/60">No suppliers match your current matrix parameters.</p>
           </motion.div>
         )}
       </motion.div>

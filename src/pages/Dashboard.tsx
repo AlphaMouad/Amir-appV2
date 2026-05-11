@@ -59,7 +59,7 @@ export default function Dashboard() {
   }, [user]);
 
   if (loading) {
-    return <div className="flex justify-center items-center h-full text-indigo-400 font-outfit">Loading Elite Dashboard...</div>;
+    return <div className="flex justify-center items-center h-full text-amber-400 font-playfair">Loading Elite Dashboard...</div>;
   }
 
   // Calculate metrics
@@ -93,11 +93,11 @@ export default function Dashboard() {
     >
       <motion.div variants={item} className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
         <div>
-          <h1 className="text-4xl font-outfit font-black tracking-tight text-white mb-2">Overview</h1>
-          <p className="text-indigo-200/60 font-medium">Welcome back, {user?.displayName?.split(' ')[0] || 'User'}. Here is your financial summary.</p>
+          <h1 className="text-4xl font-playfair font-black tracking-tight text-white mb-2">Overview</h1>
+          <p className="text-stone-300/60 font-medium">Welcome back, {user?.displayName?.split(' ')[0] || 'User'}. Here is your financial summary.</p>
         </div>
-        <div className="bg-indigo-500/10 border border-indigo-500/20 px-4 py-2 rounded-xl backdrop-blur-md">
-          <span className="text-sm font-bold text-indigo-300 uppercase tracking-widest">{new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</span>
+        <div className="bg-amber-600/10 border border-amber-600/20 px-4 py-2 rounded-xl backdrop-blur-md">
+          <span className="text-sm font-bold text-amber-200 uppercase tracking-widest">{new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</span>
         </div>
       </motion.div>
       
@@ -106,15 +106,15 @@ export default function Dashboard() {
           <Card className="glass-card overflow-hidden group">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10 border-b border-white/5 mb-4">
               <CardTitle className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em]">Projects</CardTitle>
-              <div className="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center group-hover:bg-indigo-500/20 transition-colors duration-300 shadow-[0_0_15px_rgba(79,70,229,0.2)]">
-                <Building className="h-5 w-5 text-indigo-400" />
+              <div className="w-10 h-10 rounded-xl bg-amber-600/10 border border-amber-600/20 flex items-center justify-center group-hover:bg-amber-600/20 transition-colors duration-300 shadow-[0_0_15px_rgba(79,70,229,0.2)]">
+                <Building className="h-5 w-5 text-amber-400" />
               </div>
             </CardHeader>
             <CardContent className="relative z-10">
-              <div className="text-4xl font-outfit font-black text-white tracking-tight">{totalProjects}</div>
-              <p className="text-sm text-indigo-300 font-medium mt-1">{activeProjects} active</p>
+              <div className="text-4xl font-playfair font-black text-white tracking-tight">{totalProjects}</div>
+              <p className="text-sm text-amber-200 font-medium mt-1">{activeProjects} active</p>
             </CardContent>
-            <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="absolute inset-0 bg-gradient-to-br from-amber-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           </Card>
         </motion.div>
 
@@ -127,7 +127,7 @@ export default function Dashboard() {
               </div>
             </CardHeader>
             <CardContent className="relative z-10">
-              <div className="text-4xl font-outfit font-black text-white tracking-tight">€{totalBudget.toLocaleString()}</div>
+              <div className="text-4xl font-playfair font-black text-white tracking-tight">€{totalBudget.toLocaleString()}</div>
               <p className="text-sm text-emerald-300 font-medium mt-1">Total allocated</p>
             </CardContent>
             <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -143,7 +143,7 @@ export default function Dashboard() {
               </div>
             </CardHeader>
             <CardContent className="relative z-10">
-              <div className="text-4xl font-outfit font-black text-white tracking-tight">€{totalAdvances.toLocaleString()}</div>
+              <div className="text-4xl font-playfair font-black text-white tracking-tight">€{totalAdvances.toLocaleString()}</div>
               <div className="flex items-center gap-3 mt-2">
                 <div className="flex-1 bg-white/5 h-2 rounded-full overflow-hidden border border-white/10">
                   <div className="bg-gradient-to-r from-blue-600 to-blue-400 h-full rounded-full shadow-[0_0_10px_rgba(59,130,246,0.5)]" style={{ width: `${Math.min(100, (totalAdvances / (totalBudget || 1)) * 100)}%` }} />
@@ -166,7 +166,7 @@ export default function Dashboard() {
               </div>
             </CardHeader>
             <CardContent className="relative z-10">
-              <div className="text-4xl font-outfit font-black text-rose-400 tracking-tight drop-shadow-[0_0_10px_rgba(244,63,94,0.4)]">{tradesWithWarnings.length}</div>
+              <div className="text-4xl font-playfair font-black text-rose-400 tracking-tight drop-shadow-[0_0_10px_rgba(244,63,94,0.4)]">{tradesWithWarnings.length}</div>
               <p className="text-sm text-rose-300 font-medium mt-1">Advances &gt; 75%</p>
             </CardContent>
             <div className="absolute inset-0 bg-gradient-to-br from-rose-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -178,8 +178,8 @@ export default function Dashboard() {
         <motion.div variants={item} className="lg:col-span-2">
           <Card className="glass-card h-full">
             <CardHeader className="border-b border-white/5 pb-4">
-              <CardTitle className="text-xl font-outfit font-black text-white">Financial Matrix</CardTitle>
-              <CardDescription className="text-indigo-200/60 font-medium">Budget vs Advances tracking across active projects</CardDescription>
+              <CardTitle className="text-xl font-playfair font-black text-white">Financial Matrix</CardTitle>
+              <CardDescription className="text-stone-300/60 font-medium">Budget vs Advances tracking across active projects</CardDescription>
             </CardHeader>
             <CardContent className="h-[350px] pt-6">
               <ResponsiveContainer width="100%" height="100%" minHeight={0} minWidth={0}>
@@ -221,7 +221,7 @@ export default function Dashboard() {
         <motion.div variants={item}>
           <Card className="glass-card h-full">
             <CardHeader className="border-b border-white/5 pb-4">
-              <CardTitle className="text-xl font-outfit font-black text-white">Critical Ledger</CardTitle>
+              <CardTitle className="text-xl font-playfair font-black text-white">Critical Ledger</CardTitle>
               <CardDescription className="text-rose-300/60 font-medium">Trades approaching limit</CardDescription>
             </CardHeader>
             <CardContent className="pt-6">
@@ -230,7 +230,7 @@ export default function Dashboard() {
                   <div className="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mb-4 border border-emerald-500/20 shadow-[0_0_30px_rgba(16,185,129,0.15)]">
                      <Building className="h-10 w-10 text-emerald-400 opacity-80" />
                   </div>
-                  <p className="text-lg font-outfit font-bold text-white neon-green">Ledger Clear!</p>
+                  <p className="text-lg font-playfair font-bold text-white neon-green">Ledger Clear!</p>
                   <p className="text-sm text-emerald-200/60 mt-1">No trades exceed risk thresholds.</p>
                 </div>
               ) : (
@@ -247,7 +247,7 @@ export default function Dashboard() {
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-bold text-white truncate">{trade.designation}</p>
-                          <p className="text-xs text-indigo-200/60 truncate mb-2">{project?.name || 'Unknown Project'}</p>
+                          <p className="text-xs text-stone-300/60 truncate mb-2">{project?.name || 'Unknown Project'}</p>
                           
                           <div className="w-full bg-black/40 rounded-full h-2 mb-1.5 border border-white/5 overflow-hidden">
                             <div className="bg-gradient-to-r from-rose-600 to-rose-400 h-full rounded-full shadow-[0_0_8px_rgba(244,63,94,0.6)]" style={{ width: `${Math.min(100, percentage)}%` }}></div>

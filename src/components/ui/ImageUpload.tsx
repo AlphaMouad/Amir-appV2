@@ -81,7 +81,7 @@ export function ImageUpload({ onImageSelected, onClear, isLoading = false }: Ima
   return (
     <div
       className={`relative w-full h-32 rounded-xl border-2 border-dashed transition-all duration-200 flex flex-col items-center justify-center overflow-hidden
-        ${dragActive ? 'border-indigo-500 bg-indigo-50/50' : 'border-slate-200 bg-slate-50 hover:bg-slate-100/50 hover:border-slate-300'}
+        ${dragActive ? 'border-amber-600 bg-indigo-50/50' : 'border-slate-200 bg-slate-50 hover:bg-slate-100/50 hover:border-slate-300'}
       `}
       onDragEnter={handleDrag}
       onDragLeave={handleDrag}
@@ -96,9 +96,9 @@ export function ImageUpload({ onImageSelected, onClear, isLoading = false }: Ima
         disabled={isLoading}
       />
       <div className="flex flex-col items-center justify-center pointer-events-none text-slate-500 space-y-2">
-        <UploadCloud className={`h-8 w-8 ${dragActive ? 'text-indigo-500' : 'text-slate-400'}`} />
+        <UploadCloud className={`h-8 w-8 ${dragActive ? 'text-amber-600' : 'text-slate-400'}`} />
         <span className="text-xs font-medium text-center px-4">
-          <span className="text-indigo-600 font-semibold">Click to upload</span> or drag and drop<br />
+          <span className="text-amber-700 font-semibold">Click to upload</span> or drag and drop<br />
           SVG, PNG, JPG or GIF
         </span>
       </div>

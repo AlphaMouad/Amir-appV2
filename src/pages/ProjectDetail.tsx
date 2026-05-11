@@ -66,7 +66,7 @@ export default function ProjectDetail() {
     return () => unsub();
   }, [user, id, selectedTrade]);
 
-  if (!project) return <div className="p-8 text-indigo-400 font-outfit">Loading Elite Matrix...</div>;
+  if (!project) return <div className="p-8 text-amber-400 font-playfair">Loading Elite Matrix...</div>;
 
   const totalBudget = trades.reduce((sum, t) => sum + t.amount, 0);
   const totalAdvances = trades.reduce((sum, t) => sum + t.totalAdvances, 0);
@@ -131,14 +131,14 @@ export default function ProjectDetail() {
       <motion.div variants={item} className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 pb-4 border-b border-white/5">
         <div className="flex items-center space-x-4">
           <Link to="/projects">
-            <Button variant="ghost" size="icon" className="text-indigo-400 hover:text-white hover:bg-white/10 rounded-xl h-12 w-12 border border-white/5 bg-black/20">
+            <Button variant="ghost" size="icon" className="text-amber-400 hover:text-white hover:bg-white/10 rounded-xl h-12 w-12 border border-white/5 bg-black/20">
               <ArrowLeft className="h-5 w-5" />
             </Button>
           </Link>
           <div>
-            <h1 className="text-4xl font-outfit font-black text-white tracking-tight">{project.name}</h1>
-            <p className="text-sm font-medium text-indigo-200/60 mt-1 uppercase tracking-widest">
-              Identity: <span className="text-indigo-300 font-bold">{project.clientName}</span> {project.contractorName ? `// Contractor: ${project.contractorName}` : ''}
+            <h1 className="text-4xl font-playfair font-black text-white tracking-tight">{project.name}</h1>
+            <p className="text-sm font-medium text-stone-300/60 mt-1 uppercase tracking-widest">
+              Identity: <span className="text-amber-200 font-bold">{project.clientName}</span> {project.contractorName ? `// Contractor: ${project.contractorName}` : ''}
             </p>
           </div>
         </div>
@@ -151,9 +151,9 @@ export default function ProjectDetail() {
               <CardTitle className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Project Budget</CardTitle>
             </CardHeader>
             <CardContent className="relative z-10">
-              <div className="text-4xl font-outfit font-black text-white tracking-tight">€ {totalBudget.toLocaleString()}</div>
+              <div className="text-4xl font-playfair font-black text-white tracking-tight">€ {totalBudget.toLocaleString()}</div>
             </CardContent>
-            <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="absolute inset-0 bg-gradient-to-br from-amber-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           </Card>
         </motion.div>
         
@@ -163,7 +163,7 @@ export default function ProjectDetail() {
             <CardTitle className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Advances Paid</CardTitle>
           </CardHeader>
           <CardContent className="relative z-10">
-            <div className="text-4xl font-outfit font-black text-white tracking-tight">€ {totalAdvances.toLocaleString()}</div>
+            <div className="text-4xl font-playfair font-black text-white tracking-tight">€ {totalAdvances.toLocaleString()}</div>
             <div className="flex items-center gap-3 mt-3">
               <div className="flex-1 bg-white/5 h-2 rounded-full overflow-hidden border border-white/10">
                   <div 
@@ -171,7 +171,7 @@ export default function ProjectDetail() {
                     style={{ width: `${Math.min(100, (totalAdvances / (totalBudget || 1)) * 100)}%` }}
                   ></div>
               </div>
-              <p className="text-xs font-black text-indigo-300 w-8 text-right">
+              <p className="text-xs font-black text-amber-200 w-8 text-right">
                 {totalBudget > 0 ? ((totalAdvances / totalBudget) * 100).toFixed(1) : 0}%
               </p>
             </div>
@@ -182,8 +182,8 @@ export default function ProjectDetail() {
       </motion.div>
 
       <motion.div variants={item} className="flex flex-col md:flex-row items-start md:items-center justify-between mt-10 gap-4">
-        <h2 className="text-2xl font-outfit font-black text-white tracking-tight">Ledger Matrix</h2>
-        <Button onClick={() => setAddingTrade(!addingTrade)} className="bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl shadow-[0_0_20px_rgba(79,70,229,0.3)] transition-all px-6">
+        <h2 className="text-2xl font-playfair font-black text-white tracking-tight">Ledger Matrix</h2>
+        <Button onClick={() => setAddingTrade(!addingTrade)} className="bg-amber-700 hover:bg-amber-600 text-white rounded-xl shadow-[0_0_20px_rgba(79,70,229,0.3)] transition-all px-6">
           <Plus className="h-4 w-4 mr-2" /> <span className="font-bold">Initialize Trade</span>
         </Button>
       </motion.div>
@@ -193,27 +193,27 @@ export default function ProjectDetail() {
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
         >
-          <Card className="glass-card border-indigo-500/30 shadow-[0_0_30px_rgba(79,70,229,0.1)] relative overflow-hidden mb-6">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-600/10 blur-[100px] rounded-full pointer-events-none" />
+          <Card className="glass-card border-amber-600/30 shadow-[0_0_30px_rgba(79,70,229,0.1)] relative overflow-hidden mb-6">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-amber-700/10 blur-[100px] rounded-full pointer-events-none" />
             <CardContent className="pt-6 relative z-10">
               <form onSubmit={handleAddTrade} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                  <div>
-                    <label className="block text-[10px] font-bold text-indigo-300 uppercase tracking-[0.2em] mb-2">Designation</label>
-                    <input required placeholder="e.g. Travaux Plombier" className="w-full text-sm border border-white/10 rounded-xl p-3.5 bg-black/40 text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all placeholder:text-slate-600 shadow-inner"
+                    <label className="block text-[10px] font-bold text-amber-200 uppercase tracking-[0.2em] mb-2">Designation</label>
+                    <input required placeholder="e.g. Travaux Plombier" className="w-full text-sm border border-white/10 rounded-xl p-3.5 bg-black/40 text-white focus:border-amber-600 focus:ring-1 focus:ring-amber-600 outline-none transition-all placeholder:text-slate-600 shadow-inner"
                       value={newTrade.designation} onChange={e => setNewTrade({...newTrade, designation: e.target.value})} />
                  </div>
                  <div>
-                    <label className="block text-[10px] font-bold text-indigo-300 uppercase tracking-[0.2em] mb-2">Supplier Entity</label>
-                    <input placeholder="Supplier Name" className="w-full text-sm border border-white/10 rounded-xl p-3.5 bg-black/40 text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all placeholder:text-slate-600 shadow-inner"
+                    <label className="block text-[10px] font-bold text-amber-200 uppercase tracking-[0.2em] mb-2">Supplier Entity</label>
+                    <input placeholder="Supplier Name" className="w-full text-sm border border-white/10 rounded-xl p-3.5 bg-black/40 text-white focus:border-amber-600 focus:ring-1 focus:ring-amber-600 outline-none transition-all placeholder:text-slate-600 shadow-inner"
                       value={newTrade.supplierName} onChange={e => setNewTrade({...newTrade, supplierName: e.target.value})} />
                  </div>
                   <div>
-                    <label className="block text-[10px] font-bold text-indigo-300 uppercase tracking-[0.2em] mb-2">Budget Allocation</label>
-                    <input type="number" required placeholder="0" className="w-full text-sm border border-white/10 rounded-xl p-3.5 bg-black/40 text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all placeholder:text-slate-600 shadow-inner"
+                    <label className="block text-[10px] font-bold text-amber-200 uppercase tracking-[0.2em] mb-2">Budget Allocation</label>
+                    <input type="number" required placeholder="0" className="w-full text-sm border border-white/10 rounded-xl p-3.5 bg-black/40 text-white focus:border-amber-600 focus:ring-1 focus:ring-amber-600 outline-none transition-all placeholder:text-slate-600 shadow-inner"
                       value={newTrade.amount || ''} onChange={e => setNewTrade({...newTrade, amount: Number(e.target.value)})} />
                  </div>
                  <div className="flex items-end space-x-3 pt-2">
-                    <Button type="submit" className="bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl px-8 font-bold shadow-[0_0_15px_rgba(79,70,229,0.3)]">Deploy</Button>
+                    <Button type="submit" className="bg-amber-700 hover:bg-amber-600 text-white rounded-xl px-8 font-bold shadow-[0_0_15px_rgba(79,70,229,0.3)]">Deploy</Button>
                     <Button type="button" variant="ghost" onClick={() => setAddingTrade(false)} className="rounded-xl text-slate-400 hover:text-white hover:bg-white/5">Cancel</Button>
                  </div>
               </form>
@@ -232,14 +232,14 @@ export default function ProjectDetail() {
             const isWarning = ratio > 0.75;
             
             return (
-              <div key={trade.id} className={`glass-card p-5 flex flex-col gap-4 relative overflow-hidden ${selectedTrade?.id === trade.id ? 'border-indigo-500 shadow-[0_0_20px_rgba(79,70,229,0.2)]' : ''}`}>
+              <div key={trade.id} className={`glass-card p-5 flex flex-col gap-4 relative overflow-hidden ${selectedTrade?.id === trade.id ? 'border-amber-600 shadow-[0_0_20px_rgba(79,70,229,0.2)]' : ''}`}>
                 {isWarning && <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-gradient-to-b from-rose-400 to-rose-600" />}
                 <div className="flex justify-between items-start pl-2">
                   <div>
-                    <h3 className="font-outfit font-black text-white text-lg">{trade.designation}</h3>
-                    <p className="text-[11px] font-medium tracking-widest uppercase text-indigo-200/60 mt-1">{trade.supplierName || 'Unknown Entity'}</p>
+                    <h3 className="font-playfair font-black text-white text-lg">{trade.designation}</h3>
+                    <p className="text-[11px] font-medium tracking-widest uppercase text-stone-300/60 mt-1">{trade.supplierName || 'Unknown Entity'}</p>
                   </div>
-                  <Button variant="outline" size="sm" className={`h-8 text-xs font-bold rounded-lg border-white/10 ${selectedTrade?.id === trade.id ? 'bg-indigo-600 text-white' : 'bg-white/5 text-slate-300'}`} onClick={() => setSelectedTrade(selectedTrade?.id === trade.id ? null : trade)}>
+                  <Button variant="outline" size="sm" className={`h-8 text-xs font-bold rounded-lg border-white/10 ${selectedTrade?.id === trade.id ? 'bg-amber-700 text-white' : 'bg-white/5 text-slate-300'}`} onClick={() => setSelectedTrade(selectedTrade?.id === trade.id ? null : trade)}>
                     {selectedTrade?.id === trade.id ? 'Close' : 'Matrix'}
                   </Button>
                 </div>
@@ -256,9 +256,9 @@ export default function ProjectDetail() {
                 <div className="pl-2">
                   <div className="flex items-center gap-3">
                     <div className="flex-1 bg-white/5 h-2 rounded-full overflow-hidden border border-white/10">
-                      <div className={`h-full rounded-full shadow-[0_0_8px_rgba(0,0,0,0.5)] ${isWarning ? 'bg-gradient-to-r from-rose-600 to-rose-400 shadow-[0_0_10px_rgba(244,63,94,0.5)]' : 'bg-gradient-to-r from-indigo-600 to-indigo-400 shadow-[0_0_10px_rgba(79,70,229,0.5)]'}`} style={{ width: `${Math.min(100, ratio * 100)}%` }}></div>
+                      <div className={`h-full rounded-full shadow-[0_0_8px_rgba(0,0,0,0.5)] ${isWarning ? 'bg-gradient-to-r from-rose-600 to-rose-400 shadow-[0_0_10px_rgba(244,63,94,0.5)]' : 'bg-gradient-to-r from-amber-700 to-amber-400 shadow-[0_0_10px_rgba(79,70,229,0.5)]'}`} style={{ width: `${Math.min(100, ratio * 100)}%` }}></div>
                     </div>
-                    <span className={`text-[10px] tracking-wider w-8 text-right ${isWarning ? 'text-rose-400 font-black' : 'text-indigo-300 font-bold'}`}>
+                    <span className={`text-[10px] tracking-wider w-8 text-right ${isWarning ? 'text-rose-400 font-black' : 'text-amber-200 font-bold'}`}>
                       {Math.round(ratio * 100)}%
                     </span>
                   </div>
@@ -278,12 +278,12 @@ export default function ProjectDetail() {
           <table className="min-w-full text-left border-collapse">
             <thead className="bg-black/20">
               <tr className="border-b border-white/5">
-                <th className="px-8 py-5 text-[10px] font-bold text-indigo-300 uppercase tracking-[0.2em]">Designation</th>
-                <th className="px-8 py-5 text-[10px] font-bold text-indigo-300 uppercase tracking-[0.2em]">Supplier Entity</th>
-                <th className="px-8 py-5 text-[10px] font-bold text-indigo-300 uppercase tracking-[0.2em] text-right">Budget</th>
-                <th className="px-8 py-5 text-[10px] font-bold text-indigo-300 uppercase tracking-[0.2em] text-right">Advances</th>
-                <th className="px-8 py-5 text-[10px] font-bold text-indigo-300 uppercase tracking-[0.2em]">Risk Level</th>
-                <th className="px-8 py-5 text-right text-[10px] font-bold text-indigo-300 uppercase tracking-[0.2em]">Actions</th>
+                <th className="px-8 py-5 text-[10px] font-bold text-amber-200 uppercase tracking-[0.2em]">Designation</th>
+                <th className="px-8 py-5 text-[10px] font-bold text-amber-200 uppercase tracking-[0.2em]">Supplier Entity</th>
+                <th className="px-8 py-5 text-[10px] font-bold text-amber-200 uppercase tracking-[0.2em] text-right">Budget</th>
+                <th className="px-8 py-5 text-[10px] font-bold text-amber-200 uppercase tracking-[0.2em] text-right">Advances</th>
+                <th className="px-8 py-5 text-[10px] font-bold text-amber-200 uppercase tracking-[0.2em]">Risk Level</th>
+                <th className="px-8 py-5 text-right text-[10px] font-bold text-amber-200 uppercase tracking-[0.2em]">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5 font-medium text-sm bg-black/10">
@@ -294,23 +294,23 @@ export default function ProjectDetail() {
                 const isWarning = ratio > 0.75;
                 
                 return (
-                  <tr key={trade.id} className={`transition-colors duration-300 ${selectedTrade?.id === trade.id ? 'bg-indigo-500/10' : 'hover:bg-white/5'} ${isWarning && selectedTrade?.id !== trade.id ? 'bg-rose-500/5' : ''}`}>
-                    <td className="px-8 py-5 whitespace-nowrap font-outfit font-bold text-base text-white">{trade.designation}</td>
-                    <td className="px-8 py-5 whitespace-nowrap text-sm font-medium tracking-wide text-indigo-200/60 uppercase">{trade.supplierName || '-'}</td>
+                  <tr key={trade.id} className={`transition-colors duration-300 ${selectedTrade?.id === trade.id ? 'bg-amber-600/10' : 'hover:bg-white/5'} ${isWarning && selectedTrade?.id !== trade.id ? 'bg-rose-500/5' : ''}`}>
+                    <td className="px-8 py-5 whitespace-nowrap font-playfair font-bold text-base text-white">{trade.designation}</td>
+                    <td className="px-8 py-5 whitespace-nowrap text-sm font-medium tracking-wide text-stone-300/60 uppercase">{trade.supplierName || '-'}</td>
                     <td className="px-8 py-5 whitespace-nowrap text-sm text-white font-bold text-right">€ {trade.amount.toLocaleString()}</td>
                     <td className="px-8 py-5 whitespace-nowrap text-sm text-slate-300 font-medium text-right">€ {trade.totalAdvances.toLocaleString()}</td>
                     <td className="px-8 py-5 whitespace-nowrap text-sm">
                       <div className="flex items-center gap-3">
                         <div className="w-24 bg-white/5 border border-white/5 h-2 rounded-full overflow-hidden">
-                          <div className={`h-full rounded-full shadow-[0_0_8px_rgba(0,0,0,0.5)] ${isWarning ? 'bg-gradient-to-r from-rose-600 to-rose-400' : 'bg-gradient-to-r from-indigo-600 to-indigo-400'}`} style={{ width: `${Math.min(100, ratio * 100)}%` }}></div>
+                          <div className={`h-full rounded-full shadow-[0_0_8px_rgba(0,0,0,0.5)] ${isWarning ? 'bg-gradient-to-r from-rose-600 to-rose-400' : 'bg-gradient-to-r from-amber-700 to-amber-400'}`} style={{ width: `${Math.min(100, ratio * 100)}%` }}></div>
                         </div>
-                        <span className={`text-[10px] tracking-wider font-bold w-8 ${isWarning ? 'text-rose-400' : 'text-indigo-300'}`}>
+                        <span className={`text-[10px] tracking-wider font-bold w-8 ${isWarning ? 'text-rose-400' : 'text-amber-200'}`}>
                           {Math.round(ratio * 100)}%
                         </span>
                       </div>
                     </td>
                     <td className="px-8 py-5 whitespace-nowrap text-right text-sm">
-                      <Button variant="outline" size="sm" className={`h-9 px-4 text-xs font-bold rounded-xl border-white/10 transition-all ${selectedTrade?.id === trade.id ? 'bg-indigo-600 text-white border-transparent shadow-[0_0_15px_rgba(79,70,229,0.4)]' : 'bg-black/20 text-slate-300 hover:text-white hover:bg-white/10'}`} onClick={() => setSelectedTrade(selectedTrade?.id === trade.id ? null : trade)}>
+                      <Button variant="outline" size="sm" className={`h-9 px-4 text-xs font-bold rounded-xl border-white/10 transition-all ${selectedTrade?.id === trade.id ? 'bg-amber-700 text-white border-transparent shadow-[0_0_15px_rgba(79,70,229,0.4)]' : 'bg-black/20 text-slate-300 hover:text-white hover:bg-white/10'}`} onClick={() => setSelectedTrade(selectedTrade?.id === trade.id ? null : trade)}>
                         {selectedTrade?.id === trade.id ? 'Close Matrix' : 'Manage'}
                       </Button>
                     </td>
@@ -324,17 +324,17 @@ export default function ProjectDetail() {
 
       {selectedTrade && (
          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
-         <Card className="mt-8 glass-card border-indigo-500/30 shadow-[0_0_40px_rgba(79,70,229,0.15)] relative overflow-hidden">
-           <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-indigo-600/5 blur-[120px] rounded-full pointer-events-none" />
+         <Card className="mt-8 glass-card border-amber-600/30 shadow-[0_0_40px_rgba(79,70,229,0.15)] relative overflow-hidden">
+           <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-amber-700/5 blur-[120px] rounded-full pointer-events-none" />
            <CardHeader className="bg-black/20 border-b border-white/5 relative z-10 px-8 py-6">
              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400">
+                  <div className="w-12 h-12 rounded-2xl bg-amber-600/10 border border-amber-600/20 flex items-center justify-center text-amber-400">
                     <Wallet className="h-6 w-6" />
                   </div>
                   <div>
-                    <CardTitle className="text-2xl font-outfit font-black text-white">{selectedTrade.designation}</CardTitle>
-                    <CardDescription className="text-indigo-200/60 font-medium uppercase tracking-widest text-[10px] mt-1">Payment Matrix / Advance Records</CardDescription>
+                    <CardTitle className="text-2xl font-playfair font-black text-white">{selectedTrade.designation}</CardTitle>
+                    <CardDescription className="text-stone-300/60 font-medium uppercase tracking-widest text-[10px] mt-1">Payment Matrix / Advance Records</CardDescription>
                   </div>
                 </div>
                 <Button onClick={() => setAddingPayment(!addingPayment)} className="bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl shadow-[0_0_15px_rgba(16,185,129,0.3)] transition-all px-6 py-5">
@@ -386,15 +386,15 @@ export default function ProjectDetail() {
                    <div key={payment.id} className="flex flex-col p-6 rounded-2xl border border-white/5 bg-white/5 hover:bg-white/10 transition-colors shadow-lg">
                      <div className="flex justify-between items-start">
                        <div className="flex items-center space-x-5">
-                         <div className="h-12 w-12 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center border border-indigo-500/20 shadow-inner">
+                         <div className="h-12 w-12 rounded-xl bg-amber-600/10 text-amber-400 flex items-center justify-center border border-amber-600/20 shadow-inner">
                            <Wallet className="h-6 w-6" />
                          </div>
                          <div>
-                           <p className="text-base font-outfit font-bold text-white">Advance Transferred</p>
-                           <p className="text-xs font-medium uppercase tracking-widest text-indigo-200/60 mt-1">{format(payment.date, 'MMM d, yyyy')} {payment.designation ? `// ${payment.designation}` : ''}</p>
+                           <p className="text-base font-playfair font-bold text-white">Advance Transferred</p>
+                           <p className="text-xs font-medium uppercase tracking-widest text-stone-300/60 mt-1">{format(payment.date, 'MMM d, yyyy')} {payment.designation ? `// ${payment.designation}` : ''}</p>
                          </div>
                        </div>
-                       <span className="font-outfit font-black text-2xl text-emerald-400 tracking-tight drop-shadow-[0_0_8px_rgba(16,185,129,0.4)]">€ {payment.amount.toLocaleString()}</span>
+                       <span className="font-playfair font-black text-2xl text-emerald-400 tracking-tight drop-shadow-[0_0_8px_rgba(16,185,129,0.4)]">€ {payment.amount.toLocaleString()}</span>
                      </div>
                      {payment.receiptUrl && (
                        <div className="mt-4 ml-16 w-40 h-40 rounded-xl overflow-hidden border border-white/10 shadow-lg group relative">
