@@ -194,7 +194,7 @@ export default function ProjectList() {
                       </button>
                     </Link>
                     <button
-                      className="h-10 w-10 flex items-center justify-center rounded-xl transition-colors duration-200"
+                      className="h-11 w-11 flex items-center justify-center rounded-xl transition-colors duration-200"
                       style={{ border: '1px solid transparent', color: 'rgba(255,255,255,0.18)' }}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.borderColor = 'rgba(248,113,113,0.3)';

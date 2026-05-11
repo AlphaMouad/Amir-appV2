@@ -109,10 +109,10 @@ export default function Dashboard() {
     },
     {
       label: t('dash_kpi_risk'),
-      value: tradesWithWarnings.length > 0 ? tradesWithWarnings.length : t('dash_kpi_no_risk'),
-      sub: t('dash_kpi_risk_sub'),
-      subColor: '#f87171',
-      icon: <AlertCircle size={16} style={{ color: '#f87171' }} />,
+      value: tradesWithWarnings.length,
+      sub: tradesWithWarnings.length === 0 ? t('dash_kpi_no_risk') : t('dash_kpi_risk_sub'),
+      subColor: tradesWithWarnings.length === 0 ? '#34d399' : '#f87171',
+      icon: <AlertCircle size={16} style={{ color: tradesWithWarnings.length > 0 ? '#f87171' : '#34d399' }} />,
       valueColor: tradesWithWarnings.length > 0 ? '#f87171' : '#34d399',
       accentHover: 'rgba(248,113,113,0.25)',
     },
@@ -146,27 +146,27 @@ export default function Dashboard() {
             <Card className="elite-card group h-full">
               <CardHeader
                 className="flex flex-row items-center justify-between space-y-0 pb-3 relative z-10 mb-3"
-                style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', padding: '20px 20px 12px' }}
+                style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', padding: '16px 16px 10px' }}
               >
-                <CardTitle className="text-[9px] font-bold uppercase tracking-[0.22em]" style={{ color: 'rgba(255,255,255,0.38)' }}>
+                <CardTitle className="text-[8px] font-bold uppercase tracking-[0.2em] leading-tight" style={{ color: 'rgba(255,255,255,0.38)' }}>
                   {card.label}
                 </CardTitle>
                 <div
-                  className="w-9 h-9 rounded-lg bg-black flex items-center justify-center transition-colors duration-400 group-hover:border-opacity-40"
+                  className="w-8 h-8 md:w-9 md:h-9 rounded-lg bg-black flex items-center justify-center shrink-0"
                   style={{ border: '1px solid rgba(255,255,255,0.06)' }}
                 >
                   {card.icon}
                 </div>
               </CardHeader>
-              <CardContent className="relative z-10" style={{ padding: '0 20px 20px' }}>
+              <CardContent className="relative z-10" style={{ padding: '0 16px 16px' }}>
                 <div
-                  className="text-3xl md:text-4xl font-playfair font-black tracking-tight"
+                  className="text-2xl md:text-3xl lg:text-4xl font-playfair font-black tracking-tight leading-none"
                   style={{ color: card.valueColor || 'white' }}
                 >
                   {card.value}
                 </div>
                 {card.sub && (
-                  <p className="text-[10px] font-bold tracking-wide mt-2 uppercase" style={{ color: card.subColor || 'rgba(255,255,255,0.4)' }}>
+                  <p className="text-[9px] font-bold tracking-wide mt-2 uppercase leading-tight" style={{ color: card.subColor || 'rgba(255,255,255,0.4)' }}>
                     {card.sub}
                   </p>
                 )}
@@ -201,7 +201,7 @@ export default function Dashboard() {
                 {t('dash_chart_sub')}
               </CardDescription>
             </CardHeader>
-            <CardContent style={{ height: 340, padding: '28px 12px 12px' }}>
+            <CardContent className="chart-responsive" style={{ padding: '20px 8px 8px' }}>
               {projectChartData.length === 0 ? (
                 <div className="h-full flex items-center justify-center">
                   <p className="text-[10px] uppercase tracking-[0.2em] font-bold" style={{ color: 'rgba(255,255,255,0.2)' }}>

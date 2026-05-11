@@ -36,7 +36,7 @@ export default function Layout() {
   );
 
   return (
-    <div className="min-h-screen flex font-montserrat text-white pb-24 md:pb-0 relative overflow-hidden bg-black">
+    <div className="min-h-screen flex font-montserrat text-white pb-nav-safe relative overflow-hidden bg-black">
 
       {/* Desktop Sidebar */}
       <aside className="w-72 hidden md:flex flex-col shrink-0 sticky top-0 h-screen z-20 overflow-hidden elite-glass border-y-0 border-l-0">
@@ -150,9 +150,9 @@ export default function Layout() {
         </div>
       </aside>
 
-      {/* Mobile Top Header */}
+      {/* Mobile Top Header — safe area top for notched iPhones */}
       <header
-        className="md:hidden fixed top-0 left-0 right-0 z-20 h-[60px] flex items-center justify-between px-5 elite-glass border-y-0 border-x-0"
+        className="md:hidden fixed top-0 left-0 right-0 z-20 flex items-center justify-between px-5 elite-glass border-y-0 border-x-0 header-safe"
         style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}
       >
         <div className="flex items-center gap-3">
@@ -182,14 +182,14 @@ export default function Layout() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 w-full max-w-7xl mx-auto p-4 md:p-10 pt-[76px] md:pt-10 relative z-10">
+      <main className="flex-1 min-w-0 w-full max-w-7xl mx-auto px-4 md:px-10 pb-4 md:pb-10 main-pt-mobile md:pt-10 relative z-10">
         <AnimatePresence mode="wait">
           <motion.div
             key={location.pathname}
-            initial={{ opacity: 0, y: 16, filter: 'blur(8px)' }}
-            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-            exit={{ opacity: 0, y: -12, filter: 'blur(8px)' }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             className="h-full"
           >
             <Outlet />
@@ -197,16 +197,19 @@ export default function Layout() {
         </AnimatePresence>
       </main>
 
-      {/* Mobile Bottom Navigation — Floating Pill */}
-      <nav className="md:hidden fixed bottom-5 left-4 right-4 z-30">
+      {/* Mobile Bottom Navigation — Floating Pill with safe area */}
+      <nav
+        className="md:hidden fixed bottom-0 left-0 right-0 z-30 px-4"
+        style={{ paddingBottom: 'calc(1.25rem + env(safe-area-inset-bottom, 0px))' }}
+      >
         <div
-          className="rounded-2xl flex items-center justify-around px-2 py-2.5"
+          className="rounded-2xl flex items-center justify-around px-2 py-2"
           style={{
-            background: 'rgba(8, 8, 8, 0.93)',
+            background: 'rgba(8, 8, 8, 0.95)',
             backdropFilter: 'blur(40px)',
             WebkitBackdropFilter: 'blur(40px)',
             border: '1px solid rgba(255, 255, 255, 0.07)',
-            boxShadow: '0 8px 32px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255,255,255,0.04)',
+            boxShadow: '0 -1px 0 rgba(255,255,255,0.03), 0 8px 32px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.04)',
           }}
         >
           {navItems.map((item) => {
@@ -217,7 +220,7 @@ export default function Layout() {
               <Link
                 key={item.path}
                 to={item.path}
-                className="flex-1 flex flex-col items-center gap-1 py-2 px-1 rounded-xl relative"
+                className="flex-1 flex flex-col items-center gap-1 py-2.5 px-1 rounded-xl relative min-h-[48px] justify-center"
               >
                 {isActive && (
                   <motion.div
@@ -232,12 +235,12 @@ export default function Layout() {
                 )}
                 <item.icon
                   className="relative z-10 transition-colors duration-200"
-                  size={19}
-                  style={{ color: isActive ? '#D4AF37' : 'rgba(255,255,255,0.22)' }}
+                  size={20}
+                  style={{ color: isActive ? '#D4AF37' : 'rgba(255,255,255,0.25)' }}
                 />
                 <span
-                  className="text-[8px] font-bold uppercase tracking-[0.12em] relative z-10 transition-colors duration-200"
-                  style={{ color: isActive ? '#D4AF37' : 'rgba(255,255,255,0.18)' }}
+                  className="text-[9px] font-bold uppercase tracking-[0.1em] relative z-10 transition-colors duration-200"
+                  style={{ color: isActive ? '#D4AF37' : 'rgba(255,255,255,0.2)' }}
                 >
                   {item.label}
                 </span>
