@@ -40,6 +40,7 @@ export const addProject = async (data: Omit<Project, 'id' | 'createdAt' | 'updat
     return docRef.id;
   } catch (error) {
     handleFirestoreError(error, OperationType.CREATE, 'projects');
+    throw error;
   }
 };
 
@@ -51,6 +52,7 @@ export const updateProject = async (id: string, data: Partial<Omit<Project, 'id'
     });
   } catch (error) {
     handleFirestoreError(error, OperationType.UPDATE, `projects/${id}`);
+    throw error;
   }
 };
 
@@ -59,6 +61,7 @@ export const deleteProject = async (id: string) => {
     await deleteDoc(doc(db, 'projects', id));
   } catch (error) {
     handleFirestoreError(error, OperationType.DELETE, `projects/${id}`);
+    throw error;
   }
 };
 
@@ -107,6 +110,7 @@ export const addTrade = async (projectId: string, data: Omit<Trade, 'id' | 'proj
     return docRef.id;
   } catch (error) {
     handleFirestoreError(error, OperationType.CREATE, `projects/${projectId}/trades`);
+    throw error;
   }
 };
 
@@ -118,6 +122,7 @@ export const updateTrade = async (projectId: string, tradeId: string, data: Part
     });
   } catch (error) {
     handleFirestoreError(error, OperationType.UPDATE, `projects/${projectId}/trades/${tradeId}`);
+    throw error;
   }
 };
 
