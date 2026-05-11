@@ -300,7 +300,7 @@ export default function ProjectDetail() {
       )}
 
       {/* Mobile Trades List */}
-      <div className="md:hidden space-y-3">
+      <div className="lg:hidden space-y-3">
         {trades.length === 0 ? (
           <div
             className="elite-card text-center py-14 text-[10px] uppercase tracking-[0.2em] font-bold"
@@ -373,7 +373,7 @@ export default function ProjectDetail() {
       </div>
 
       {/* Desktop Trades Table */}
-      <motion.div variants={item} className="hidden md:flex elite-card overflow-hidden flex-col">
+      <motion.div variants={item} className="hidden lg:flex elite-card overflow-hidden flex-col">
         <div className="px-8 py-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', background: 'rgba(0,0,0,0.3)' }}>
           <h3 className="text-[9px] font-bold uppercase tracking-[0.22em]" style={{ color: 'rgba(255,255,255,0.35)' }}>{t('detail_ledger_title')}</h3>
         </div>

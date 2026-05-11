@@ -333,7 +333,7 @@ export default function Suppliers() {
                   </div>
 
                   {/* Trades — Mobile Cards */}
-                  <div className="md:hidden divide-y" style={{ borderColor: 'rgba(255,255,255,0.04)' }}>
+                  <div className="lg:hidden divide-y" style={{ borderColor: 'rgba(255,255,255,0.04)' }}>
                     {supplier.trades.map((trade) => {
                       const trRatio = trade.amount > 0 ? trade.totalAdvances / trade.amount : 0;
                       const trWarning = trRatio > 0.75;
@@ -391,7 +391,7 @@ export default function Suppliers() {
                   </div>
 
                   {/* Trades — Desktop Table */}
-                  <div className="hidden md:block overflow-x-auto">
+                  <div className="hidden lg:block overflow-x-auto">
                     <table className="min-w-full text-left border-collapse">
                       <thead style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
                         <tr>
