@@ -93,6 +93,10 @@ export default function ProjectDetail() {
   const handleAddTrade = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user || !id || !newTrade.designation) return;
+    if (newTrade.amount <= 0) {
+      alert('Please enter a budget greater than 0.');
+      return;
+    }
     setIsSavingTrade(true);
     try {
       await addTrade(id, {
@@ -120,9 +124,13 @@ export default function ProjectDetail() {
   const handleAddPayment = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user || !id || !selectedTrade) return;
+    const amount = Number(newPayment.amount);
+    if (amount <= 0) {
+      alert('Please enter an amount greater than 0.');
+      return;
+    }
     setIsSavingPayment(true);
     try {
-      const amount = Number(newPayment.amount);
       await addPayment(id, selectedTrade.id, {
         amount,
         date: new Date(newPayment.date),
@@ -519,10 +527,18 @@ export default function ProjectDetail() {
                   >
                     <Wallet size={20} style={{ color: '#D4AF37' }} />
                   </div>
-                  <div>
-                    <h2 className="text-2xl md:text-3xl font-playfair font-black text-white uppercase tracking-[0.04em]">
-                      {selectedTrade.designation}
-                    </h2>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3">
+                      <h2 className="text-2xl md:text-3xl font-playfair font-black text-white uppercase tracking-[0.04em]">
+                        {selectedTrade.designation}
+                      </h2>
+                      <button
+                        onClick={() => setSelectedTrade(null)}
+                        className="text-[9px] uppercase tracking-widest px-2 py-1 rounded border border-white/10 hover:border-white/30 text-white/40 hover:text-white transition-colors"
+                      >
+                        {t('detail_close')}
+                      </button>
+                    </div>
                     <p className="text-[9px] uppercase tracking-[0.2em] font-bold mt-1.5" style={{ color: 'rgba(255,255,255,0.35)' }}>
                       {t('detail_payment_sub')}
                     </p>
@@ -552,7 +568,7 @@ export default function ProjectDetail() {
                     <label className="block text-[9px] font-bold uppercase tracking-[0.22em] mb-2.5" style={{ color: 'rgba(255,255,255,0.38)' }}>
                       {t('detail_field_date')}
                     </label>
-                    <input type="date" required className="elite-input [color-scheme:dark]"
+                    <input type="date" required disabled={isSavingPayment} className="elite-input [color-scheme:dark]"
                       value={newPayment.date} onChange={(e) => setNewPayment({ ...newPayment, date: e.target.value })} />
                   </div>
                   <div>
@@ -561,6 +577,7 @@ export default function ProjectDetail() {
                     </label>
                     <select
                       className="elite-input"
+                      disabled={isSavingPayment}
                       value={newPayment.type}
                       onChange={(e) => setNewPayment({ ...newPayment, type: e.target.value as PaymentType })}
                     >
@@ -573,14 +590,14 @@ export default function ProjectDetail() {
                     <label className="block text-[9px] font-bold uppercase tracking-[0.22em] mb-2.5" style={{ color: 'rgba(255,255,255,0.38)' }}>
                       {t('detail_field_amount')}
                     </label>
-                    <input type="number" required placeholder="0" className="elite-input"
+                    <input type="number" required placeholder="0" disabled={isSavingPayment} className="elite-input"
                       value={newPayment.amount || ''} onChange={(e) => setNewPayment({ ...newPayment, amount: Number(e.target.value) })} />
                   </div>
                   <div className={newPayment.type === 'labor_expense' ? 'md:col-span-1' : 'md:col-span-2'}>
                     <label className="block text-[9px] font-bold uppercase tracking-[0.22em] mb-2.5" style={{ color: 'rgba(255,255,255,0.38)' }}>
                       {t('detail_field_ref')}
                     </label>
-                    <input placeholder="e.g. Invoice #123" className="elite-input"
+                    <input placeholder="e.g. Invoice #123" disabled={isSavingPayment} className="elite-input"
                       value={newPayment.designation} onChange={(e) => setNewPayment({ ...newPayment, designation: e.target.value })} />
                   </div>
                   {newPayment.type === 'labor_expense' && (
@@ -588,7 +605,7 @@ export default function ProjectDetail() {
                       <label className="block text-[9px] font-bold uppercase tracking-[0.22em] mb-2.5" style={{ color: 'rgba(255,255,255,0.38)' }}>
                         {t('detail_field_workers')}
                       </label>
-                      <input placeholder="e.g. Jean, Marc" className="elite-input"
+                      <input placeholder="e.g. Jean, Marc" disabled={isSavingPayment} className="elite-input"
                         value={newPayment.workerNames} onChange={(e) => setNewPayment({ ...newPayment, workerNames: e.target.value })} />
                     </div>
                   )}
@@ -610,7 +627,8 @@ export default function ProjectDetail() {
                     <button
                       type="button"
                       onClick={() => { setAddingPayment(false); setReceiptFile(null); }}
-                      className="text-[10px] uppercase tracking-[0.1em] style={{ color: 'rgba(255,255,255,0.35)' }}"
+                      className="text-[10px] uppercase tracking-[0.1em] transition-colors hover:text-white"
+                      style={{ color: 'rgba(255,255,255,0.35)' }}
                     >
                       {t('detail_trade_cancel')}
                     </button>
