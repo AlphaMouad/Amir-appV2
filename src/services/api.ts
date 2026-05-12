@@ -3,6 +3,16 @@ import { db } from '../lib/firebase';
 import { handleFirestoreError, OperationType } from './errorHandler';
 import { Project, Trade, Payment } from '../types';
 
+const cleanData = (obj: any): any => {
+  const newObj: any = {};
+  Object.keys(obj).forEach((key) => {
+    if (obj[key] !== undefined) {
+      newObj[key] = obj[key];
+    }
+  });
+  return newObj;
+};
+
 export const testConnection = async () => {
   try {
     await getDocFromServer(doc(db, 'test', 'connection'));
@@ -32,11 +42,11 @@ export const getProjects = (userId: string, callback: (projects: Project[]) => v
 export const addProject = async (data: Omit<Project, 'id' | 'createdAt' | 'updatedAt'>) => {
   try {
     const docRef = doc(collection(db, 'projects'));
-    await setDoc(docRef, {
+    await setDoc(docRef, cleanData({
       ...data,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp()
-    });
+    }));
     return docRef.id;
   } catch (error) {
     handleFirestoreError(error, OperationType.CREATE, 'projects');
@@ -46,10 +56,10 @@ export const addProject = async (data: Omit<Project, 'id' | 'createdAt' | 'updat
 
 export const updateProject = async (id: string, data: Partial<Omit<Project, 'id' | 'createdAt' | 'ownerId'>>) => {
   try {
-    await updateDoc(doc(db, 'projects', id), {
+    await updateDoc(doc(db, 'projects', id), cleanData({
       ...data,
       updatedAt: serverTimestamp()
-    });
+    }));
   } catch (error) {
     handleFirestoreError(error, OperationType.UPDATE, `projects/${id}`);
     throw error;
@@ -120,7 +130,7 @@ export const addTrade = async (projectId: string, data: Omit<Trade, 'id' | 'proj
   try {
     const path = `projects/${projectId}/trades`;
     const docRef = doc(collection(db, path));
-    await setDoc(docRef, {
+    await setDoc(docRef, cleanData({
       ...data,
       projectId,
       budget: data.budget ?? data.amount,
@@ -131,7 +141,7 @@ export const addTrade = async (projectId: string, data: Omit<Trade, 'id' | 'proj
       totalMaterialExpenses: 0,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp()
-    });
+    }));
     return docRef.id;
   } catch (error) {
     handleFirestoreError(error, OperationType.CREATE, `projects/${projectId}/trades`);
@@ -145,10 +155,10 @@ export const updateTrade = async (projectId: string, tradeId: string, data: Part
     if (data.budget !== undefined) updateData.amount = data.budget;
     if (data.totalClientAdvances !== undefined) updateData.totalAdvances = data.totalClientAdvances;
 
-    await updateDoc(doc(db, `projects/${projectId}/trades`, tradeId), {
+    await updateDoc(doc(db, `projects/${projectId}/trades`, tradeId), cleanData({
       ...updateData,
       updatedAt: serverTimestamp()
-    });
+    }));
   } catch (error) {
     handleFirestoreError(error, OperationType.UPDATE, `projects/${projectId}/trades/${tradeId}`);
     throw error;
@@ -199,13 +209,13 @@ export const addPayment = async (projectId: string, tradeId: string, data: Omit<
        receiptUrl = json.data.url;
     }
 
-    await setDoc(docRef, {
+    await setDoc(docRef, cleanData({
       ...data,
       projectId,
       tradeId,
       ...(receiptUrl ? { receiptUrl } : {}),
       createdAt: serverTimestamp()
-    });
+    }));
 
     // Update trade totals
     const tradeRef = doc(db, `projects/${projectId}/trades`, tradeId);

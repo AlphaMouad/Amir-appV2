@@ -85,9 +85,9 @@ export default function ProjectDetail() {
     );
   }
 
-  const totalBudget = trades.reduce((sum, t) => sum + (t.budget || t.amount || 0), 0);
-  const totalClientAdvances = trades.reduce((sum, t) => sum + (t.totalClientAdvances || t.totalAdvances || 0), 0);
-  const totalExpenses = trades.reduce((sum, t) => sum + (t.totalLaborExpenses || 0) + (t.totalMaterialExpenses || 0), 0);
+  const totalBudget = trades.reduce((sum, t) => sum + Number(t.budget || t.amount || 0), 0);
+  const totalClientAdvances = trades.reduce((sum, t) => sum + Number(t.totalClientAdvances || t.totalAdvances || 0), 0);
+  const totalExpenses = trades.reduce((sum, t) => sum + Number(t.totalLaborExpenses || 0) + Number(t.totalMaterialExpenses || 0), 0);
   const projectBalance = totalClientAdvances - totalExpenses;
 
   const handleAddTrade = async (e: React.FormEvent) => {

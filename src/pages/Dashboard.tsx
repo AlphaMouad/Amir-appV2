@@ -67,9 +67,9 @@ export default function Dashboard() {
 
   const totalProjects = projects.length;
   const activeProjects = projects.filter((p) => p.status === 'ongoing').length;
-  const globalBudget = trades.reduce((sum, t) => sum + (t.budget || t.amount || 0), 0);
-  const globalAdvances = trades.reduce((sum, t) => sum + (t.totalClientAdvances || t.totalAdvances || 0), 0);
-  const globalExpenses = trades.reduce((sum, t) => sum + (t.totalLaborExpenses || 0) + (t.totalMaterialExpenses || 0), 0);
+  const globalBudget = trades.reduce((sum, t) => sum + Number(t.budget || t.amount || 0), 0);
+  const globalAdvances = trades.reduce((sum, t) => sum + Number(t.totalClientAdvances || t.totalAdvances || 0), 0);
+  const globalExpenses = trades.reduce((sum, t) => sum + Number(t.totalLaborExpenses || 0) + Number(t.totalMaterialExpenses || 0), 0);
   const globalBalance = globalAdvances - globalExpenses;
 
   const tradesWithWarnings = trades.filter((t) => {
