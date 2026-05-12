@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
-import { getAllTrades, getProjects, addPayment, updateTrade, getPayments } from '../services/api';
+import { getAllTrades, getProjects, addPayment, updateTrade, getPayments, deleteTrade, deletePayment, deleteSupplier } from '../services/api';
 import { Trade, Project, Payment, PaymentType } from '../types';
-import { Building2, Search, Wallet, Plus, AlertCircle, User } from 'lucide-react';
+import { Building2, Search, Wallet, Plus, AlertCircle, User, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { ImageUpload } from '../components/ui/ImageUpload';
 import { LazyImage } from '../components/ui/LazyImage';
@@ -71,9 +71,13 @@ export default function Suppliers() {
   const handleAddPayment = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user || !selectedTrade) return;
+    const amount = Number(newPayment.amount);
+    if (amount <= 0) {
+      alert('Please enter an amount greater than 0.');
+      return;
+    }
     setIsSavingPayment(true);
     try {
-      const amount = Number(newPayment.amount);
       await addPayment(selectedTrade.projectId, selectedTrade.id, {
         amount,
         date: new Date(newPayment.date),
@@ -191,7 +195,7 @@ export default function Suppliers() {
                   </div>
                   <div>
                     <label className="block text-[9px] font-bold uppercase tracking-[0.22em] mb-2.5" style={{ color: 'rgba(255,255,255,0.38)' }}>{t('detail_field_amount')}</label>
-                    <input type="number" required placeholder="0" className="elite-input"
+                    <input type="number" step="any" required placeholder="0" className="elite-input"
                       value={newPayment.amount || ''} onChange={(e) => setNewPayment({ ...newPayment, amount: Number(e.target.value) })} />
                   </div>
                   <div className={newPayment.type === 'labor_expense' ? 'md:col-span-1' : 'md:col-span-2'}>
@@ -257,7 +261,19 @@ export default function Suppliers() {
                               </p>
                             </div>
                           </div>
-                          <span className="font-playfair font-black text-2xl text-white">€ {payment.amount.toLocaleString()}</span>
+                          <div className="flex items-center gap-4">
+                            <span className="font-playfair font-black text-2xl text-white">€ {payment.amount.toLocaleString()}</span>
+                            <button
+                              onClick={async () => {
+                                if (confirm('Delete this record?')) {
+                                  await deletePayment(trade.projectId, trade.id, payment);
+                                }
+                              }}
+                              className="p-2 text-white/10 hover:text-red-500 transition-colors"
+                            >
+                              <Trash2 size={14} />
+                            </button>
+                          </div>
                         </div>
                         {payment.receiptUrl && (
                           <button
@@ -354,6 +370,18 @@ export default function Suppliers() {
                             € {supplier.totalExpenses.toLocaleString()}
                           </p>
                         </div>
+                        <div className="w-px h-10" style={{ background: 'rgba(255,255,255,0.08)' }} />
+                        <button
+                          onClick={async () => {
+                            if (confirm(`Delete everything related to ${supplier.name}? This will delete ${supplier.trades.length} trades.`)) {
+                              await deleteSupplier(user!.uid, supplier.name, trades);
+                            }
+                          }}
+                          className="p-3 text-white/10 hover:text-red-500 transition-colors"
+                          title="Delete Supplier"
+                        >
+                          <Trash2 size={20} />
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -461,16 +489,29 @@ export default function Suppliers() {
                                   € {balance.toLocaleString()}
                                 </td>
                                 <td className="px-7 py-5 whitespace-nowrap text-right">
-                                  <button
-                                    className="px-5 py-2 text-[9px] uppercase tracking-[0.1em] font-bold transition-all duration-200 rounded-lg"
-                                    style={isExpanded
-                                      ? { background: '#D4AF37', color: '#000', border: '1px solid #D4AF37' }
-                                      : { background: 'transparent', color: 'rgba(255,255,255,0.4)', border: '1px solid rgba(255,255,255,0.1)' }
-                                    }
-                                    onClick={() => { setSelectedTrade(isExpanded ? null : trade); setAddingPayment(false); }}
-                                  >
-                                    {isExpanded ? t('detail_close') : t('detail_manage')}
-                                  </button>
+                                  <div className="flex items-center justify-end gap-3">
+                                    <button
+                                      className="px-5 py-2 text-[9px] uppercase tracking-[0.1em] font-bold transition-all duration-200 rounded-lg"
+                                      style={isExpanded
+                                        ? { background: '#D4AF37', color: '#000', border: '1px solid #D4AF37' }
+                                        : { background: 'transparent', color: 'rgba(255,255,255,0.4)', border: '1px solid rgba(255,255,255,0.1)' }
+                                      }
+                                      onClick={() => { setSelectedTrade(isExpanded ? null : trade); setAddingPayment(false); }}
+                                    >
+                                      {isExpanded ? t('detail_close') : t('detail_manage')}
+                                    </button>
+                                    <button
+                                      onClick={async () => {
+                                        if (confirm('Delete this trade?')) {
+                                          await deleteTrade(trade.projectId, trade.id);
+                                          if (isExpanded) setSelectedTrade(null);
+                                        }
+                                      }}
+                                      className="p-2 text-white/10 hover:text-red-500 transition-colors"
+                                    >
+                                      <Trash2 size={14} />
+                                    </button>
+                                  </div>
                                 </td>
                               </tr>
                               {isExpanded && (

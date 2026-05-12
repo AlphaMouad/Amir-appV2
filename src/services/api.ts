@@ -94,6 +94,18 @@ export const deletePayment = async (projectId: string, tradeId: string, payment:
   }
 };
 
+export const deleteSupplier = async (userId: string, supplierName: string, trades: Trade[]) => {
+  try {
+    const promises = trades
+      .filter(t => t.supplierName === supplierName && t.ownerId === userId)
+      .map(t => deleteTrade(t.projectId, t.id));
+    await Promise.all(promises);
+  } catch (error) {
+    handleFirestoreError(error, OperationType.DELETE, `supplier/${supplierName}`);
+    throw error;
+  }
+};
+
 export const updateProject = async (id: string, data: Partial<Omit<Project, 'id' | 'createdAt' | 'ownerId'>>) => {
   try {
     await updateDoc(doc(db, 'projects', id), cleanData({

@@ -304,7 +304,7 @@ export default function ProjectDetail() {
                   <label className="block text-[9px] font-bold uppercase tracking-[0.22em] mb-2.5" style={{ color: 'rgba(255,255,255,0.38)' }}>
                     {t('detail_trade_budget')}
                   </label>
-                  <input type="number" required placeholder="0" className="elite-input"
+                  <input type="number" step="any" required placeholder="0" className="elite-input"
                     value={newTrade.amount || ''} onChange={(e) => setNewTrade({ ...newTrade, amount: Number(e.target.value) })} />
                 </div>
                 <div className="flex items-end gap-5 pb-0.5">
@@ -603,7 +603,7 @@ export default function ProjectDetail() {
                     <label className="block text-[9px] font-bold uppercase tracking-[0.22em] mb-2.5" style={{ color: 'rgba(255,255,255,0.38)' }}>
                       {t('detail_field_amount')}
                     </label>
-                    <input type="number" required placeholder="0" disabled={isSavingPayment} className="elite-input"
+                    <input type="number" step="any" required placeholder="0" disabled={isSavingPayment} className="elite-input"
                       value={newPayment.amount || ''} onChange={(e) => setNewPayment({ ...newPayment, amount: Number(e.target.value) })} />
                   </div>
                   <div className={newPayment.type === 'labor_expense' ? 'md:col-span-1' : 'md:col-span-2'}>
