@@ -179,7 +179,9 @@ export const addPayment = async (projectId: string, tradeId: string, data: Omit<
     let receiptUrl = undefined;
     if (receiptImageFile) {
        const imgbbApiKey = import.meta.env.VITE_IMGBB_API_KEY;
-       if (!imgbbApiKey) throw new Error("VITE_IMGBB_API_KEY is not configured in Vercel Environment Variables.");
+       if (!imgbbApiKey) {
+         throw new Error("ImgBB API Key is missing. If you just added it to Vercel, please REDEPLOY your application for changes to take effect.");
+       }
 
        const formData = new FormData();
        formData.append('image', receiptImageFile);
