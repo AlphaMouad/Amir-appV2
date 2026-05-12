@@ -54,6 +54,46 @@ export const addProject = async (data: Omit<Project, 'id' | 'createdAt' | 'updat
   }
 };
 
+export const deleteTrade = async (projectId: string, tradeId: string) => {
+  try {
+    await deleteDoc(doc(db, `projects/${projectId}/trades`, tradeId));
+  } catch (error) {
+    handleFirestoreError(error, OperationType.DELETE, `projects/${projectId}/trades/${tradeId}`);
+    throw error;
+  }
+};
+
+export const deletePayment = async (projectId: string, tradeId: string, payment: Payment) => {
+  try {
+    const paymentRef = doc(db, `projects/${projectId}/trades/${tradeId}/payments`, payment.id);
+    await deleteDoc(paymentRef);
+
+    // Update trade totals
+    const tradeRef = doc(db, `projects/${projectId}/trades`, tradeId);
+    const updates: any = {};
+    const amount = -Number(payment.amount);
+
+    if (payment.type === 'client_advance' || payment.type === 'advance' || payment.type === 'income') {
+      updates.totalClientAdvances = increment(amount);
+      updates.totalAdvances = increment(amount);
+    } else if (payment.type === 'labor_expense') {
+      updates.totalLaborExpenses = increment(amount);
+    } else if (payment.type === 'material_expense' || payment.type === 'expense') {
+      updates.totalMaterialExpenses = increment(amount);
+    }
+
+    if (Object.keys(updates).length > 0) {
+      await updateDoc(tradeRef, {
+        ...updates,
+        updatedAt: serverTimestamp()
+      });
+    }
+  } catch (error) {
+    handleFirestoreError(error, OperationType.DELETE, `projects/${projectId}/trades/${tradeId}/payments/${payment.id}`);
+    throw error;
+  }
+};
+
 export const updateProject = async (id: string, data: Partial<Omit<Project, 'id' | 'createdAt' | 'ownerId'>>) => {
   try {
     await updateDoc(doc(db, 'projects', id), cleanData({

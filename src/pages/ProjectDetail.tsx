@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
-import { getProjects, getTrades, addTrade, updateTrade, getPayments, addPayment } from '../services/api';
+import { getProjects, getTrades, addTrade, updateTrade, getPayments, addPayment, deleteTrade, deletePayment } from '../services/api';
 import { Project, Trade, Payment, PaymentType } from '../types';
-import { ArrowLeft, Plus, AlertCircle, Wallet, Building2, User } from 'lucide-react';
+import { ArrowLeft, Plus, AlertCircle, Wallet, Building2, User, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { ImageUpload } from '../components/ui/ImageUpload';
 import { LazyImage } from '../components/ui/LazyImage';
@@ -85,9 +85,9 @@ export default function ProjectDetail() {
     );
   }
 
-  const totalBudget = trades.reduce((sum, t) => sum + Number(t.budget || t.amount || 0), 0);
-  const totalClientAdvances = trades.reduce((sum, t) => sum + Number(t.totalClientAdvances || t.totalAdvances || 0), 0);
-  const totalExpenses = trades.reduce((sum, t) => sum + Number(t.totalLaborExpenses || 0) + Number(t.totalMaterialExpenses || 0), 0);
+  const totalBudget = Number(trades.reduce((sum, t) => sum + Number(t.budget || t.amount || 0), 0).toFixed(2));
+  const totalClientAdvances = Number(trades.reduce((sum, t) => sum + Number(t.totalClientAdvances || t.totalAdvances || 0), 0).toFixed(2));
+  const totalExpenses = Number(trades.reduce((sum, t) => sum + Number(t.totalLaborExpenses || 0) + Number(t.totalMaterialExpenses || 0), 0).toFixed(2));
   const projectBalance = totalClientAdvances - totalExpenses;
 
   const handleAddTrade = async (e: React.FormEvent) => {
@@ -487,16 +487,29 @@ export default function ProjectDetail() {
                         </div>
                       </td>
                       <td className="px-7 py-5 whitespace-nowrap text-right">
-                        <button
-                          className="px-5 py-2 text-[9px] uppercase tracking-[0.1em] font-bold transition-all duration-200 rounded-lg"
-                          style={isSelected
-                            ? { background: '#D4AF37', color: '#000', border: '1px solid #D4AF37' }
-                            : { background: 'transparent', color: 'rgba(255,255,255,0.4)', border: '1px solid rgba(255,255,255,0.1)' }
-                          }
-                          onClick={() => setSelectedTrade(isSelected ? null : trade)}
-                        >
-                          {isSelected ? t('detail_close') : t('detail_manage')}
-                        </button>
+                        <div className="flex items-center justify-end gap-3">
+                          <button
+                            className="px-5 py-2 text-[9px] uppercase tracking-[0.1em] font-bold transition-all duration-200 rounded-lg"
+                            style={isSelected
+                              ? { background: '#D4AF37', color: '#000', border: '1px solid #D4AF37' }
+                              : { background: 'transparent', color: 'rgba(255,255,255,0.4)', border: '1px solid rgba(255,255,255,0.1)' }
+                            }
+                            onClick={() => setSelectedTrade(isSelected ? null : trade)}
+                          >
+                            {isSelected ? t('detail_close') : t('detail_manage')}
+                          </button>
+                          <button
+                            onClick={async () => {
+                              if (confirm('Delete this trade? This cannot be undone.')) {
+                                await deleteTrade(id!, trade.id);
+                                if (isSelected) setSelectedTrade(null);
+                              }
+                            }}
+                            className="p-2 text-white/20 hover:text-red-500 transition-colors"
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   );
@@ -649,7 +662,13 @@ export default function ProjectDetail() {
                     </p>
                   ) : (
                     incomePayments.map((payment) => (
-                      <PaymentCard key={payment.id} payment={payment} t={t} onImageClick={setLightboxSrc} />
+                      <PaymentCard
+                        key={payment.id}
+                        payment={payment}
+                        t={t}
+                        onImageClick={setLightboxSrc}
+                        onDelete={(p) => deletePayment(id!, selectedTrade.id, p)}
+                      />
                     ))
                   )}
                 </div>
@@ -668,7 +687,13 @@ export default function ProjectDetail() {
                     </p>
                   ) : (
                     expensePayments.map((payment) => (
-                      <PaymentCard key={payment.id} payment={payment} t={t} onImageClick={setLightboxSrc} />
+                      <PaymentCard
+                        key={payment.id}
+                        payment={payment}
+                        t={t}
+                        onImageClick={setLightboxSrc}
+                        onDelete={(p) => deletePayment(id!, selectedTrade.id, p)}
+                      />
                     ))
                   )}
                 </div>
@@ -683,7 +708,7 @@ export default function ProjectDetail() {
   );
 }
 
-function PaymentCard({ payment, t, onImageClick }: { payment: Payment, t: any, onImageClick: (src: string) => void }) {
+function PaymentCard({ payment, t, onImageClick, onDelete }: { payment: Payment, t: any, onImageClick: (src: string) => void, onDelete: (p: Payment) => void }) {
   const isIncome = payment.type === 'client_advance' || payment.type === 'advance' || payment.type === 'income';
   const typeLabel = payment.type === 'labor_expense' ? t('detail_expense_labor_label') :
                    payment.type === 'material_expense' || payment.type === 'expense' ? t('detail_expense_material_label') :
@@ -713,9 +738,19 @@ function PaymentCard({ payment, t, onImageClick }: { payment: Payment, t: any, o
             </p>
           </div>
         </div>
-        <span className="font-playfair font-black text-2xl text-white tracking-tight">
-          € {payment.amount.toLocaleString()}
-        </span>
+        <div className="flex items-center gap-4">
+          <span className="font-playfair font-black text-2xl text-white tracking-tight">
+            € {payment.amount.toLocaleString()}
+          </span>
+          <button
+            onClick={() => {
+              if (confirm('Delete this record?')) onDelete(payment);
+            }}
+            className="p-2 text-white/10 hover:text-red-500 transition-colors"
+          >
+            <Trash2 size={14} />
+          </button>
+        </div>
       </div>
       {payment.receiptUrl && (
         <button
