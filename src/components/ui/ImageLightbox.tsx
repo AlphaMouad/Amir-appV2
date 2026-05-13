@@ -56,18 +56,18 @@ export default function ImageLightbox({ src, onClose }: ImageLightboxProps) {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.22 }}
           className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8"
-          style={{ background: 'rgba(0,0,0,0.92)', backdropFilter: 'blur(16px)' }}
+          style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(16px)' }}
           onClick={onClose}
         >
           {/* Top bar */}
           <div
             className="absolute top-0 left-0 right-0 flex items-center justify-between px-5 py-4 z-10"
-            style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.7), transparent)' }}
+            style={{ background: 'linear-gradient(to bottom, var(--glass-bg), transparent)' }}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center gap-2.5">
               <ZoomIn size={13} style={{ color: 'rgba(212,175,55,0.7)' }} />
-              <span className="text-[10px] font-bold uppercase tracking-[0.25em]" style={{ color: 'rgba(255,255,255,0.5)' }}>
+              <span className="text-[10px] font-bold uppercase tracking-[0.25em]" style={{ color: 'var(--text-silver)' }}>
                 {t('img_receipt')}
               </span>
             </div>
@@ -88,9 +88,9 @@ export default function ImageLightbox({ src, onClose }: ImageLightboxProps) {
                 onClick={onClose}
                 className="w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95"
                 style={{
-                  background: 'rgba(255,255,255,0.06)',
-                  border: '1px solid rgba(255,255,255,0.1)',
-                  color: 'rgba(255,255,255,0.6)',
+                  background: 'var(--card-border)',
+                  border: '1px solid var(--card-border)',
+                  color: 'var(--text-silver)',
                 }}
               >
                 <X size={15} />
@@ -116,7 +116,7 @@ export default function ImageLightbox({ src, onClose }: ImageLightboxProps) {
               style={{
                 maxWidth: '100%',
                 maxHeight: '82vh',
-                boxShadow: '0 32px 80px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.06)',
+                boxShadow: '0 32px 80px var(--card-shadow), 0 0 0 1px var(--card-border)',
               }}
             />
           </motion.div>
@@ -124,7 +124,7 @@ export default function ImageLightbox({ src, onClose }: ImageLightboxProps) {
           {/* Bottom hint */}
           <p
             className="absolute bottom-5 left-0 right-0 text-center text-[9px] uppercase tracking-[0.25em] font-bold"
-            style={{ color: 'rgba(255,255,255,0.15)' }}
+            style={{ color: 'var(--text-silver)' }}
           >
             {t('img_press_esc')}
           </p>

@@ -222,7 +222,7 @@ export default function Layout() {
             backdropFilter: 'blur(40px)',
             WebkitBackdropFilter: 'blur(40px)',
             border: '1px solid var(--card-border)',
-            boxShadow: `0 -1px 0 rgba(255,255,255,0.03), 0 8px 32px var(--card-shadow)`,
+            boxShadow: `0 -1px 0 rgba(128,128,128,0.05), 0 8px 32px var(--card-shadow)`,
           }}
         >
           {navItems.map((item) => {

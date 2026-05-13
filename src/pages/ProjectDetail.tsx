@@ -331,8 +331,8 @@ export default function ProjectDetail() {
                     type="button"
                     onClick={() => setAddingTrade(false)}
                     disabled={isSavingTrade}
-                    className="text-[10px] uppercase tracking-[0.1em] transition-colors hover:text-white pb-0.5 disabled:opacity-40"
-                    style={{ color: 'rgba(255,255,255,0.35)' }}
+                    className="text-[10px] uppercase tracking-[0.1em] transition-colors hover:text-foreground pb-0.5 disabled:opacity-40"
+                    style={{ color: 'var(--text-silver)' }}
                   >
                     {t('detail_trade_cancel')}
                   </button>
@@ -432,7 +432,7 @@ export default function ProjectDetail() {
         <div className="overflow-x-auto">
           <table className="min-w-full text-left border-collapse">
             <thead>
-              <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+              <tr style={{ borderBottom: '1px solid var(--card-border)' }}>
                 {[t('detail_th_designation'), t('detail_th_budget'), t('detail_th_advances'), t('detail_th_expenses'), t('detail_th_balance'), t('detail_th_risk'), t('detail_th_actions')].map((h, i) => (
                   <th
                     key={h}
@@ -447,7 +447,7 @@ export default function ProjectDetail() {
             <tbody>
               {trades.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-8 py-20 text-center text-[10px] uppercase tracking-[0.22em] font-bold" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                  <td colSpan={7} className="px-8 py-20 text-center text-[10px] uppercase tracking-[0.22em] font-bold" style={{ color: 'var(--text-silver)' }}>
                     {t('detail_no_trades')}
                   </td>
                 </tr>
@@ -466,7 +466,7 @@ export default function ProjectDetail() {
                       key={trade.id}
                       className="transition-colors duration-300"
                       style={{
-                        borderBottom: '1px solid rgba(255,255,255,0.03)',
+                        borderBottom: '1px solid var(--card-border)',
                         background: isSelected ? 'rgba(212,175,55,0.04)' : 'transparent',
                       }}
                     >
@@ -517,7 +517,7 @@ export default function ProjectDetail() {
                                 if (isSelected) setSelectedTrade(null);
                               }
                             }}
-                            className="p-2 text-white/20 hover:text-red-500 transition-colors"
+                            className="p-2 text-foreground/20 hover:text-red-500 transition-colors"
                           >
                             <Trash2 size={14} />
                           </button>
@@ -660,8 +660,8 @@ export default function ProjectDetail() {
                     <button
                       type="button"
                       onClick={() => { setAddingPayment(false); setReceiptFile(null); }}
-                      className="text-[10px] uppercase tracking-[0.1em] transition-colors hover:text-white"
-                      style={{ color: 'rgba(255,255,255,0.35)' }}
+                      className="text-[10px] uppercase tracking-[0.1em] transition-colors hover:text-foreground"
+                      style={{ color: 'var(--text-silver)' }}
                     >
                       {t('detail_trade_cancel')}
                     </button>
@@ -766,7 +766,7 @@ function PaymentCard({ payment, t, onImageClick, onDelete }: { payment: Payment,
             onClick={() => {
               if (confirm('Delete this record?')) onDelete(payment);
             }}
-            className="p-2 text-white/10 hover:text-red-500 transition-colors"
+            className="p-2 text-foreground/10 hover:text-red-500 transition-colors"
           >
             <Trash2 size={14} />
           </button>
@@ -775,7 +775,7 @@ function PaymentCard({ payment, t, onImageClick, onDelete }: { payment: Payment,
       {payment.receiptUrl && (
         <button
           className="mt-5 w-32 h-32 rounded-xl overflow-hidden group relative text-left"
-          style={{ border: '1px solid rgba(255,255,255,0.1)' }}
+          style={{ border: '1px solid var(--card-border)' }}
           onClick={() => onImageClick(payment.receiptUrl!)}
         >
           <LazyImage src={payment.receiptUrl} alt={t('img_receipt')} className="w-full h-full" />

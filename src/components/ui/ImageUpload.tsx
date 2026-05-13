@@ -56,16 +56,16 @@ export function ImageUpload({ onImageSelected, onClear, isLoading = false }: Ima
 
   if (preview) {
     return (
-      <div className="relative w-full h-36 rounded-xl overflow-hidden group" style={{ border: '1px solid rgba(255,255,255,0.1)' }}>
+      <div className="relative w-full h-36 rounded-xl overflow-hidden group" style={{ border: '1px solid var(--card-border)' }}>
         <img src={preview} alt="Receipt preview" className="w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/55 transition-all duration-300 flex items-center justify-center">
+        <div className="absolute inset-0 bg-background/0 group-hover:bg-background/55 transition-all duration-300 flex items-center justify-center">
           {isLoading ? (
-            <Loader2 className="h-5 w-5 text-white animate-spin opacity-0 group-hover:opacity-100 transition-opacity" />
+            <Loader2 className="h-5 w-5 text-foreground animate-spin opacity-0 group-hover:opacity-100 transition-opacity" />
           ) : (
             <button
               onClick={clearImage}
-              className="opacity-0 group-hover:opacity-100 transition-all duration-200 p-2.5 rounded-full border border-white/20 text-white"
-              style={{ background: 'rgba(0,0,0,0.7)' }}
+              className="opacity-0 group-hover:opacity-100 transition-all duration-200 p-2.5 rounded-full border border-white/20 text-foreground"
+              style={{ background: 'var(--glass-bg)' }}
             >
               <X className="h-4 w-4" />
             </button>
@@ -79,8 +79,8 @@ export function ImageUpload({ onImageSelected, onClear, isLoading = false }: Ima
     <div
       className="relative w-full h-36 rounded-xl flex flex-col items-center justify-center overflow-hidden cursor-pointer transition-all duration-300"
       style={{
-        border: dragActive ? '1px solid rgba(212,175,55,0.55)' : '1px dashed rgba(255,255,255,0.1)',
-        background: dragActive ? 'rgba(212,175,55,0.04)' : 'rgba(255,255,255,0.01)',
+        border: dragActive ? '1px solid rgba(212,175,55,0.55)' : '1px dashed var(--card-border)',
+        background: dragActive ? 'rgba(212,175,55,0.04)' : 'var(--card-border)',
         boxShadow: dragActive ? '0 0 20px rgba(212,175,55,0.08)' : 'none',
       }}
       onDragEnter={handleDrag}
@@ -98,14 +98,14 @@ export function ImageUpload({ onImageSelected, onClear, isLoading = false }: Ima
       <div className="flex flex-col items-center gap-3 pointer-events-none text-center px-4">
         <UploadCloud
           className="h-7 w-7 transition-colors duration-300"
-          style={{ color: dragActive ? '#D4AF37' : 'rgba(255,255,255,0.2)' }}
+          style={{ color: dragActive ? '#D4AF37' : 'var(--icon-muted)' }}
         />
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.15em]" style={{ color: 'rgba(255,255,255,0.3)' }}>
-            <span style={{ color: dragActive ? '#D4AF37' : 'rgba(255,255,255,0.5)' }}>Upload receipt</span>
+          <p className="text-[10px] font-bold uppercase tracking-[0.15em]" style={{ color: 'var(--text-silver)' }}>
+            <span style={{ color: dragActive ? '#D4AF37' : 'var(--text-silver)' }}>Upload receipt</span>
             {' '}or drag & drop
           </p>
-          <p className="text-[9px] mt-1 tracking-wide" style={{ color: 'rgba(255,255,255,0.18)' }}>PNG, JPG, GIF</p>
+          <p className="text-[9px] mt-1 tracking-wide" style={{ color: 'var(--text-silver)' }}>PNG, JPG, GIF</p>
         </div>
       </div>
     </div>

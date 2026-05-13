@@ -57,10 +57,10 @@ export default function ProjectList() {
       <motion.div
         variants={item}
         className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 pb-6"
-        style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}
+        style={{ borderBottom: '1px solid var(--card-border)' }}
       >
         <div>
-          <h1 className="text-4xl font-playfair font-black tracking-[0.05em] text-white uppercase mb-2">{t('proj_title')}</h1>
+          <h1 className="text-4xl font-playfair font-black tracking-[0.05em] text-foreground uppercase mb-2">{t('proj_title')}</h1>
           <p className="elite-text-silver tracking-wide">{t('proj_subtitle')}</p>
         </div>
         <button
@@ -86,12 +86,12 @@ export default function ProjectList() {
             className="absolute top-[-60px] right-[-60px] w-72 h-72 rounded-full pointer-events-none"
             style={{ background: 'rgba(212,175,55,0.05)', filter: 'blur(80px)' }}
           />
-          <h2 className="text-xl font-playfair font-black mb-8 text-white uppercase tracking-[0.1em] relative z-10">
+          <h2 className="text-xl font-playfair font-black mb-8 text-foreground uppercase tracking-[0.1em] relative z-10">
             {t('proj_form_title')}
           </h2>
           <form onSubmit={handleCreate} className="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
             <div>
-              <label className="block text-[9px] font-bold uppercase tracking-[0.22em] mb-2.5" style={{ color: 'rgba(255,255,255,0.38)' }}>
+              <label className="block text-[9px] font-bold uppercase tracking-[0.22em] mb-2.5" style={{ color: 'var(--text-silver)' }}>
                 {t('proj_field_name')}
               </label>
               <input
@@ -104,7 +104,7 @@ export default function ProjectList() {
               />
             </div>
             <div>
-              <label className="block text-[9px] font-bold uppercase tracking-[0.22em] mb-2.5" style={{ color: 'rgba(255,255,255,0.38)' }}>
+              <label className="block text-[9px] font-bold uppercase tracking-[0.22em] mb-2.5" style={{ color: 'var(--text-silver)' }}>
                 {t('proj_field_client')}
               </label>
               <input
@@ -117,7 +117,7 @@ export default function ProjectList() {
               />
             </div>
             <div>
-              <label className="block text-[9px] font-bold uppercase tracking-[0.22em] mb-2.5" style={{ color: 'rgba(255,255,255,0.38)' }}>
+              <label className="block text-[9px] font-bold uppercase tracking-[0.22em] mb-2.5" style={{ color: 'var(--text-silver)' }}>
                 {t('proj_field_contractor')}
               </label>
               <input
@@ -128,15 +128,15 @@ export default function ProjectList() {
                 placeholder="e.g. AMG Building"
               />
             </div>
-            <div className="md:col-span-3 flex items-center gap-6 pt-4" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
+            <div className="md:col-span-3 flex items-center gap-6 pt-4" style={{ borderTop: '1px solid var(--card-border)' }}>
               <button type="submit" className="elite-button px-9 py-3 uppercase text-[11px] tracking-[0.1em]">
                 {t('proj_deploy')}
               </button>
               <button
                 type="button"
                 onClick={() => setIsCreating(false)}
-                className="text-[11px] uppercase tracking-[0.1em] transition-colors duration-200 hover:text-white"
-                style={{ color: 'rgba(255,255,255,0.35)' }}
+                className="text-[11px] uppercase tracking-[0.1em] transition-colors duration-200 hover:text-foreground"
+                style={{ color: 'var(--text-silver)' }}
               >
                 {t('proj_cancel')}
               </button>
@@ -156,13 +156,13 @@ export default function ProjectList() {
                 <div className="flex items-start justify-between mb-7">
                   <div className="flex items-center gap-4">
                     <div
-                      className="h-11 w-11 rounded-xl bg-black flex items-center justify-center transition-colors duration-400 shrink-0"
-                      style={{ border: '1px solid rgba(255,255,255,0.08)' }}
+                      className="h-11 w-11 rounded-xl bg-background flex items-center justify-center transition-colors duration-400 shrink-0"
+                      style={{ border: '1px solid var(--card-border)' }}
                     >
                       <Building2 size={18} style={{ color: '#D4AF37' }} />
                     </div>
                     <div className="min-w-0">
-                      <h3 className="font-playfair font-black text-lg text-white uppercase tracking-[0.04em] leading-tight truncate max-w-[150px]">
+                      <h3 className="font-playfair font-black text-lg text-foreground uppercase tracking-[0.04em] leading-tight truncate max-w-[150px]">
                         {project.name}
                       </h3>
                       <p className="text-[9px] uppercase tracking-[0.2em] mt-1 font-bold" style={{ color: '#D4AF37' }}>
@@ -170,7 +170,7 @@ export default function ProjectList() {
                       </p>
                     </div>
                   </div>
-                  <span className="text-[9px] font-bold uppercase tracking-[0.06em] ml-2 mt-0.5" style={{ color: 'rgba(255,255,255,0.2)' }}>
+                  <span className="text-[9px] font-bold uppercase tracking-[0.06em] ml-2 mt-0.5" style={{ color: 'var(--icon-muted)' }}>
                     #{String(index + 1).padStart(2, '0')}
                   </span>
                 </div>
@@ -178,7 +178,7 @@ export default function ProjectList() {
                 {/* Footer */}
                 <div className="mt-auto">
                   <div className="flex items-center justify-between mb-5">
-                    <span className="text-[10px] uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                    <span className="text-[10px] uppercase tracking-widest" style={{ color: 'var(--text-silver)' }}>
                       {project.createdAt ? format(project.createdAt, 'MMM d, yyyy') : '—'}
                     </span>
                     <span className={project.status === 'ongoing' ? 'elite-badge-gold' : 'elite-badge-muted'}>
@@ -186,7 +186,7 @@ export default function ProjectList() {
                     </span>
                   </div>
 
-                  <div className="flex items-center justify-between gap-3 pt-5" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
+                  <div className="flex items-center justify-between gap-3 pt-5" style={{ borderTop: '1px solid var(--card-border)' }}>
                     <Link to={`/projects/${project.id}`} className="flex-1">
                       <button className="elite-button-outline w-full py-2.5 flex items-center justify-center uppercase text-[10px] tracking-[0.18em] gap-2">
                         {t('proj_open')}
@@ -195,14 +195,14 @@ export default function ProjectList() {
                     </Link>
                     <button
                       className="h-11 w-11 flex items-center justify-center rounded-xl transition-colors duration-200"
-                      style={{ border: '1px solid transparent', color: 'rgba(255,255,255,0.18)' }}
+                      style={{ border: '1px solid transparent', color: 'var(--text-silver)' }}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.borderColor = 'rgba(248,113,113,0.3)';
                         e.currentTarget.style.color = '#f87171';
                       }}
                       onMouseLeave={(e) => {
                         e.currentTarget.style.borderColor = 'transparent';
-                        e.currentTarget.style.color = 'rgba(255,255,255,0.18)';
+                        e.currentTarget.style.color = 'var(--text-silver)';
                       }}
                       onClick={async () => {
                         if (confirm(t('proj_delete_confirm'))) {
@@ -231,18 +231,18 @@ export default function ProjectList() {
           <motion.div variants={item} className="col-span-full">
             <div
               className="elite-card flex flex-col items-center justify-center py-32 px-6 group relative overflow-hidden"
-              style={{ border: '1px dashed rgba(255,255,255,0.08)' }}
+              style={{ border: '1px dashed var(--card-border)' }}
             >
               <div
                 className="h-18 w-18 rounded-full flex items-center justify-center mb-6 transition-all duration-600 group-hover:scale-110"
-                style={{ background: 'rgba(0,0,0,0.6)', border: '1px solid rgba(255,255,255,0.08)', width: 72, height: 72 }}
+                style={{ background: 'rgba(128,128,128,0.05)', border: '1px solid var(--card-border)', width: 72, height: 72 }}
               >
-                <Building2 size={28} className="transition-colors duration-600 group-hover:text-[#D4AF37]" style={{ color: 'rgba(255,255,255,0.18)' }} />
+                <Building2 size={28} className="transition-colors duration-600 group-hover:text-[#D4AF37]" style={{ color: 'var(--text-silver)' }} />
               </div>
-              <h3 className="text-xl font-playfair font-black text-white uppercase tracking-[0.1em] relative z-10">
+              <h3 className="text-xl font-playfair font-black text-foreground uppercase tracking-[0.1em] relative z-10">
                 {t('proj_empty_title')}
               </h3>
-              <p className="mt-3 max-w-xs text-center relative z-10 text-[12px] tracking-wide font-light" style={{ color: 'rgba(255,255,255,0.35)' }}>
+              <p className="mt-3 max-w-xs text-center relative z-10 text-[12px] tracking-wide font-light" style={{ color: 'var(--text-silver)' }}>
                 {t('proj_empty_sub')}
               </p>
               <button

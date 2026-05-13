@@ -187,14 +187,14 @@ export default function Suppliers() {
           >
             <div
               className="p-7 md:p-10 relative overflow-hidden"
-              style={{ background: 'rgba(0,0,0,0.6)', borderTop: '1px solid rgba(212,175,55,0.2)', borderBottom: '1px solid rgba(212,175,55,0.2)' }}
+              style={{ background: 'rgba(128,128,128,0.05)', borderTop: '1px solid rgba(212,175,55,0.2)', borderBottom: '1px solid rgba(212,175,55,0.2)' }}
             >
               <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-5 mb-8 relative z-10">
                 <div>
-                  <h4 className="font-playfair font-black text-white text-2xl uppercase tracking-[0.04em]">
+                  <h4 className="font-playfair font-black text-foreground text-2xl uppercase tracking-[0.04em]">
                     {trade.designation} <span style={{ color: '#D4AF37' }}>/</span> {t('sup_transfers')}
                   </h4>
-                  <p className="text-[9px] uppercase tracking-[0.2em] font-bold mt-1.5" style={{ color: 'rgba(255,255,255,0.35)' }}>
+                  <p className="text-[9px] uppercase tracking-[0.2em] font-bold mt-1.5" style={{ color: 'var(--text-silver)' }}>
                     {t('sup_from')} {trade.projectName}
                   </p>
                 </div>
@@ -213,15 +213,15 @@ export default function Suppliers() {
                   animate={{ opacity: 1, height: 'auto' }}
                   onSubmit={handleAddPayment}
                   className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7 mb-10 p-7 rounded-xl relative z-10"
-                  style={{ border: '1px solid rgba(255,255,255,0.08)', background: 'rgba(0,0,0,0.4)' }}
+                  style={{ border: '1px solid var(--card-border)', background: 'rgba(128,128,128,0.05)' }}
                 >
                   <div>
-                    <label className="block text-[9px] font-bold uppercase tracking-[0.22em] mb-2.5" style={{ color: 'rgba(255,255,255,0.38)' }}>{t('detail_field_date')}</label>
+                    <label className="block text-[9px] font-bold uppercase tracking-[0.22em] mb-2.5" style={{ color: 'var(--text-silver)' }}>{t('detail_field_date')}</label>
                     <input type="date" required className="elite-input [color-scheme:dark]"
                       value={newPayment.date} onChange={(e) => setNewPayment({ ...newPayment, date: e.target.value })} />
                   </div>
                   <div>
-                    <label className="block text-[9px] font-bold uppercase tracking-[0.22em] mb-2.5" style={{ color: 'rgba(255,255,255,0.38)' }}>{t('detail_field_type')}</label>
+                    <label className="block text-[9px] font-bold uppercase tracking-[0.22em] mb-2.5" style={{ color: 'var(--text-silver)' }}>{t('detail_field_type')}</label>
                     <select className="elite-input" value={newPayment.type} onChange={(e) => setNewPayment({ ...newPayment, type: e.target.value as PaymentType })}>
                       <option value="material_expense">{t('detail_expense_material_label')}</option>
                       <option value="labor_expense">{t('detail_expense_labor_label')}</option>
@@ -229,7 +229,7 @@ export default function Suppliers() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-[9px] font-bold uppercase tracking-[0.22em] mb-2.5" style={{ color: 'rgba(255,255,255,0.38)' }}>{t('detail_field_amount')}</label>
+                    <label className="block text-[9px] font-bold uppercase tracking-[0.22em] mb-2.5" style={{ color: 'var(--text-silver)' }}>{t('detail_field_amount')}</label>
                     <input
                       type="number"
                       step="any"
@@ -241,22 +241,22 @@ export default function Suppliers() {
                     />
                   </div>
                   <div className={newPayment.type === 'labor_expense' ? 'md:col-span-1' : 'md:col-span-2'}>
-                    <label className="block text-[9px] font-bold uppercase tracking-[0.22em] mb-2.5" style={{ color: 'rgba(255,255,255,0.38)' }}>{t('detail_field_ref')}</label>
+                    <label className="block text-[9px] font-bold uppercase tracking-[0.22em] mb-2.5" style={{ color: 'var(--text-silver)' }}>{t('detail_field_ref')}</label>
                     <input placeholder="e.g. Invoice #123" className="elite-input"
                       value={newPayment.designation} onChange={(e) => setNewPayment({ ...newPayment, designation: e.target.value })} />
                   </div>
                   {newPayment.type === 'labor_expense' && (
                     <div className="md:col-span-1">
-                      <label className="block text-[9px] font-bold uppercase tracking-[0.22em] mb-2.5" style={{ color: 'rgba(255,255,255,0.38)' }}>{t('detail_field_workers')}</label>
+                      <label className="block text-[9px] font-bold uppercase tracking-[0.22em] mb-2.5" style={{ color: 'var(--text-silver)' }}>{t('detail_field_workers')}</label>
                       <input placeholder="e.g. Jean, Marc" className="elite-input"
                         value={newPayment.workerNames} onChange={(e) => setNewPayment({ ...newPayment, workerNames: e.target.value })} />
                     </div>
                   )}
                   <div className="md:col-span-3">
-                    <label className="block text-[9px] font-bold uppercase tracking-[0.22em] mb-3" style={{ color: 'rgba(255,255,255,0.38)' }}>{t('detail_field_receipt')}</label>
+                    <label className="block text-[9px] font-bold uppercase tracking-[0.22em] mb-3" style={{ color: 'var(--text-silver)' }}>{t('detail_field_receipt')}</label>
                     <ImageUpload onImageSelected={(f) => setReceiptFile(f)} onClear={() => setReceiptFile(null)} isLoading={isSavingPayment} />
                   </div>
-                  <div className="md:col-span-3 flex items-center gap-5 pt-5" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                  <div className="md:col-span-3 flex items-center gap-5 pt-5" style={{ borderTop: '1px solid var(--card-border)' }}>
                     <button type="submit" disabled={isSavingPayment}
                       className="flex items-center gap-2 px-8 py-3.5 font-bold text-[10px] uppercase tracking-[0.12em] rounded-xl transition-all disabled:opacity-50"
                       style={{ background: 'white', color: '#000' }}
@@ -264,7 +264,7 @@ export default function Suppliers() {
                       {isSavingPayment ? t('detail_processing') : t('detail_confirm')}
                     </button>
                     <button type="button" onClick={() => { setAddingPayment(false); setReceiptFile(null); }} disabled={isSavingPayment}
-                      className="text-[10px] uppercase tracking-[0.1em]" style={{ color: 'rgba(255,255,255,0.35)' }}>
+                      className="text-[10px] uppercase tracking-[0.1em]" style={{ color: 'var(--text-silver)' }}>
                       {t('detail_trade_cancel')}
                     </button>
                   </div>
@@ -274,7 +274,7 @@ export default function Suppliers() {
               <div className="space-y-3 relative z-10">
                 {payments.length === 0 ? (
                   <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-center py-12 rounded-xl"
-                    style={{ color: 'rgba(255,255,255,0.28)', border: '1px dashed rgba(255,255,255,0.07)', background: 'rgba(0,0,0,0.2)' }}>
+                    style={{ color: 'var(--text-silver)', border: '1px dashed var(--card-border)', background: 'rgba(128,128,128,0.02)' }}>
                     {t('detail_no_payments')}
                   </p>
                 ) : (
@@ -282,36 +282,36 @@ export default function Suppliers() {
                     const isInc = payment.type === 'client_advance' || payment.type === 'advance' || payment.type === 'income';
                     return (
                       <div key={payment.id} className="flex flex-col p-6 rounded-xl transition-colors duration-200"
-                        style={{ border: '1px solid rgba(255,255,255,0.04)', background: 'rgba(255,255,255,0.01)' }}
+                        style={{ border: '1px solid var(--card-border)', background: 'var(--card-border)' }}
                       >
                         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
                           <div className="flex items-center gap-4">
-                            <div className="h-10 w-10 rounded-xl bg-black flex items-center justify-center shrink-0"
-                              style={{ border: '1px solid rgba(255,255,255,0.08)', color: isInc ? '#D4AF37' : '#f87171' }}>
+                            <div className="h-10 w-10 rounded-xl bg-background flex items-center justify-center shrink-0"
+                              style={{ border: '1px solid var(--card-border)', color: isInc ? '#D4AF37' : '#f87171' }}>
                               {payment.type === 'labor_expense' ? <User size={16} /> : <Wallet size={16} />}
                             </div>
                             <div>
-                              <p className="font-playfair font-black text-white uppercase tracking-[0.04em]">
+                              <p className="font-playfair font-black text-foreground uppercase tracking-[0.04em]">
                                 {payment.type === 'labor_expense' ? t('detail_expense_labor_label') :
                                  payment.type === 'material_expense' || payment.type === 'expense' ? t('detail_expense_material_label') :
                                  t('detail_advance_label')}
                               </p>
                               <p className="text-[9px] font-bold uppercase tracking-[0.2em] mt-1" style={{ color: isInc ? '#D4AF37' : '#f87171' }}>
                                 {payment.date instanceof Date ? format(payment.date, 'MMM d, yyyy') : '—'}
-                                {payment.designation && <span style={{ color: 'rgba(255,255,255,0.4)' }}> · {payment.designation}</span>}
-                                {payment.workerNames && <span style={{ color: 'rgba(255,255,255,0.4)' }}> · Workers: {payment.workerNames}</span>}
+                                {payment.designation && <span style={{ color: 'var(--text-silver)' }}> · {payment.designation}</span>}
+                                {payment.workerNames && <span style={{ color: 'var(--text-silver)' }}> · Workers: {payment.workerNames}</span>}
                               </p>
                             </div>
                           </div>
                           <div className="flex items-center gap-4">
-                            <span className="font-playfair font-black text-2xl text-white">€ {payment.amount.toLocaleString()}</span>
+                            <span className="font-playfair font-black text-2xl text-foreground">€ {payment.amount.toLocaleString()}</span>
                             <button
                               onClick={async () => {
                                 if (confirm('Delete this record?')) {
                                   await deletePayment(trade.projectId, trade.id, payment);
                                 }
                               }}
-                              className="p-2 text-white/10 hover:text-red-500 transition-colors"
+                              className="p-2 text-foreground/10 hover:text-red-500 transition-colors"
                             >
                               <Trash2 size={14} />
                             </button>
@@ -320,7 +320,7 @@ export default function Suppliers() {
                         {payment.receiptUrl && (
                           <button
                             className="mt-4 w-32 h-32 rounded-xl overflow-hidden group relative text-left"
-                            style={{ border: '1px solid rgba(255,255,255,0.1)' }}
+                            style={{ border: '1px solid var(--card-border)' }}
                             onClick={() => setLightboxSrc(payment.receiptUrl!)}
                           >
                             <LazyImage src={payment.receiptUrl} alt={t('img_receipt')} className="w-full h-full" />
@@ -345,10 +345,10 @@ export default function Suppliers() {
       <motion.div
         variants={item}
         className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 pb-6"
-        style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}
+        style={{ borderBottom: '1px solid var(--card-border)' }}
       >
         <div>
-          <h1 className="text-4xl font-playfair font-black uppercase tracking-[0.05em] text-white mb-2">{t('sup_title')}</h1>
+          <h1 className="text-4xl font-playfair font-black uppercase tracking-[0.05em] text-foreground mb-2">{t('sup_title')}</h1>
           <p className="elite-text-silver tracking-wide">{t('sup_subtitle')}</p>
         </div>
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full md:w-auto">
@@ -417,15 +417,15 @@ export default function Suppliers() {
                   {/* Supplier Header */}
                   <div
                     className="p-7 md:p-9 relative z-10"
-                    style={{ background: 'rgba(0,0,0,0.35)', borderBottom: '1px solid rgba(255,255,255,0.04)' }}
+                    style={{ background: 'rgba(128,128,128,0.05)', borderBottom: '1px solid var(--card-border)' }}
                   >
                     <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                       <div className="flex items-center gap-5">
                         <div
                           className="h-14 w-14 rounded-xl flex items-center justify-center shrink-0 transition-colors duration-500"
-                          style={{ border: '1px solid rgba(255,255,255,0.1)' }}
+                          style={{ border: '1px solid var(--card-border)' }}
                         >
-                          <Building2 size={22} className="transition-colors duration-500 group-hover:text-[#D4AF37]" style={{ color: 'rgba(255,255,255,0.2)' }} />
+                          <Building2 size={22} className="transition-colors duration-500 group-hover:text-[#D4AF37]" style={{ color: 'var(--icon-muted)' }} />
                         </div>
                         <div>
                           <h2 className="text-2xl md:text-3xl font-playfair font-black text-foreground uppercase tracking-[0.04em]">
@@ -456,14 +456,14 @@ export default function Suppliers() {
                             € {supplier.totalExpenses.toLocaleString()}
                           </p>
                         </div>
-                        <div className="w-px h-10" style={{ background: 'rgba(255,255,255,0.08)' }} />
+                        <div className="w-px h-10" style={{ background: 'var(--card-border)' }} />
                         <button
                           onClick={async () => {
                             if (confirm(`Delete everything related to ${supplier.name}? This will delete ${supplier.trades.length} trades.`)) {
                               await deleteSupplier(user!.uid, supplier.name, trades);
                             }
                           }}
-                          className="p-3 text-white/10 hover:text-red-500 transition-colors"
+                          className="p-3 text-foreground/10 hover:text-red-500 transition-colors"
                           title="Delete Supplier"
                         >
                           <Trash2 size={20} />
@@ -473,7 +473,7 @@ export default function Suppliers() {
                   </div>
 
                   {/* Trades — Mobile Cards */}
-                  <div className="lg:hidden divide-y" style={{ borderColor: 'rgba(255,255,255,0.04)' }}>
+                  <div className="lg:hidden divide-y" style={{ borderColor: 'var(--card-border)' }}>
                     {supplier.trades.map((trade) => {
                       const budget = trade.budget || trade.amount || 0;
                       const advances = trade.totalClientAdvances || trade.totalAdvances || 0;
@@ -482,12 +482,12 @@ export default function Suppliers() {
                       const isExpanded = selectedTrade?.id === trade.id;
 
                       return (
-                        <div key={trade.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+                        <div key={trade.id} style={{ borderBottom: '1px solid var(--card-border)' }}>
                           <div className="p-5 flex flex-col gap-4" style={isExpanded ? { background: 'rgba(212,175,55,0.03)' } : {}}>
                             <div className="flex justify-between items-start">
                               <div className="flex-1">
-                                <p className="font-playfair font-black text-white text-[1rem] uppercase tracking-[0.03em]">{trade.designation}</p>
-                                <p className="text-[9px] uppercase tracking-[0.18em] mt-1 font-bold" style={{ color: 'rgba(255,255,255,0.35)' }}>{trade.projectName}</p>
+                                <p className="font-playfair font-black text-foreground text-[1rem] uppercase tracking-[0.03em]">{trade.designation}</p>
+                                <p className="text-[9px] uppercase tracking-[0.18em] mt-1 font-bold" style={{ color: 'var(--text-silver)' }}>{trade.projectName}</p>
                               </div>
                               <div className="flex items-center gap-2">
                                 <button
@@ -513,21 +513,21 @@ export default function Suppliers() {
                                 </button>
                               </div>
                             </div>
-                            <div className="grid grid-cols-2 gap-3 p-3.5 rounded-lg" style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.03)' }}>
+                            <div className="grid grid-cols-2 gap-3 p-3.5 rounded-lg" style={{ background: 'rgba(128,128,128,0.05)', border: '1px solid var(--card-border)' }}>
                               <div>
-                                <p className="text-[9px] font-bold uppercase tracking-[0.18em] mb-1" style={{ color: 'rgba(255,255,255,0.35)' }}>{t('sup_th_budget')}</p>
-                                <p className="font-bold text-white text-sm">€ {budget.toLocaleString()}</p>
+                                <p className="text-[9px] font-bold uppercase tracking-[0.18em] mb-1" style={{ color: 'var(--text-silver)' }}>{t('sup_th_budget')}</p>
+                                <p className="font-bold text-foreground text-sm">€ {budget.toLocaleString()}</p>
                               </div>
                               <div>
-                                <p className="text-[9px] font-bold uppercase tracking-[0.18em] mb-1" style={{ color: 'rgba(255,255,255,0.35)' }}>{t('detail_th_advances')}</p>
+                                <p className="text-[9px] font-bold uppercase tracking-[0.18em] mb-1" style={{ color: 'var(--text-silver)' }}>{t('detail_th_advances')}</p>
                                 <p className="font-bold text-sm" style={{ color: '#D4AF37' }}>€ {advances.toLocaleString()}</p>
                               </div>
                               <div>
-                                <p className="text-[9px] font-bold uppercase tracking-[0.18em] mb-1" style={{ color: 'rgba(255,255,255,0.35)' }}>{t('detail_th_expenses')}</p>
+                                <p className="text-[9px] font-bold uppercase tracking-[0.18em] mb-1" style={{ color: 'var(--text-silver)' }}>{t('detail_th_expenses')}</p>
                                 <p className="font-bold text-sm" style={{ color: '#f87171' }}>€ {expenses.toLocaleString()}</p>
                               </div>
                               <div>
-                                <p className="text-[9px] font-bold uppercase tracking-[0.18em] mb-1" style={{ color: 'rgba(255,255,255,0.35)' }}>{t('detail_th_balance')}</p>
+                                <p className="text-[9px] font-bold uppercase tracking-[0.18em] mb-1" style={{ color: 'var(--text-silver)' }}>{t('detail_th_balance')}</p>
                                 <p className="font-bold text-sm" style={{ color: balance < 0 ? '#f87171' : '#34d399' }}>€ {balance.toLocaleString()}</p>
                               </div>
                             </div>
@@ -541,7 +541,7 @@ export default function Suppliers() {
                   {/* Trades — Desktop Table */}
                   <div className="hidden lg:block overflow-x-auto">
                     <table className="min-w-full text-left border-collapse">
-                      <thead style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+                      <thead style={{ borderBottom: '1px solid var(--card-border)' }}>
                         <tr>
                           {[t('sup_th_project'), t('sup_th_designation'), t('sup_th_budget'), t('detail_th_advances'), t('detail_th_expenses'), t('detail_th_balance'), t('sup_th_actions')].map((h, i) => (
                             <th
@@ -567,17 +567,17 @@ export default function Suppliers() {
                               <tr
                                 className="transition-colors duration-200"
                                 style={{
-                                  borderBottom: '1px solid rgba(255,255,255,0.03)',
+                                  borderBottom: '1px solid var(--card-border)',
                                   background: isExpanded ? 'rgba(212,175,55,0.04)' : 'transparent',
                                 }}
                               >
-                                <td className="px-7 py-5 whitespace-nowrap text-[10px] font-bold uppercase tracking-[0.2em]" style={{ color: 'rgba(255,255,255,0.38)' }}>
+                                <td className="px-7 py-5 whitespace-nowrap text-[10px] font-bold uppercase tracking-[0.2em]" style={{ color: 'var(--text-silver)' }}>
                                   {trade.projectName}
                                 </td>
-                                <td className="px-7 py-5 whitespace-nowrap font-playfair font-black text-[1rem] text-white uppercase tracking-[0.04em]">
+                                <td className="px-7 py-5 whitespace-nowrap font-playfair font-black text-[1rem] text-foreground uppercase tracking-[0.04em]">
                                   {trade.designation}
                                 </td>
-                                <td className="px-7 py-5 whitespace-nowrap text-sm font-bold text-white text-right">€ {budget.toLocaleString()}</td>
+                                <td className="px-7 py-5 whitespace-nowrap text-sm font-bold text-foreground text-right">€ {budget.toLocaleString()}</td>
                                 <td className="px-7 py-5 whitespace-nowrap text-sm font-bold text-right" style={{ color: 'var(--elite-gold)' }}>
                                   € {advances.toLocaleString()}
                                 </td>
@@ -606,7 +606,7 @@ export default function Suppliers() {
                                           if (isExpanded) setSelectedTrade(null);
                                         }
                                       }}
-                                      className="p-2 text-white/10 hover:text-red-500 transition-colors"
+                                      className="p-2 text-foreground/10 hover:text-red-500 transition-colors"
                                     >
                                       <Trash2 size={14} />
                                     </button>

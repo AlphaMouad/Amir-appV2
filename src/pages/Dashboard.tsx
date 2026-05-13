@@ -143,11 +143,11 @@ export default function Dashboard() {
         {kpiCards.map((card, i) => (
           <motion.div variants={item} key={i}>
             <Card className="elite-card group h-full">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 mb-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', padding: '16px 16px 10px' }}>
-                <CardTitle className="text-[8px] font-bold uppercase tracking-[0.2em] leading-tight" style={{ color: 'rgba(255,255,255,0.38)' }}>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 mb-3" style={{ borderBottom: '1px solid var(--card-border)', padding: '16px 16px 10px' }}>
+                <CardTitle className="text-[8px] font-bold uppercase tracking-[0.2em] leading-tight" style={{ color: 'var(--text-silver)' }}>
                   {card.label}
                 </CardTitle>
-                <div className="w-8 h-8 rounded-lg bg-black flex items-center justify-center shrink-0" style={{ border: '1px solid rgba(255,255,255,0.06)' }}>
+                <div className="w-8 h-8 rounded-lg bg-background flex items-center justify-center shrink-0" style={{ border: '1px solid var(--card-border)' }}>
                   {card.icon}
                 </div>
               </CardHeader>
@@ -155,7 +155,7 @@ export default function Dashboard() {
                 <div className="text-2xl md:text-3xl font-playfair font-black tracking-tight" style={{ color: card.valueColor || 'var(--foreground)' }}>
                   {card.value}
                 </div>
-                <p className="text-[9px] font-bold tracking-wide mt-2 uppercase" style={{ color: card.subColor || 'rgba(255,255,255,0.4)' }}>
+                <p className="text-[9px] font-bold tracking-wide mt-2 uppercase" style={{ color: card.subColor || 'var(--text-silver)' }}>
                   {card.sub}
                 </p>
               </CardContent>
@@ -179,12 +179,18 @@ export default function Dashboard() {
             <CardContent className="chart-responsive" style={{ padding: '20px 8px 8px' }}>
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={projectChartData} margin={{ top: 8, right: 8, left: -20, bottom: 0 }} barGap={3}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.025)" />
-                  <XAxis dataKey="name" fontSize={9} tickLine={false} axisLine={false} tick={{ fill: 'rgba(255,255,255,0.35)' }} dy={14} />
-                  <YAxis fontSize={9} tickLine={false} axisLine={false} tickFormatter={(v) => `€${v / 1000}k`} tick={{ fill: 'rgba(255,255,255,0.35)' }} />
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--card-border)" />
+                  <XAxis dataKey="name" fontSize={9} tickLine={false} axisLine={false} tick={{ fill: 'var(--text-silver)' }} dy={14} />
+                  <YAxis fontSize={9} tickLine={false} axisLine={false} tickFormatter={(v) => `€${v / 1000}k`} tick={{ fill: 'var(--text-silver)' }} />
                   <Tooltip
-                    cursor={{ fill: 'rgba(255,255,255,0.015)' }}
-                    contentStyle={{ backgroundColor: 'rgba(5,5,5,0.96)', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.07)', fontSize: '10px' }}
+                    cursor={{ fill: 'var(--body-bg-start)' }}
+                    contentStyle={{
+                      backgroundColor: 'var(--glass-bg)',
+                      borderRadius: '10px',
+                      border: '1px solid var(--card-border)',
+                      fontSize: '10px',
+                      color: 'var(--foreground)'
+                    }}
                   />
                   <Bar dataKey="Advances" fill="var(--elite-gold)" radius={[3, 3, 0, 0]} maxBarSize={22} />
                   <Bar dataKey="Expenses" fill="#f87171" radius={[3, 3, 0, 0]} maxBarSize={22} />
@@ -196,11 +202,11 @@ export default function Dashboard() {
 
         <motion.div variants={item}>
           <Card className="elite-card h-full">
-            <CardHeader style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', padding: '24px 24px 20px' }}>
+            <CardHeader style={{ borderBottom: '1px solid var(--card-border)', padding: '24px 24px 20px' }}>
               <CardTitle className="text-lg font-playfair font-black uppercase tracking-[0.1em]" style={{ color: '#f87171' }}>
                 {t('dash_ledger_title')}
               </CardTitle>
-              <CardDescription className="text-[10px] font-medium tracking-wide mt-1 uppercase" style={{ color: 'rgba(255,255,255,0.35)' }}>
+              <CardDescription className="text-[10px] font-medium tracking-wide mt-1 uppercase" style={{ color: 'var(--text-silver)' }}>
                 {t('dash_ledger_sub')}
               </CardDescription>
             </CardHeader>
@@ -212,7 +218,7 @@ export default function Dashboard() {
               ) : (
                 <div className="space-y-3">
                   {tradesWithWarnings.map((trade) => (
-                    <div key={trade.id} className="p-4 rounded-lg bg-black/50 border border-border border-l-[#f87171] border-l-2">
+                    <div key={trade.id} className="p-4 rounded-lg bg-background/50 border border-border border-l-[#f87171] border-l-2">
                       <p className="text-[11px] font-bold text-foreground uppercase">{trade.designation}</p>
                       <p className="text-[9px] uppercase tracking-widest mt-1 opacity-40">
                         Exp: €{((trade.totalLaborExpenses || 0) + (trade.totalMaterialExpenses || 0)).toLocaleString()} / Budget: €{(trade.budget || trade.amount || 0).toLocaleString()}

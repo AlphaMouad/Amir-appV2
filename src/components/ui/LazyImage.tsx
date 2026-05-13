@@ -13,15 +13,15 @@ export function LazyImage({ src, alt, className = '' }: LazyImageProps) {
   const [hasError, setHasError] = useState(false);
 
   return (
-    <div className={`relative overflow-hidden bg-black ${className}`}>
+    <div className={`relative overflow-hidden bg-background ${className}`}>
       {!isLoaded && !hasError && (
         <div
           className="absolute inset-0 animate-pulse"
-          style={{ background: 'rgba(255,255,255,0.03)' }}
+          style={{ background: 'var(--card-border)' }}
         />
       )}
       {hasError ? (
-        <div className="absolute inset-0 flex flex-col items-center justify-center" style={{ color: 'rgba(255,255,255,0.2)' }}>
+        <div className="absolute inset-0 flex flex-col items-center justify-center" style={{ color: 'var(--icon-muted)' }}>
           <ImageIcon className="h-7 w-7 mb-2 opacity-40" />
           <span className="text-[9px] font-bold uppercase tracking-widest">Unavailable</span>
         </div>
