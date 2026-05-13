@@ -122,7 +122,7 @@ export default function Dashboard() {
   const tradesWithWarnings = trades.filter((t) => {
     const budget = t.budget || t.amount || 0;
     const expenses = (t.totalLaborExpenses || 0) + (t.totalMaterialExpenses || 0);
-    return budget > 0 && expenses > budget;
+    return budget > 0 && expenses >= budget * 0.75;
   });
 
   const projectChartData = projects.map((p) => {
