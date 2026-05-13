@@ -13,6 +13,8 @@ import Dashboard from './pages/Dashboard';
 import ProjectList from './pages/ProjectList';
 import ProjectDetail from './pages/ProjectDetail';
 import Suppliers from './pages/Suppliers';
+import { useTheme } from './contexts/ThemeContext';
+import { Sun, Moon } from 'lucide-react';
 import { motion } from 'motion/react';
 
 const Login = () => {

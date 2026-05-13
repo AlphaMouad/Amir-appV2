@@ -139,14 +139,19 @@ export default function Suppliers() {
   };
 
   const suppliers = useMemo(() => {
+    const safeNum = (v: any) => {
+      const n = Number(v);
+      return isNaN(n) ? 0 : n;
+    };
+
     const grouped = new Map<string, { name: string; totalBudget: number; totalExpenses: number; trades: (Trade & { projectName: string })[] }>();
     trades.forEach((trade) => {
       const name = trade.supplierName?.trim() || 'Unknown Entity';
       const project = projects.find((p) => p.id === trade.projectId);
       if (!grouped.has(name)) grouped.set(name, { name, totalBudget: 0, totalExpenses: 0, trades: [] });
       const entry = grouped.get(name)!;
-      entry.totalBudget += trade.budget || trade.amount || 0;
-      entry.totalExpenses += (trade.totalLaborExpenses || 0) + (trade.totalMaterialExpenses || 0);
+      entry.totalBudget = Number((entry.totalBudget + safeNum(trade.budget || trade.amount)).toFixed(2));
+      entry.totalExpenses = Number((entry.totalExpenses + safeNum(trade.totalLaborExpenses) + safeNum(trade.totalMaterialExpenses)).toFixed(2));
       entry.trades.push({ ...trade, projectName: project?.name || 'Unknown Project' });
     });
     return Array.from(grouped.values()).sort((a, b) => a.name.localeCompare(b.name));
@@ -292,7 +297,7 @@ export default function Suppliers() {
                                  t('detail_advance_label')}
                               </p>
                               <p className="text-[9px] font-bold uppercase tracking-[0.2em] mt-1" style={{ color: isInc ? '#D4AF37' : '#f87171' }}>
-                                {format(payment.date, 'MMM d, yyyy')}
+                                {payment.date instanceof Date ? format(payment.date, 'MMM d, yyyy') : '—'}
                                 {payment.designation && <span style={{ color: 'rgba(255,255,255,0.4)' }}> · {payment.designation}</span>}
                                 {payment.workerNames && <span style={{ color: 'rgba(255,255,255,0.4)' }}> · Workers: {payment.workerNames}</span>}
                               </p>

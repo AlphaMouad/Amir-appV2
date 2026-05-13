@@ -67,10 +67,16 @@ export default function Dashboard() {
 
   const totalProjects = projects.length;
   const activeProjects = projects.filter((p) => p.status === 'ongoing').length;
-  const globalBudget = Number(trades.reduce((sum, t) => sum + Number(t.budget || t.amount || 0), 0).toFixed(2));
-  const globalAdvances = Number(trades.reduce((sum, t) => sum + Number(t.totalClientAdvances || t.totalAdvances || 0), 0).toFixed(2));
-  const globalExpenses = Number(trades.reduce((sum, t) => sum + Number(t.totalLaborExpenses || 0) + Number(t.totalMaterialExpenses || 0), 0).toFixed(2));
-  const globalBalance = globalAdvances - globalExpenses;
+
+  const safeNum = (v: any) => {
+    const n = Number(v);
+    return isNaN(n) ? 0 : n;
+  };
+
+  const globalBudget = Number(trades.reduce((sum, t) => sum + safeNum(t.budget || t.amount), 0).toFixed(2));
+  const globalAdvances = Number(trades.reduce((sum, t) => sum + safeNum(t.totalClientAdvances || t.totalAdvances), 0).toFixed(2));
+  const globalExpenses = Number(trades.reduce((sum, t) => sum + safeNum(t.totalLaborExpenses) + safeNum(t.totalMaterialExpenses), 0).toFixed(2));
+  const globalBalance = Number((globalAdvances - globalExpenses).toFixed(2));
 
   const tradesWithWarnings = trades.filter((t) => {
     const budget = t.budget || t.amount || 0;

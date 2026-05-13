@@ -34,12 +34,12 @@ export default function ProjectDetail() {
   const [payments, setPayments] = useState<Payment[]>([]);
 
   const [addingTrade, setAddingTrade] = useState(false);
-  const [newTrade, setNewTrade] = useState({ designation: '', amount: 0, supplierName: '', quantity: 1 });
+  const [newTrade, setNewTrade] = useState({ designation: '', amount: '' as string | number, supplierName: '', quantity: 1 });
   const [isSavingTrade, setIsSavingTrade] = useState(false);
 
   const [addingPayment, setAddingPayment] = useState(false);
   const [newPayment, setNewPayment] = useState({
-    amount: 0,
+    amount: '' as string | number,
     date: new Date().toISOString().substring(0, 10),
     designation: '',
     type: 'client_advance' as PaymentType,
@@ -85,10 +85,15 @@ export default function ProjectDetail() {
     );
   }
 
-  const totalBudget = Number(trades.reduce((sum, t) => sum + Number(t.budget || t.amount || 0), 0).toFixed(2));
-  const totalClientAdvances = Number(trades.reduce((sum, t) => sum + Number(t.totalClientAdvances || t.totalAdvances || 0), 0).toFixed(2));
-  const totalExpenses = Number(trades.reduce((sum, t) => sum + Number(t.totalLaborExpenses || 0) + Number(t.totalMaterialExpenses || 0), 0).toFixed(2));
-  const projectBalance = totalClientAdvances - totalExpenses;
+  const safeNum = (v: any) => {
+    const n = Number(v);
+    return isNaN(n) ? 0 : n;
+  };
+
+  const totalBudget = Number(trades.reduce((sum, t) => sum + safeNum(t.budget || t.amount), 0).toFixed(2));
+  const totalClientAdvances = Number(trades.reduce((sum, t) => sum + safeNum(t.totalClientAdvances || t.totalAdvances), 0).toFixed(2));
+  const totalExpenses = Number(trades.reduce((sum, t) => sum + safeNum(t.totalLaborExpenses) + safeNum(t.totalMaterialExpenses), 0).toFixed(2));
+  const projectBalance = Number((totalClientAdvances - totalExpenses).toFixed(2));
 
   const handleAddTrade = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -178,9 +183,9 @@ export default function ProjectDetail() {
           <Link to="/projects">
             <button
               className="h-11 w-11 rounded-full flex items-center justify-center transition-colors duration-200"
-              style={{ border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.4)' }}
+                  style={{ border: '1px solid var(--card-border)', color: 'var(--text-silver)' }}
               onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(212,175,55,0.35)'; e.currentTarget.style.color = '#D4AF37'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; e.currentTarget.style.color = 'rgba(255,255,255,0.4)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--card-border)'; e.currentTarget.style.color = 'var(--text-silver)'; }}
             >
               <ArrowLeft size={18} />
             </button>
@@ -747,7 +752,7 @@ function PaymentCard({ payment, t, onImageClick, onDelete }: { payment: Payment,
               {typeLabel}
             </p>
             <p className="text-[9px] font-bold uppercase tracking-[0.2em] mt-1.5" style={{ color: isIncome ? '#D4AF37' : '#f87171' }}>
-              {format(payment.date, 'MMM d, yyyy')}
+                {payment.date instanceof Date ? format(payment.date, 'MMM d, yyyy') : '—'}
               {payment.designation && <span style={{ opacity: 0.5 }}> · {payment.designation}</span>}
               {payment.workerNames && <span style={{ opacity: 0.5 }}> · Workers: {payment.workerNames}</span>}
             </p>
