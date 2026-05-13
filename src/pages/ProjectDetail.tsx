@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { getProjects, getTrades, addTrade, updateTrade, getPayments, addPayment, deleteTrade, deletePayment, getAllTrades, getAllPayments } from '../services/api';
@@ -25,6 +25,7 @@ const item = {
 
 export default function ProjectDetail() {
   const { id } = useParams<{ id: string }>();
+  const location = useLocation();
   const { user } = useAuth();
   const { t } = useLanguage();
 
@@ -67,11 +68,22 @@ export default function ProjectDetail() {
 
   // Keep selectedTrade in sync when trades update (e.g. after a payment)
   useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const tradeId = params.get('tradeId');
+    
+    if (tradeId && trades.length > 0 && !selectedTrade) {
+      const initialTrade = trades.find(t => t.id === tradeId);
+      if (initialTrade) {
+        setSelectedTrade(initialTrade);
+        return;
+      }
+    }
+
     if (selectedTrade) {
       const fresh = trades.find((t) => t.id === selectedTrade.id);
       if (fresh) setSelectedTrade(fresh);
     }
-  }, [trades]);
+  }, [trades, location.search, selectedTrade]);
 
   useEffect(() => {
     if (!user || !id || !selectedTrade) return;
@@ -102,8 +114,8 @@ export default function ProjectDetail() {
   const totalExpenses = Number(trades.reduce((sum, t) => sum + safeNum(t.totalLaborExpenses) + safeNum(t.totalMaterialExpenses), 0).toFixed(2));
   const projectBalance = Number((totalClientAdvances - totalExpenses).toFixed(2));
 
-  const uniqueSuppliers = Array.from(new Set(globalTrades.map(t => t.supplierName).filter(Boolean)));
-  const uniqueWorkers = Array.from(new Set(
+  const uniqueSuppliers: string[] = Array.from(new Set(globalTrades.map(t => t.supplierName).filter(Boolean) as string[]));
+  const uniqueWorkers: string[] = Array.from(new Set(
     globalPayments.filter(p => p.type === 'labor_expense' && p.workerNames)
                   .flatMap(p => p.workerNames!.split(',').map(n => n.trim()))
   ));
@@ -751,7 +763,7 @@ export default function ProjectDetail() {
   );
 }
 
-function PaymentCard({ payment, t, onImageClick, onDelete }: { payment: Payment, t: any, onImageClick: (src: string) => void, onDelete: (p: Payment) => void }) {
+function PaymentCard({ payment, t, onImageClick, onDelete }: { key?: React.Key, payment: Payment, t: any, onImageClick: (src: string) => void, onDelete: (p: Payment) => void | Promise<void> }) {
   const isIncome = payment.type === 'client_advance' || payment.type === 'advance' || payment.type === 'income';
   const typeLabel = payment.type === 'labor_expense' ? t('detail_expense_labor_label') :
                    payment.type === 'material_expense' || payment.type === 'expense' ? t('detail_expense_material_label') :

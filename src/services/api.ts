@@ -2,6 +2,7 @@ import { collection, doc, query, where, getDocs, setDoc, updateDoc, deleteDoc, s
 import { db } from '../lib/firebase';
 import { handleFirestoreError, OperationType } from './errorHandler';
 import { Project, Trade, Payment } from '../types';
+import imageCompression from 'browser-image-compression';
 
 const cleanData = (obj: any): any => {
   const newObj: any = {};
@@ -277,8 +278,15 @@ export const addPayment = async (projectId: string, tradeId: string, data: Omit<
          throw new Error("ImgBB API Key is missing. If you just added it to Vercel, please REDEPLOY your application for changes to take effect.");
        }
 
+       const options = {
+         maxSizeMB: 1,
+         maxWidthOrHeight: 1920,
+         useWebWorker: true
+       };
+       const compressedFile = await imageCompression(receiptImageFile, options);
+
        const formData = new FormData();
-       formData.append('image', receiptImageFile);
+       formData.append('image', compressedFile);
 
        const response = await fetch(`https://api.imgbb.com/1/upload?key=${imgbbApiKey}`, {
          method: 'POST',

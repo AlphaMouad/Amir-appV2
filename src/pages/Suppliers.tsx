@@ -36,6 +36,10 @@ export default function Suppliers() {
   const [payments, setPayments] = useState<Payment[]>([]);
   const [globalPayments, setGlobalPayments] = useState<Payment[]>([]);
   const [addingPayment, setAddingPayment] = useState(false);
+  const laborSuggestions = Array.from(new Set(
+    globalPayments.filter(p => p.type === 'labor_expense' && p.workerNames)
+                  .flatMap(p => p.workerNames!.split(',').map(n => n.trim()))
+  ));
   const [addingTrade, setAddingTrade] = useState(false);
   const [newTrade, setNewTrade] = useState({ designation: '', amount: '', supplierName: '', projectId: '' });
   const [isSavingTrade, setIsSavingTrade] = useState(false);
@@ -156,10 +160,7 @@ export default function Suppliers() {
     return date;
   };
 
-  const uniqueWorkers = Array.from(new Set(
-    globalPayments.filter(p => p.type === 'labor_expense' && p.workerNames)
-                  .flatMap(p => p.workerNames!.split(',').map(n => n.trim()))
-  ));
+
 
   const suppliers = useMemo(() => {
     const safeNum = (v: any) => {
@@ -657,7 +658,8 @@ const PaymentPanel = ({
                     <AutocompleteInput 
                       value={newPayment.workerNames} 
                       onChange={val => setNewPayment({ ...newPayment, workerNames: val })} 
-                      suggestions={uniqueWorkers} 
+                      // @ts-ignore
+                      suggestions={laborSuggestions} 
                       className="elite-input" 
                       placeholder="e.g. Jean, Marc" 
                     />

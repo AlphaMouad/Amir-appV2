@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { getProjects, getAllTrades, getAllPayments } from '../services/api';
@@ -21,6 +22,7 @@ const item = {
 export default function Dashboard() {
   const { user } = useAuth();
   const { t } = useLanguage();
+  const navigate = useNavigate();
   const [projects, setProjects] = useState<Project[]>([]);
   const [trades, setTrades] = useState<Trade[]>([]);
   const [payments, setPayments] = useState<Payment[]>([]);
@@ -272,14 +274,22 @@ export default function Dashboard() {
                 </div>
               ) : (
                 <div className="space-y-3">
-                  {tradesWithWarnings.map((trade) => (
-                    <div key={trade.id} className="p-4 rounded-lg bg-background/50 border border-border border-l-[#f87171] border-l-2">
-                      <p className="text-[11px] font-bold text-foreground uppercase">{trade.designation}</p>
-                      <p className="text-[9px] uppercase tracking-widest mt-1 opacity-40">
-                        Exp: €{((trade.totalLaborExpenses || 0) + (trade.totalMaterialExpenses || 0)).toLocaleString()} / Budget: €{(trade.budget || trade.amount || 0).toLocaleString()}
-                      </p>
-                    </div>
-                  ))}
+                  {tradesWithWarnings.map((trade) => {
+                    const projectName = projects.find(p => p.id === trade.projectId)?.name || 'Project';
+                    return (
+                      <div 
+                        key={trade.id} 
+                        onClick={() => navigate(`/project/${trade.projectId}?tradeId=${trade.id}`)}
+                        className="p-4 rounded-lg bg-background/50 border border-border border-l-[#f87171] border-l-2 cursor-pointer hover:bg-background/80 transition-colors"
+                      >
+                        <p className="text-[9px] font-bold tracking-widest text-[#f87171] uppercase mb-1">{projectName}</p>
+                        <p className="text-[11px] font-bold text-foreground uppercase">{trade.designation}</p>
+                        <p className="text-[9px] uppercase tracking-widest mt-1 opacity-40">
+                          Exp: €{((trade.totalLaborExpenses || 0) + (trade.totalMaterialExpenses || 0)).toLocaleString()} / Budget: €{(trade.budget || trade.amount || 0).toLocaleString()}
+                        </p>
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </CardContent>
