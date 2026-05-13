@@ -205,6 +205,7 @@ export default function Workers() {
 
       <ImageLightbox src={lightboxSrc} onClose={() => setLightboxSrc(null)} />
     </motion.div>
+  );
 }
 
 const PaymentPanel = ({ 
