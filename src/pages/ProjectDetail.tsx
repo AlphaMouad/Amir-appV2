@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
-import { getProjects, getTrades, addTrade, updateTrade, getPayments, addPayment, deleteTrade, deletePayment } from '../services/api';
+import { getProjects, getTrades, addTrade, updateTrade, getPayments, addPayment, deleteTrade, deletePayment, getAllTrades, getAllPayments } from '../services/api';
 import { Project, Trade, Payment, PaymentType } from '../types';
 import { ArrowLeft, Plus, AlertCircle, Wallet, Building2, User, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { ImageUpload } from '../components/ui/ImageUpload';
 import { LazyImage } from '../components/ui/LazyImage';
 import ImageLightbox from '../components/ui/ImageLightbox';
+import { AutocompleteInput } from '../components/ui/AutocompleteInput';
 import { checkAndSendAlert } from '../services/email';
 import { motion } from 'motion/react';
 
@@ -32,6 +33,9 @@ export default function ProjectDetail() {
   const [trades, setTrades] = useState<Trade[]>([]);
   const [selectedTrade, setSelectedTrade] = useState<Trade | null>(null);
   const [payments, setPayments] = useState<Payment[]>([]);
+  
+  const [globalTrades, setGlobalTrades] = useState<Trade[]>([]);
+  const [globalPayments, setGlobalPayments] = useState<Payment[]>([]);
 
   const [addingTrade, setAddingTrade] = useState(false);
   const [newTrade, setNewTrade] = useState({ designation: '', amount: '' as string | number, supplierName: '', quantity: 1 });
@@ -55,7 +59,10 @@ export default function ProjectDetail() {
       if (p) setProject(p);
     }, console.error);
     const unsubT = getTrades(id, user.uid, setTrades, console.error);
-    return () => { unsubP(); unsubT(); };
+    const unsubGlobalT = getAllTrades(user.uid, setGlobalTrades, console.error);
+    const unsubGlobalP = getAllPayments(user.uid, setGlobalPayments, console.error);
+    
+    return () => { unsubP(); unsubT(); unsubGlobalT(); unsubGlobalP(); };
   }, [user, id]);
 
   // Keep selectedTrade in sync when trades update (e.g. after a payment)
@@ -94,6 +101,12 @@ export default function ProjectDetail() {
   const totalClientAdvances = Number(trades.reduce((sum, t) => sum + safeNum(t.totalClientAdvances || t.totalAdvances), 0).toFixed(2));
   const totalExpenses = Number(trades.reduce((sum, t) => sum + safeNum(t.totalLaborExpenses) + safeNum(t.totalMaterialExpenses), 0).toFixed(2));
   const projectBalance = Number((totalClientAdvances - totalExpenses).toFixed(2));
+
+  const uniqueSuppliers = Array.from(new Set(globalTrades.map(t => t.supplierName).filter(Boolean)));
+  const uniqueWorkers = Array.from(new Set(
+    globalPayments.filter(p => p.type === 'labor_expense' && p.workerNames)
+                  .flatMap(p => p.workerNames!.split(',').map(n => n.trim()))
+  ));
 
   const handleAddTrade = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -302,8 +315,13 @@ export default function ProjectDetail() {
                   <label className="block text-[9px] font-bold uppercase tracking-[0.22em] mb-2.5" style={{ color: 'var(--text-silver)' }}>
                     {t('detail_trade_supplier')}
                   </label>
-                  <input placeholder="e.g. AMG Building" className="elite-input"
-                    value={newTrade.supplierName} onChange={(e) => setNewTrade({ ...newTrade, supplierName: e.target.value })} />
+                  <AutocompleteInput 
+                    value={newTrade.supplierName} 
+                    onChange={val => setNewTrade({ ...newTrade, supplierName: val })} 
+                    suggestions={uniqueSuppliers} 
+                    className="elite-input" 
+                    placeholder="e.g. AMG Building" 
+                  />
                 </div>
                 <div>
                   <label className="block text-[9px] font-bold uppercase tracking-[0.22em] mb-2.5" style={{ color: 'var(--text-silver)' }}>
@@ -638,8 +656,13 @@ export default function ProjectDetail() {
                       <label className="block text-[9px] font-bold uppercase tracking-[0.22em] mb-2.5" style={{ color: 'var(--text-silver)' }}>
                         {t('detail_field_workers')}
                       </label>
-                      <input placeholder="e.g. Jean, Marc" disabled={isSavingPayment} className="elite-input"
-                        value={newPayment.workerNames} onChange={(e) => setNewPayment({ ...newPayment, workerNames: e.target.value })} />
+                      <AutocompleteInput 
+                        value={newPayment.workerNames} 
+                        onChange={val => setNewPayment({ ...newPayment, workerNames: val })} 
+                        suggestions={uniqueWorkers} 
+                        className="elite-input" 
+                        placeholder="e.g. Jean, Marc" 
+                      />
                     </div>
                   )}
                   <div className="md:col-span-3">

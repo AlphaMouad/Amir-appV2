@@ -108,9 +108,16 @@ export default function Dashboard() {
   const filteredPayments = payments.filter(p => p.date && p.date >= startDate);
 
   const globalBudget = Number(trades.reduce((sum, t) => sum + safeNum(t.budget || t.amount), 0).toFixed(2));
-  const globalAdvances = Number(filteredPayments.filter(p => p.type === 'client_advance' || p.type === 'advance' || p.type === 'income').reduce((sum, p) => sum + safeNum(p.amount), 0).toFixed(2));
-  const globalExpenses = Number(filteredPayments.filter(p => p.type === 'labor_expense' || p.type === 'material_expense' || p.type === 'expense').reduce((sum, p) => sum + safeNum(p.amount), 0).toFixed(2));
-  const globalBalance = Number((globalAdvances - globalExpenses).toFixed(2));
+  
+  // Lifetime Totals (ignores Time Filter)
+  const lifetimeAdvances = Number(payments.filter(p => p.type === 'client_advance' || p.type === 'advance' || p.type === 'income').reduce((sum, p) => sum + safeNum(p.amount), 0).toFixed(2));
+  const lifetimeExpenses = Number(payments.filter(p => p.type === 'labor_expense' || p.type === 'material_expense' || p.type === 'expense').reduce((sum, p) => sum + safeNum(p.amount), 0).toFixed(2));
+  const lifetimeBalance = Number((lifetimeAdvances - lifetimeExpenses).toFixed(2));
+
+  // Period Totals (uses Time Filter)
+  const periodAdvances = Number(filteredPayments.filter(p => p.type === 'client_advance' || p.type === 'advance' || p.type === 'income').reduce((sum, p) => sum + safeNum(p.amount), 0).toFixed(2));
+  const periodExpenses = Number(filteredPayments.filter(p => p.type === 'labor_expense' || p.type === 'material_expense' || p.type === 'expense').reduce((sum, p) => sum + safeNum(p.amount), 0).toFixed(2));
+  const periodCashflow = Number((periodAdvances - periodExpenses).toFixed(2));
 
   const tradesWithWarnings = trades.filter((t) => {
     const budget = t.budget || t.amount || 0;
@@ -136,26 +143,27 @@ export default function Dashboard() {
       icon: <Building size={16} style={{ color: 'var(--elite-gold)' }} />,
     },
     {
-      label: t('dash_kpi_advances'),
-      value: `€${globalAdvances.toLocaleString()}`,
-      sub: t('dash_kpi_allocated'),
+      label: (t as any)('dash_kpi_global_budget') || 'Global Budget',
+      value: `€${globalBudget.toLocaleString()}`,
+      sub: (t as any)('dash_kpi_allocated_total') || 'Total Allocated',
       subColor: 'var(--elite-gold)',
       icon: <DollarSign size={16} style={{ color: 'var(--elite-gold)' }} />,
     },
     {
-      label: t('dash_kpi_expenses'),
-      value: `€${globalExpenses.toLocaleString()}`,
-      sub: `€${globalBudget.toLocaleString()} ${t('dash_kpi_budget')}`,
-      subColor: '#f87171',
-      icon: <TrendingUp size={16} style={{ color: '#f87171' }} />,
+      label: (t as any)('dash_kpi_lifetime_balance') || 'Lifetime Balance',
+      value: `€${lifetimeBalance.toLocaleString()}`,
+      sub: `€${lifetimeExpenses.toLocaleString()} ${(t as any)('dash_kpi_expenses') || 'Expenses'}`,
+      subColor: lifetimeBalance < 0 ? '#f87171' : '#34d399',
+      icon: <AlertCircle size={16} style={{ color: lifetimeBalance < 0 ? '#f87171' : '#34d399' }} />,
+      valueColor: lifetimeBalance < 0 ? '#f87171' : '#34d399',
     },
     {
-      label: t('dash_kpi_balance'),
-      value: `€${globalBalance.toLocaleString()}`,
-      sub: tradesWithWarnings.length === 0 ? t('dash_kpi_no_risk') : `${tradesWithWarnings.length} ${t('dash_kpi_risk')}`,
-      subColor: globalBalance < 0 ? '#f87171' : '#34d399',
-      icon: <AlertCircle size={16} style={{ color: globalBalance < 0 ? '#f87171' : '#34d399' }} />,
-      valueColor: globalBalance < 0 ? '#f87171' : '#34d399',
+      label: (t as any)('dash_kpi_period_cashflow') || 'Period Cashflow',
+      value: `€${periodCashflow.toLocaleString()}`,
+      sub: period === 'all' ? ((t as any)('dash_kpi_all_time') || 'All Time') : `LAST ${period.toUpperCase()}`,
+      subColor: periodCashflow < 0 ? '#f87171' : '#34d399',
+      icon: <TrendingUp size={16} style={{ color: periodCashflow < 0 ? '#f87171' : '#34d399' }} />,
+      valueColor: periodCashflow < 0 ? '#f87171' : '#34d399',
     },
   ];
 

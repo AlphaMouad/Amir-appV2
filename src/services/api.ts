@@ -56,6 +56,11 @@ export const addProject = async (data: Omit<Project, 'id' | 'createdAt' | 'updat
 
 export const deleteTrade = async (projectId: string, tradeId: string) => {
   try {
+    const paymentsRef = collection(db, `projects/${projectId}/trades/${tradeId}/payments`);
+    const snapshot = await getDocs(paymentsRef);
+    const deletePromises = snapshot.docs.map(docSnap => deleteDoc(docSnap.ref));
+    await Promise.all(deletePromises);
+
     await deleteDoc(doc(db, `projects/${projectId}/trades`, tradeId));
   } catch (error) {
     handleFirestoreError(error, OperationType.DELETE, `projects/${projectId}/trades/${tradeId}`);
@@ -120,6 +125,11 @@ export const updateProject = async (id: string, data: Partial<Omit<Project, 'id'
 
 export const deleteProject = async (id: string) => {
   try {
+    const tradesRef = collection(db, `projects/${id}/trades`);
+    const snapshot = await getDocs(tradesRef);
+    const deletePromises = snapshot.docs.map(docSnap => deleteTrade(id, docSnap.id));
+    await Promise.all(deletePromises);
+
     await deleteDoc(doc(db, 'projects', id));
   } catch (error) {
     handleFirestoreError(error, OperationType.DELETE, `projects/${id}`);

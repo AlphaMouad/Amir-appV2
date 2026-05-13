@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { getProjects, getAllPayments } from '../services/api';
-import { Project, Payment } from '../types';
+import { Project, Payment, PeriodKey } from '../types';
 import { Search, Users, Wallet } from 'lucide-react';
 import { format } from 'date-fns';
 import { LazyImage } from '../components/ui/LazyImage';
@@ -29,6 +29,21 @@ export default function Workers() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [selectedWorker, setSelectedWorker] = useState<string | null>(null);
+  const [period, setPeriod] = useState<PeriodKey>('all');
+
+  const getStartDate = (p: PeriodKey) => {
+    if (p === 'all') return new Date(0);
+    const date = new Date();
+    switch (p) {
+      case '7d': date.setDate(date.getDate() - 7); break;
+      case '14d': date.setDate(date.getDate() - 14); break;
+      case '1m': date.setMonth(date.getMonth() - 1); break;
+      case '3m': date.setMonth(date.getMonth() - 3); break;
+      case '6m': date.setMonth(date.getMonth() - 6); break;
+      case '1y': date.setFullYear(date.getFullYear() - 1); break;
+    }
+    return date;
+  };
 
   useEffect(() => {
     if (!user) return;
@@ -54,8 +69,10 @@ export default function Workers() {
 
   const workers = useMemo(() => {
     const grouped = new Map<string, { name: string; totalPaid: number; payments: (Payment & { projectName: string })[] }>();
+    const startDate = getStartDate(period);
     
     payments.forEach(payment => {
+      if (payment.date && payment.date < startDate) return;
       // Only process labor expenses that have worker names attached
       if (payment.type !== 'labor_expense') return;
       const name = payment.workerNames?.trim();
@@ -121,6 +138,19 @@ export default function Workers() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
+          </div>
+          <div className="flex bg-background/50 border border-border p-1 rounded-xl w-full sm:w-auto overflow-x-auto hide-scrollbar">
+            {(['7d', '1m', '6m', '1y', 'all'] as PeriodKey[]).map((p) => (
+              <button
+                key={p}
+                onClick={() => setPeriod(p)}
+                className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all shrink-0 ${
+                  period === p ? 'bg-foreground text-background shadow-md' : 'text-foreground/60 hover:text-foreground'
+                }`}
+              >
+                {p}
+              </button>
+            ))}
           </div>
         </div>
       </motion.div>

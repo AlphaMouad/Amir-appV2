@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
-import { getAllTrades, getProjects, addPayment, updateTrade, getPayments, deleteTrade, deletePayment, deleteSupplier, addTrade } from '../services/api';
-import { Trade, Project, Payment, PaymentType } from '../types';
+import { getAllTrades, getProjects, addPayment, updateTrade, getPayments, deleteTrade, deletePayment, deleteSupplier, addTrade, getAllPayments } from '../services/api';
+import { Trade, Project, Payment, PaymentType, PeriodKey } from '../types';
 import { Building2, Search, Wallet, Plus, AlertCircle, User, Trash2, X } from 'lucide-react';
 import { format } from 'date-fns';
 import { ImageUpload } from '../components/ui/ImageUpload';
 import { LazyImage } from '../components/ui/LazyImage';
 import ImageLightbox from '../components/ui/ImageLightbox';
+import { AutocompleteInput } from '../components/ui/AutocompleteInput';
 import { checkAndSendAlert } from '../services/email';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -29,9 +30,11 @@ export default function Suppliers() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [period, setPeriod] = useState<PeriodKey>('all');
 
   const [selectedTrade, setSelectedTrade] = useState<Trade | null>(null);
   const [payments, setPayments] = useState<Payment[]>([]);
+  const [globalPayments, setGlobalPayments] = useState<Payment[]>([]);
   const [addingPayment, setAddingPayment] = useState(false);
   const [addingTrade, setAddingTrade] = useState(false);
   const [newTrade, setNewTrade] = useState({ designation: '', amount: '', supplierName: '', projectId: '' });
@@ -54,7 +57,8 @@ export default function Suppliers() {
 
     const unsubTrades = getAllTrades(user.uid, (data) => { setTrades(data); tradesLoaded = true; check(); }, (e) => { console.error(e); setLoading(false); });
     const unsubProjects = getProjects(user.uid, (data) => { setProjects(data); projectsLoaded = true; check(); }, (e) => { console.error(e); setLoading(false); });
-    return () => { unsubTrades(); unsubProjects(); };
+    const unsubPayments = getAllPayments(user.uid, setGlobalPayments, console.error);
+    return () => { unsubTrades(); unsubProjects(); unsubPayments(); };
   }, [user]);
 
   useEffect(() => {
@@ -138,11 +142,33 @@ export default function Suppliers() {
     }
   };
 
+  const getStartDate = (p: PeriodKey) => {
+    if (p === 'all') return new Date(0);
+    const date = new Date();
+    switch (p) {
+      case '7d': date.setDate(date.getDate() - 7); break;
+      case '14d': date.setDate(date.getDate() - 14); break;
+      case '1m': date.setMonth(date.getMonth() - 1); break;
+      case '3m': date.setMonth(date.getMonth() - 3); break;
+      case '6m': date.setMonth(date.getMonth() - 6); break;
+      case '1y': date.setFullYear(date.getFullYear() - 1); break;
+    }
+    return date;
+  };
+
+  const uniqueWorkers = Array.from(new Set(
+    globalPayments.filter(p => p.type === 'labor_expense' && p.workerNames)
+                  .flatMap(p => p.workerNames!.split(',').map(n => n.trim()))
+  ));
+
   const suppliers = useMemo(() => {
     const safeNum = (v: any) => {
       const n = Number(v);
       return isNaN(n) ? 0 : n;
     };
+
+    const startDate = getStartDate(period);
+    const filteredGlobalPayments = globalPayments.filter(p => p.date && p.date >= startDate);
 
     const grouped = new Map<string, { name: string; totalBudget: number; totalExpenses: number; trades: (Trade & { projectName: string })[] }>();
     trades.forEach((trade) => {
@@ -151,11 +177,19 @@ export default function Suppliers() {
       if (!grouped.has(name)) grouped.set(name, { name, totalBudget: 0, totalExpenses: 0, trades: [] });
       const entry = grouped.get(name)!;
       entry.totalBudget = Number((entry.totalBudget + safeNum(trade.budget || trade.amount)).toFixed(2));
-      entry.totalExpenses = Number((entry.totalExpenses + safeNum(trade.totalLaborExpenses) + safeNum(trade.totalMaterialExpenses)).toFixed(2));
+      
+      if (period === 'all') {
+        entry.totalExpenses = Number((entry.totalExpenses + safeNum(trade.totalLaborExpenses) + safeNum(trade.totalMaterialExpenses)).toFixed(2));
+      } else {
+        const tradePayments = filteredGlobalPayments.filter(p => p.tradeId === trade.id && (p.type === 'expense' || p.type === 'labor_expense' || p.type === 'material_expense'));
+        const tradeExpensesThisPeriod = tradePayments.reduce((sum, p) => sum + safeNum(p.amount), 0);
+        entry.totalExpenses = Number((entry.totalExpenses + tradeExpensesThisPeriod).toFixed(2));
+      }
+      
       entry.trades.push({ ...trade, projectName: project?.name || 'Unknown Project' });
     });
     return Array.from(grouped.values()).sort((a, b) => a.name.localeCompare(b.name));
-  }, [trades, projects]);
+  }, [trades, projects, globalPayments, period]);
 
   const filteredSuppliers = useMemo(() => {
     if (!search) return suppliers;
@@ -200,6 +234,19 @@ export default function Suppliers() {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
+          <div className="flex bg-background/50 border border-border p-1 rounded-xl w-full sm:w-auto overflow-x-auto hide-scrollbar">
+            {(['7d', '1m', '6m', '1y', 'all'] as PeriodKey[]).map((p) => (
+              <button
+                key={p}
+                onClick={() => setPeriod(p)}
+                className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all shrink-0 ${
+                  period === p ? 'bg-foreground text-background shadow-md' : 'text-foreground/60 hover:text-foreground'
+                }`}
+              >
+                {p}
+              </button>
+            ))}
+          </div>
           <button
             onClick={() => setAddingTrade(!addingTrade)}
             className="elite-button px-6 py-3 flex items-center justify-center gap-2 text-[10px] uppercase tracking-widest"
@@ -232,7 +279,13 @@ export default function Suppliers() {
             </div>
             <div>
               <label className="block text-[9px] font-bold uppercase tracking-widest mb-2 opacity-40">{t('detail_trade_supplier')}</label>
-              <input required className="elite-input" value={newTrade.supplierName} onChange={e => setNewTrade({ ...newTrade, supplierName: e.target.value })} />
+              <AutocompleteInput 
+                value={newTrade.supplierName} 
+                onChange={(val) => setNewTrade({ ...newTrade, supplierName: val })} 
+                suggestions={suppliers.map(s => s.name)} 
+                className="elite-input" 
+                required 
+              />
             </div>
             <div>
               <label className="block text-[9px] font-bold uppercase tracking-widest mb-2 opacity-40">{t('detail_trade_budget')}</label>
@@ -601,8 +654,13 @@ const PaymentPanel = ({
                 {newPayment.type === 'labor_expense' && (
                   <div className="md:col-span-1">
                     <label className="block text-[9px] font-bold uppercase tracking-[0.22em] mb-2.5" style={{ color: 'var(--text-silver)' }}>{t('detail_field_workers')}</label>
-                    <input placeholder="e.g. Jean, Marc" className="elite-input"
-                      value={newPayment.workerNames} onChange={(e) => setNewPayment({ ...newPayment, workerNames: e.target.value })} />
+                    <AutocompleteInput 
+                      value={newPayment.workerNames} 
+                      onChange={val => setNewPayment({ ...newPayment, workerNames: val })} 
+                      suggestions={uniqueWorkers} 
+                      className="elite-input" 
+                      placeholder="e.g. Jean, Marc" 
+                    />
                   </div>
                 )}
                 <div className="md:col-span-3">
