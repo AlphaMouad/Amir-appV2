@@ -217,6 +217,28 @@ export const updateTrade = async (projectId: string, tradeId: string, data: Part
   }
 };
 
+export const getAllPayments = (userId: string, callback: (payments: Payment[]) => void, errorCallback: (error: any) => void) => {
+  const q = query(collectionGroup(db, 'payments'), where('ownerId', '==', userId));
+  return onSnapshot(q, (snapshot) => {
+    const payments: Payment[] = snapshot.docs.map(doc => ({
+      ...(doc.data() as any),
+      id: doc.id,
+      date: doc.data().date?.toDate(),
+      createdAt: doc.data().createdAt?.toDate()
+    }));
+    // Sort manually since collectionGroup queries with orderby require complex composite indexes
+    payments.sort((a, b) => {
+      const dateA = a.date ? a.date.getTime() : 0;
+      const dateB = b.date ? b.date.getTime() : 0;
+      return dateB - dateA;
+    });
+    callback(payments);
+  }, (error) => {
+    handleFirestoreError(error, OperationType.LIST, `payments group`);
+    errorCallback(error);
+  });
+};
+
 export const getPayments = (projectId: string, tradeId: string, userId: string, callback: (payments: Payment[]) => void, errorCallback: (error: any) => void) => {
   const q = query(collection(db, `projects/${projectId}/trades/${tradeId}/payments`), where('ownerId', '==', userId), orderBy('date', 'desc'));
   return onSnapshot(q, (snapshot) => {

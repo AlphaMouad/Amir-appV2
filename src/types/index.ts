@@ -43,3 +43,5 @@ export interface Payment {
   createdAt: Date;
   ownerId: string;
 }
+
+export type PeriodKey = '7d' | '14d' | '1m' | '3m' | '6m' | '1y' | 'all';

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
-import { getProjects, getAllTrades } from '../services/api';
-import { Project, Trade } from '../types';
+import { getProjects, getAllTrades, getAllPayments } from '../services/api';
+import { Project, Trade, Payment, PeriodKey } from '../types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { AlertCircle, TrendingUp, Building, DollarSign } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
@@ -23,20 +23,41 @@ export default function Dashboard() {
   const { t } = useLanguage();
   const [projects, setProjects] = useState<Project[]>([]);
   const [trades, setTrades] = useState<Trade[]>([]);
+  const [payments, setPayments] = useState<Payment[]>([]);
   const [loading, setLoading] = useState(true);
+  const [period, setPeriod] = useState<PeriodKey>('1m');
+
+  const getStartDate = (p: PeriodKey) => {
+    if (p === 'all') return new Date(0);
+    const date = new Date();
+    switch (p) {
+      case '7d': date.setDate(date.getDate() - 7); break;
+      case '14d': date.setDate(date.getDate() - 14); break;
+      case '1m': date.setMonth(date.getMonth() - 1); break;
+      case '3m': date.setMonth(date.getMonth() - 3); break;
+      case '6m': date.setMonth(date.getMonth() - 6); break;
+      case '1y': date.setFullYear(date.getFullYear() - 1); break;
+    }
+    return date;
+  };
 
   useEffect(() => {
     if (!user) return;
 
     let projectsLoaded = false;
     let tradesLoaded = false;
+    let paymentsLoaded = false;
+
+    const checkLoaded = () => {
+      if (projectsLoaded && tradesLoaded && paymentsLoaded) setLoading(false);
+    };
 
     const unsubProjects = getProjects(
       user.uid,
       (data) => {
         setProjects(data);
         projectsLoaded = true;
-        if (tradesLoaded) setLoading(false);
+        checkLoaded();
       },
       (error) => { console.error(error); setLoading(false); }
     );
@@ -46,12 +67,22 @@ export default function Dashboard() {
       (data) => {
         setTrades(data);
         tradesLoaded = true;
-        if (projectsLoaded) setLoading(false);
+        checkLoaded();
       },
       (error) => { console.error(error); setLoading(false); }
     );
 
-    return () => { unsubProjects(); unsubTrades(); };
+    const unsubPayments = getAllPayments(
+      user.uid,
+      (data) => {
+        setPayments(data);
+        paymentsLoaded = true;
+        checkLoaded();
+      },
+      (error) => { console.error(error); setLoading(false); }
+    );
+
+    return () => { unsubProjects(); unsubTrades(); unsubPayments(); };
   }, [user]);
 
   if (loading) {
@@ -73,9 +104,12 @@ export default function Dashboard() {
     return isNaN(n) ? 0 : n;
   };
 
+  const startDate = getStartDate(period);
+  const filteredPayments = payments.filter(p => p.date && p.date >= startDate);
+
   const globalBudget = Number(trades.reduce((sum, t) => sum + safeNum(t.budget || t.amount), 0).toFixed(2));
-  const globalAdvances = Number(trades.reduce((sum, t) => sum + safeNum(t.totalClientAdvances || t.totalAdvances), 0).toFixed(2));
-  const globalExpenses = Number(trades.reduce((sum, t) => sum + safeNum(t.totalLaborExpenses) + safeNum(t.totalMaterialExpenses), 0).toFixed(2));
+  const globalAdvances = Number(filteredPayments.filter(p => p.type === 'client_advance' || p.type === 'advance' || p.type === 'income').reduce((sum, p) => sum + safeNum(p.amount), 0).toFixed(2));
+  const globalExpenses = Number(filteredPayments.filter(p => p.type === 'labor_expense' || p.type === 'material_expense' || p.type === 'expense').reduce((sum, p) => sum + safeNum(p.amount), 0).toFixed(2));
   const globalBalance = Number((globalAdvances - globalExpenses).toFixed(2));
 
   const tradesWithWarnings = trades.filter((t) => {
@@ -85,11 +119,11 @@ export default function Dashboard() {
   });
 
   const projectChartData = projects.map((p) => {
-    const pTrades = trades.filter((t) => t.projectId === p.id);
+    const pPayments = filteredPayments.filter(pay => pay.projectId === p.id);
     return {
       name: p.name.length > 12 ? p.name.substring(0, 12) + '…' : p.name,
-      Advances: pTrades.reduce((sum, t) => sum + (t.totalClientAdvances || t.totalAdvances || 0), 0),
-      Expenses: pTrades.reduce((sum, t) => sum + (t.totalLaborExpenses || 0) + (t.totalMaterialExpenses || 0), 0),
+      Advances: pPayments.filter(pay => pay.type === 'client_advance' || pay.type === 'advance' || pay.type === 'income').reduce((sum, pay) => sum + safeNum(pay.amount), 0),
+      Expenses: pPayments.filter(pay => pay.type === 'labor_expense' || pay.type === 'material_expense' || pay.type === 'expense').reduce((sum, pay) => sum + safeNum(pay.amount), 0),
     };
   });
 
@@ -133,8 +167,21 @@ export default function Dashboard() {
         <div>
           <h1 className="text-4xl font-playfair font-black tracking-[0.05em] text-foreground uppercase mb-2">{t('dash_title')}</h1>
           <p className="elite-text-silver">
-            {t('dash_welcome')}, {user?.displayName?.split(' ')[0] || 'User'}. {t('dash_summary')}
+            {t('dash_welcome')}, {user?.displayName?.split(' ')[0] || 'User'}. Showing cashflow for the selected period.
           </p>
+        </div>
+        <div className="flex bg-background/50 border border-border p-1 rounded-xl">
+          {(['7d', '14d', '1m', '3m', '6m', '1y', 'all'] as PeriodKey[]).map((p) => (
+            <button
+              key={p}
+              onClick={() => setPeriod(p)}
+              className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all ${
+                period === p ? 'bg-foreground text-background shadow-md' : 'text-foreground/60 hover:text-foreground'
+              }`}
+            >
+              {p}
+            </button>
+          ))}
         </div>
       </motion.div>
 
