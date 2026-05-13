@@ -7,6 +7,7 @@ export const translations = {
     nav_management: 'Management',
     nav_navigation: 'Navigation',
     nav_logout: 'Secure Logout',
+    nav_workers: 'Workers',
 
     // Auth
     auth_subtitle: 'Construction Finance',
@@ -132,6 +133,15 @@ export const translations = {
     img_error: 'Unavailable',
     img_tap_zoom: 'Click to enlarge',
     img_press_esc: 'Press ESC to close',
+
+    // Workers
+    workers_title: 'Labor Force',
+    workers_subtitle: 'Manage teams, track payroll, and monitor labor expenses globally',
+    workers_search: 'Search workers or teams...',
+    workers_total_paid: 'Total Paid',
+    workers_no_workers: 'No Workers Found',
+    workers_no_workers_sub: 'No labor expenses with assigned workers match your search.',
+    workers_payments: 'Payments',
   },
   fr: {
     // Layout / Nav
@@ -141,6 +151,7 @@ export const translations = {
     nav_management: 'Gestion',
     nav_navigation: 'Navigation',
     nav_logout: 'Déconnexion Sécurisée',
+    nav_workers: 'Ouvriers',
 
     // Auth
     auth_subtitle: 'Finance de Construction',
@@ -266,6 +277,15 @@ export const translations = {
     img_error: 'Non Disponible',
     img_tap_zoom: 'Cliquer pour agrandir',
     img_press_esc: 'Appuyer sur ESC pour fermer',
+
+    // Workers
+    workers_title: 'Force de Travail',
+    workers_subtitle: 'Gérez les équipes, suivez la paie et surveillez les dépenses de main-d\'œuvre',
+    workers_search: 'Rechercher des ouvriers ou équipes...',
+    workers_total_paid: 'Total Payé',
+    workers_no_workers: 'Aucun Ouvrier Trouvé',
+    workers_no_workers_sub: 'Aucune dépense de main-d\'œuvre avec des ouvriers ne correspond à votre recherche.',
+    workers_payments: 'Paiements',
   },
 } as const;
 

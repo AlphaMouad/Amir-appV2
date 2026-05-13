@@ -13,6 +13,7 @@ import Dashboard from './pages/Dashboard';
 import ProjectList from './pages/ProjectList';
 import ProjectDetail from './pages/ProjectDetail';
 import Suppliers from './pages/Suppliers';
+import Workers from './pages/Workers';
 import { useTheme } from './contexts/ThemeContext';
 import { Sun, Moon } from 'lucide-react';
 import { motion } from 'motion/react';
@@ -179,6 +180,7 @@ export default function App() {
                 <Route path="projects" element={<ProjectList />} />
                 <Route path="projects/:id" element={<ProjectDetail />} />
                 <Route path="suppliers" element={<Suppliers />} />
+                <Route path="workers" element={<Workers />} />
               </Route>
             </Routes>
           </BrowserRouter>

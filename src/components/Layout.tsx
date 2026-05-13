@@ -3,7 +3,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { Link, Outlet, useLocation } from 'react-router-dom';
-import { LayoutDashboard, FolderKanban, LogOut, Building2, User, Sun, Moon } from 'lucide-react';
+import { LayoutDashboard, FolderKanban, LogOut, Building2, User, Users, Sun, Moon } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 export default function Layout() {
@@ -16,6 +16,7 @@ export default function Layout() {
     { label: t('nav_dashboard'), path: '/', icon: LayoutDashboard },
     { label: t('nav_projects'), path: '/projects', icon: FolderKanban },
     { label: t('nav_suppliers'), path: '/suppliers', icon: Building2 },
+    { label: t('nav_workers'), path: '/workers', icon: Users },
   ];
 
   const LangToggle = ({ compact }: { compact?: boolean }) => (
