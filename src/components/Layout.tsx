@@ -1,13 +1,15 @@
 import React from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useTheme } from '../contexts/ThemeContext';
 import { Link, Outlet, useLocation } from 'react-router-dom';
-import { LayoutDashboard, FolderKanban, LogOut, Building2, User } from 'lucide-react';
+import { LayoutDashboard, FolderKanban, LogOut, Building2, User, Sun, Moon } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 export default function Layout() {
   const { user, logout } = useAuth();
   const { t, lang, setLang } = useLanguage();
+  const { theme, toggleTheme } = useTheme();
   const location = useLocation();
 
   const navItems = [
@@ -24,19 +26,30 @@ export default function Layout() {
           onClick={() => setLang(l)}
           className={`${compact ? 'px-2.5 py-1' : 'flex-1 py-1.5'} rounded-lg text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-200`}
           style={{
-            background: lang === l ? 'rgba(212,175,55,0.12)' : 'rgba(255,255,255,0.02)',
-            border: `1px solid ${lang === l ? 'rgba(212,175,55,0.3)' : 'rgba(255,255,255,0.06)'}`,
-            color: lang === l ? '#D4AF37' : 'rgba(255,255,255,0.22)',
+            background: lang === l ? 'rgba(212,175,55,0.12)' : 'rgba(128,128,128,0.05)',
+            border: `1px solid ${lang === l ? 'rgba(212,175,55,0.3)' : 'rgba(128,128,128,0.1)'}`,
+            color: lang === l ? '#D4AF37' : 'var(--text-silver)',
           }}
         >
           {l}
         </button>
       ))}
+      <button
+        onClick={toggleTheme}
+        className={`${compact ? 'w-8 h-8' : 'w-9 h-9'} rounded-lg flex items-center justify-center transition-all duration-300 ml-1`}
+        style={{
+          background: 'rgba(128,128,128,0.05)',
+          border: '1px solid rgba(128,128,128,0.1)',
+          color: '#D4AF37',
+        }}
+      >
+        {theme === 'dark' ? <Sun size={13} /> : <Moon size={13} />}
+      </button>
     </div>
   );
 
   return (
-    <div className="min-h-screen flex font-montserrat text-white pb-nav-safe relative overflow-hidden bg-black">
+    <div className="min-h-screen flex font-montserrat text-foreground pb-nav-safe relative overflow-hidden">
 
       {/* Desktop Sidebar */}
       <aside className="w-72 hidden lg:flex flex-col shrink-0 sticky top-0 h-screen z-20 overflow-hidden elite-glass border-y-0 border-l-0">
@@ -50,16 +63,16 @@ export default function Layout() {
         <div className="p-7 pb-3 relative z-10">
           <div className="flex items-center gap-4">
             <div
-              className="w-11 h-11 rounded-xl bg-black flex items-center justify-center shrink-0"
+              className="w-11 h-11 rounded-xl bg-background flex items-center justify-center shrink-0"
               style={{
                 border: '1px solid rgba(212,175,55,0.22)',
-                boxShadow: '0 0 20px rgba(212,175,55,0.08), inset 0 1px 0 rgba(255,255,255,0.04)',
+                boxShadow: '0 0 20px rgba(212,175,55,0.08)',
               }}
             >
               <span className="font-playfair font-black text-xl elite-text-gold">V</span>
             </div>
             <div>
-              <h1 className="text-[1.1rem] font-playfair font-black tracking-[0.1em] text-white uppercase leading-none">
+              <h1 className="text-[1.1rem] font-playfair font-black tracking-[0.1em] text-foreground uppercase leading-none">
                 Elite<span className="elite-text-gold font-medium">Finance</span>
               </h1>
               <p className="text-[8px] uppercase tracking-[0.35em] mt-1.5 font-bold" style={{ color: 'rgba(212,175,55,0.4)' }}>
@@ -69,11 +82,11 @@ export default function Layout() {
           </div>
         </div>
 
-        <div className="mx-7 my-1 h-px relative z-10" style={{ background: 'rgba(255,255,255,0.04)' }} />
+        <div className="mx-7 my-1 h-px relative z-10" style={{ background: 'var(--card-border)' }} />
 
         {/* Navigation */}
         <nav className="flex-1 px-4 pt-5 space-y-0.5 relative z-10">
-          <p className="text-[8px] font-bold uppercase tracking-[0.28em] mb-3 px-3" style={{ color: 'rgba(255,255,255,0.18)' }}>
+          <p className="text-[8px] font-bold uppercase tracking-[0.28em] mb-3 px-3" style={{ color: 'var(--text-silver)' }}>
             {t('nav_navigation')}
           </p>
           {navItems.map((item) => {
@@ -85,9 +98,9 @@ export default function Layout() {
                 key={item.path}
                 to={item.path}
                 className={`flex items-center gap-3.5 px-3.5 py-3 text-[13px] font-medium rounded-xl transition-colors duration-200 relative group ${
-                  isActive ? 'text-white' : 'hover:text-white/70'
+                  isActive ? 'text-foreground' : 'hover:text-foreground/70'
                 }`}
-                style={{ color: isActive ? 'white' : 'rgba(255,255,255,0.28)' }}
+                style={{ color: isActive ? 'var(--foreground)' : 'var(--text-silver)' }}
               >
                 {isActive && (
                   <motion.div
@@ -102,11 +115,11 @@ export default function Layout() {
                   />
                 )}
                 {!isActive && (
-                  <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200" style={{ background: 'rgba(255,255,255,0.02)' }} />
+                  <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200" style={{ background: 'rgba(128,128,128,0.03)' }} />
                 )}
                 <item.icon
                   className="h-4.5 w-4.5 relative z-10 shrink-0 transition-colors duration-200"
-                  style={{ color: isActive ? '#D4AF37' : 'rgba(255,255,255,0.22)' }}
+                  style={{ color: isActive ? '#D4AF37' : 'var(--text-silver)' }}
                   size={18}
                 />
                 <span className="relative z-10 tracking-wide">{item.label}</span>
@@ -115,27 +128,27 @@ export default function Layout() {
           })}
         </nav>
 
-        <div className="mx-7 h-px relative z-10" style={{ background: 'rgba(255,255,255,0.04)' }} />
+        <div className="mx-7 h-px relative z-10" style={{ background: 'var(--card-border)' }} />
 
         {/* User profile */}
         <div className="p-5 relative z-10">
           <LangToggle />
           <div className="flex items-center gap-3 mb-4">
             <div
-              className="w-9 h-9 rounded-full bg-black flex items-center justify-center overflow-hidden shrink-0"
-              style={{ border: '1px solid rgba(255,255,255,0.1)' }}
+              className="w-9 h-9 rounded-full bg-background flex items-center justify-center overflow-hidden shrink-0"
+              style={{ border: '1px solid var(--card-border)' }}
             >
               {user?.photoURL ? (
                 <img src={user.photoURL} alt="Profile" className="w-full h-full object-cover opacity-80" />
               ) : (
-                <User size={14} style={{ color: 'rgba(255,255,255,0.4)' }} />
+                <User size={14} style={{ color: 'var(--text-silver)' }} />
               )}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="font-semibold text-white text-[13px] truncate tracking-wide">
+              <p className="font-semibold text-foreground text-[13px] truncate tracking-wide">
                 {user?.displayName || 'User'}
               </p>
-              <p className="text-[10px] truncate mt-0.5" style={{ color: 'rgba(255,255,255,0.28)', letterSpacing: '0.05em' }}>
+              <p className="text-[10px] truncate mt-0.5" style={{ color: 'var(--text-silver)', letterSpacing: '0.05em' }}>
                 {user?.email}
               </p>
             </div>
@@ -153,16 +166,16 @@ export default function Layout() {
       {/* Mobile Top Header — safe area top for notched iPhones */}
       <header
         className="lg:hidden fixed top-0 left-0 right-0 z-20 flex items-center justify-between px-5 elite-glass border-y-0 border-x-0 header-safe"
-        style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}
+        style={{ borderBottom: '1px solid var(--card-border)' }}
       >
         <div className="flex items-center gap-3">
           <div
-            className="w-8 h-8 rounded-lg bg-black flex items-center justify-center"
+            className="w-8 h-8 rounded-lg bg-background flex items-center justify-center"
             style={{ border: '1px solid rgba(212,175,55,0.2)', boxShadow: '0 0 14px rgba(212,175,55,0.07)' }}
           >
             <span className="font-playfair font-black text-base elite-text-gold">V</span>
           </div>
-          <h1 className="text-[1.05rem] font-playfair font-black tracking-[0.08em] text-white uppercase">
+          <h1 className="text-[1.05rem] font-playfair font-black tracking-[0.08em] text-foreground uppercase">
             Elite<span className="elite-text-gold font-medium">Finance</span>
           </h1>
         </div>
@@ -172,11 +185,11 @@ export default function Layout() {
             onClick={logout}
             className="h-8 w-8 rounded-lg flex items-center justify-center transition-colors duration-200 hover:text-rose-400"
             style={{
-              background: 'rgba(0,0,0,0.4)',
-              border: '1px solid rgba(255,255,255,0.06)',
+              background: 'rgba(128,128,128,0.05)',
+              border: '1px solid var(--card-border)',
             }}
           >
-            <LogOut size={13} style={{ color: 'rgba(255,255,255,0.4)' }} />
+            <LogOut size={13} style={{ color: 'var(--text-silver)' }} />
           </button>
         </div>
       </header>
@@ -205,11 +218,11 @@ export default function Layout() {
         <div
           className="rounded-2xl flex items-center justify-around px-2 py-2"
           style={{
-            background: 'rgba(8, 8, 8, 0.95)',
+            background: 'var(--glass-bg)',
             backdropFilter: 'blur(40px)',
             WebkitBackdropFilter: 'blur(40px)',
-            border: '1px solid rgba(255, 255, 255, 0.07)',
-            boxShadow: '0 -1px 0 rgba(255,255,255,0.03), 0 8px 32px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.04)',
+            border: '1px solid var(--card-border)',
+            boxShadow: `0 -1px 0 rgba(255,255,255,0.03), 0 8px 32px var(--card-shadow)`,
           }}
         >
           {navItems.map((item) => {
@@ -236,11 +249,11 @@ export default function Layout() {
                 <item.icon
                   className="relative z-10 transition-colors duration-200"
                   size={20}
-                  style={{ color: isActive ? '#D4AF37' : 'rgba(255,255,255,0.25)' }}
+                  style={{ color: isActive ? '#D4AF37' : 'var(--text-silver)' }}
                 />
                 <span
                   className="text-[9px] font-bold uppercase tracking-[0.1em] relative z-10 transition-colors duration-200"
-                  style={{ color: isActive ? '#D4AF37' : 'rgba(255,255,255,0.2)' }}
+                  style={{ color: isActive ? '#D4AF37' : 'var(--text-silver)' }}
                 >
                   {item.label}
                 </span>

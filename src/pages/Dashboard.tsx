@@ -125,7 +125,7 @@ export default function Dashboard() {
       {/* Header */}
       <motion.div variants={item} className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
         <div>
-          <h1 className="text-4xl font-playfair font-black tracking-[0.05em] text-white uppercase mb-2">{t('dash_title')}</h1>
+          <h1 className="text-4xl font-playfair font-black tracking-[0.05em] text-foreground uppercase mb-2">{t('dash_title')}</h1>
           <p className="elite-text-silver">
             {t('dash_welcome')}, {user?.displayName?.split(' ')[0] || 'User'}. {t('dash_summary')}
           </p>
@@ -146,7 +146,7 @@ export default function Dashboard() {
                 </div>
               </CardHeader>
               <CardContent style={{ padding: '0 16px 16px' }}>
-                <div className="text-2xl md:text-3xl font-playfair font-black tracking-tight" style={{ color: card.valueColor || 'white' }}>
+                <div className="text-2xl md:text-3xl font-playfair font-black tracking-tight" style={{ color: card.valueColor || 'var(--foreground)' }}>
                   {card.value}
                 </div>
                 <p className="text-[9px] font-bold tracking-wide mt-2 uppercase" style={{ color: card.subColor || 'rgba(255,255,255,0.4)' }}>
@@ -162,11 +162,11 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pb-6">
         <motion.div variants={item} className="lg:col-span-2">
           <Card className="elite-card h-full">
-            <CardHeader style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', padding: '24px 24px 20px' }}>
-              <CardTitle className="text-lg font-playfair font-black text-white uppercase tracking-[0.1em]">
+            <CardHeader style={{ borderBottom: '1px solid var(--card-border)', padding: '24px 24px 20px' }}>
+              <CardTitle className="text-lg font-playfair font-black text-foreground uppercase tracking-[0.1em]">
                 {t('dash_chart_title')}
               </CardTitle>
-              <CardDescription className="text-[10px] font-medium tracking-wide mt-1 uppercase" style={{ color: 'rgba(255,255,255,0.35)' }}>
+              <CardDescription className="text-[10px] font-medium tracking-wide mt-1 uppercase">
                 {t('dash_chart_sub')}
               </CardDescription>
             </CardHeader>
@@ -201,14 +201,14 @@ export default function Dashboard() {
             <CardContent style={{ padding: '20px' }}>
               {tradesWithWarnings.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-14 text-center">
-                  <p className="text-sm font-playfair tracking-[0.2em] text-white uppercase">{t('dash_ledger_clear')}</p>
+                  <p className="text-sm font-playfair tracking-[0.2em] text-foreground uppercase">{t('dash_ledger_clear')}</p>
                 </div>
               ) : (
                 <div className="space-y-3">
                   {tradesWithWarnings.map((trade) => (
-                    <div key={trade.id} className="p-4 rounded-lg bg-black/50 border border-white/5 border-l-[#f87171] border-l-2">
-                      <p className="text-[11px] font-bold text-white uppercase">{trade.designation}</p>
-                      <p className="text-[9px] uppercase tracking-widest mt-1 text-white/30">
+                    <div key={trade.id} className="p-4 rounded-lg bg-black/50 border border-border border-l-[#f87171] border-l-2">
+                      <p className="text-[11px] font-bold text-foreground uppercase">{trade.designation}</p>
+                      <p className="text-[9px] uppercase tracking-widest mt-1 opacity-40">
                         Exp: €{((trade.totalLaborExpenses || 0) + (trade.totalMaterialExpenses || 0)).toLocaleString()} / Budget: €{(trade.budget || trade.amount || 0).toLocaleString()}
                       </p>
                     </div>

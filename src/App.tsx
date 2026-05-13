@@ -7,6 +7,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
+import { ThemeProvider } from './contexts/ThemeContext';
 import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
 import ProjectList from './pages/ProjectList';
@@ -17,16 +18,19 @@ import { motion } from 'motion/react';
 const Login = () => {
   const { login } = useAuth();
   const { t, lang, setLang } = useLanguage();
+  const { theme, toggleTheme } = useTheme();
 
   return (
-    <div className="relative flex h-screen items-center justify-center overflow-hidden bg-black">
+    <div className="relative flex h-screen items-center justify-center overflow-hidden bg-background">
       {/* Subtle grid texture */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          opacity: 0.025,
+          opacity: theme === 'dark' ? 0.025 : 0.05,
           backgroundImage:
-            'linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)',
+            theme === 'dark'
+              ? 'linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)'
+              : 'linear-gradient(rgba(0,0,0,1) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,1) 1px, transparent 1px)',
           backgroundSize: '64px 64px',
         }}
       />
@@ -35,7 +39,7 @@ const Login = () => {
       <div className="absolute top-1/4 -left-1/4 w-[900px] h-[900px] rounded-full pointer-events-none" style={{ background: 'rgba(212,175,55,0.04)', filter: 'blur(180px)' }} />
       <div className="absolute -bottom-1/4 right-1/4 w-[600px] h-[600px] rounded-full pointer-events-none" style={{ background: 'rgba(212,175,55,0.025)', filter: 'blur(140px)' }} />
 
-      {/* Language toggle */}
+      {/* Settings toggle */}
       <div className="absolute top-5 right-5 flex items-center gap-1 z-20">
         {(['fr', 'en'] as const).map((l) => (
           <button
@@ -43,14 +47,25 @@ const Login = () => {
             onClick={() => setLang(l)}
             className="px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-200"
             style={{
-              background: lang === l ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.03)',
-              border: `1px solid ${lang === l ? 'rgba(212,175,55,0.35)' : 'rgba(255,255,255,0.07)'}`,
-              color: lang === l ? '#D4AF37' : 'rgba(255,255,255,0.25)',
+              background: lang === l ? 'rgba(212,175,55,0.15)' : 'rgba(128,128,128,0.05)',
+              border: `1px solid ${lang === l ? 'rgba(212,175,55,0.35)' : 'rgba(128,128,128,0.1)'}`,
+              color: lang === l ? '#D4AF37' : 'var(--text-silver)',
             }}
           >
             {l}
           </button>
         ))}
+        <button
+          onClick={toggleTheme}
+          className="w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-300 ml-1"
+          style={{
+            background: 'rgba(128,128,128,0.05)',
+            border: '1px solid rgba(128,128,128,0.1)',
+            color: '#D4AF37',
+          }}
+        >
+          {theme === 'dark' ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
+        </button>
       </div>
 
       <motion.div
@@ -67,10 +82,10 @@ const Login = () => {
           className="relative mb-10 animate-float"
         >
           <div
-            className="w-20 h-20 rounded-2xl bg-black flex items-center justify-center"
+            className="w-20 h-20 rounded-2xl bg-background flex items-center justify-center"
             style={{
               border: '1px solid rgba(212,175,55,0.22)',
-              boxShadow: '0 0 60px rgba(212,175,55,0.12), inset 0 1px 0 rgba(255,255,255,0.04)',
+              boxShadow: '0 0 60px rgba(212,175,55,0.12)',
             }}
           >
             <span className="font-playfair font-black text-4xl elite-text-gold">V</span>
@@ -87,14 +102,14 @@ const Login = () => {
           transition={{ delay: 0.22, duration: 0.6 }}
           className="w-full"
         >
-          <h1 className="text-[2.75rem] font-playfair font-black tracking-[0.04em] text-white uppercase leading-none mb-2">
+          <h1 className="text-[2.75rem] font-playfair font-black tracking-[0.04em] text-foreground uppercase leading-none mb-2">
             Elite<span className="elite-text-gold">Finance</span>
           </h1>
           <p className="text-[9px] font-bold uppercase tracking-[0.4em] mb-8" style={{ color: 'rgba(212,175,55,0.45)' }}>
             {t('auth_subtitle')}
           </p>
           <span className="gold-divider block w-16 mx-auto mb-8" />
-          <p className="text-[13px] leading-relaxed tracking-wide mb-10 font-light" style={{ color: 'rgba(255,255,255,0.3)' }}>
+          <p className="text-[13px] leading-relaxed tracking-wide mb-10 font-medium" style={{ color: 'var(--text-silver)' }}>
             {t('auth_desc')}
           </p>
         </motion.div>
@@ -120,7 +135,7 @@ const Login = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.55 }}
           className="mt-6 text-[9px] uppercase tracking-[0.22em] font-medium"
-          style={{ color: 'rgba(255,255,255,0.14)' }}
+          style={{ color: 'var(--text-silver)', opacity: 0.4 }}
         >
           {t('auth_secure')}
         </motion.p>
@@ -135,7 +150,7 @@ const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-black">
+      <div className="flex h-screen items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-5">
           <div className="w-10 h-10 border-t-2 border-r-2 border-[#D4AF37] rounded-full animate-spin" />
           <span className="font-playfair text-[10px] uppercase tracking-[0.35em] animate-pulse-soft" style={{ color: 'rgba(212,175,55,0.5)' }}>
@@ -152,19 +167,21 @@ const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
 
 export default function App() {
   return (
-    <LanguageProvider>
-      <AuthProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<PrivateRoute><Layout /></PrivateRoute>}>
-              <Route index element={<Dashboard />} />
-              <Route path="projects" element={<ProjectList />} />
-              <Route path="projects/:id" element={<ProjectDetail />} />
-              <Route path="suppliers" element={<Suppliers />} />
-            </Route>
-          </Routes>
-        </BrowserRouter>
-      </AuthProvider>
-    </LanguageProvider>
+    <ThemeProvider>
+      <LanguageProvider>
+        <AuthProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<PrivateRoute><Layout /></PrivateRoute>}>
+                <Route index element={<Dashboard />} />
+                <Route path="projects" element={<ProjectList />} />
+                <Route path="projects/:id" element={<ProjectDetail />} />
+                <Route path="suppliers" element={<Suppliers />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        </AuthProvider>
+      </LanguageProvider>
+    </ThemeProvider>
   );
 }

@@ -55,6 +55,36 @@
     /* Safe area variables — resolved at render time */
     --safe-bottom: env(safe-area-inset-bottom, 0px);
     --safe-top: env(safe-area-inset-top, 0px);
+
+    --body-bg-start: rgba(212,175,55,0.05);
+    --body-bg-end: #060604;
+    --glass-bg: rgba(0, 0, 0, 0.72);
+    --card-bg: rgba(6, 6, 6, 0.94);
+    --card-border: rgba(255, 255, 255, 0.055);
+    --card-shadow: rgba(0, 0, 0, 0.9);
+    --text-silver: rgba(160, 155, 145, 0.85);
+    --input-border: rgba(255, 255, 255, 0.12);
+  }
+
+  :root.light {
+    --background: 34 25% 98%;
+    --foreground: 20 10% 12%;
+    --primary: 43 65% 45%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 34 30% 94%;
+    --secondary-foreground: 20 10% 25%;
+    --border: 34 20% 88%;
+    --input: 34 25% 98%;
+    --ring: 43 65% 45%;
+
+    --body-bg-start: rgba(212,175,55,0.1);
+    --body-bg-end: #faf9f6;
+    --glass-bg: rgba(250, 249, 246, 0.88);
+    --card-bg: #ffffff;
+    --card-border: rgba(212, 175, 55, 0.12);
+    --card-shadow: rgba(43, 38, 25, 0.08);
+    --text-silver: rgba(90, 85, 75, 0.8);
+    --input-border: rgba(212, 175, 55, 0.2);
   }
 
   html {
@@ -63,12 +93,12 @@
   }
 
   body {
-    @apply bg-black text-white antialiased;
+    @apply bg-background text-foreground antialiased;
     font-family: 'Montserrat', sans-serif;
     /* Warmer, deeper background — subtle golden warmth at zenith */
     background-image:
-      radial-gradient(ellipse 120% 60% at 50% -10%, rgba(212,175,55,0.05) 0%, transparent 60%),
-      radial-gradient(ellipse at 50% 0%, #060604 0%, #000000 70%);
+      radial-gradient(ellipse 120% 60% at 50% -10%, var(--body-bg-start) 0%, transparent 60%),
+      radial-gradient(ellipse at 50% 0%, var(--body-bg-end) 0%, var(--body-bg-end) 70%);
     background-attachment: fixed;
     letter-spacing: 0.01em;
     /* Smooth text rendering */
@@ -142,31 +172,31 @@
 
   /* ── Elite Glass ─────────────────────────────────────────────── */
   .elite-glass {
-    background: rgba(0, 0, 0, 0.72);
+    background: var(--glass-bg);
     backdrop-filter: blur(40px) saturate(120%);
     -webkit-backdrop-filter: blur(40px) saturate(120%);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 1);
+    border: 1px solid var(--card-border);
+    box-shadow: 0 30px 60px -15px var(--card-shadow);
   }
 
   /* ── Elite Card ──────────────────────────────────────────────── */
   .elite-card {
-    background: rgba(6, 6, 6, 0.94);
+    background: var(--card-bg);
     backdrop-filter: blur(20px) saturate(110%);
     -webkit-backdrop-filter: blur(20px) saturate(110%);
-    border: 1px solid rgba(255, 255, 255, 0.055);
+    border: 1px solid var(--card-border);
     box-shadow:
       0 1px 0 0 rgba(255, 255, 255, 0.035) inset,
       0 0 0 0 rgba(212,175,55,0) inset,
-      0 8px 32px rgba(0, 0, 0, 0.9);
+      0 8px 32px var(--card-shadow);
     @apply transition-all duration-500 rounded-xl overflow-hidden;
   }
 
   .elite-card:hover {
-    border-color: rgba(255, 255, 255, 0.09);
+    border-color: rgba(212, 175, 55, 0.2);
     box-shadow:
       0 1px 0 0 rgba(255, 255, 255, 0.05) inset,
-      0 16px 48px rgba(0, 0, 0, 0.95),
+      0 16px 48px var(--card-shadow),
       0 0 0 1px rgba(212, 175, 55, 0.055);
   }
 
@@ -186,8 +216,8 @@
 
   /* ── Silver / Muted text ─────────────────────────────────────── */
   .elite-text-silver {
-    color: rgba(160, 155, 145, 0.85);
-    font-weight: 300;
+    color: var(--text-silver);
+    font-weight: 400;
     letter-spacing: 0.04em;
   }
 
@@ -240,14 +270,15 @@
 
   /* ── Form Input (underline style) ────────────────────────────── */
   .elite-input {
-    @apply w-full bg-transparent pb-2.5 pt-1 text-sm text-white outline-none transition-all duration-300;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    @apply w-full bg-transparent pb-2.5 pt-1 text-sm text-foreground outline-none transition-all duration-300;
+    border-bottom: 1px solid var(--input-border);
     /* Ensure readable placeholder color on mobile */
     --tw-placeholder-opacity: 1;
   }
 
   .elite-input::placeholder {
-    color: rgba(255, 255, 255, 0.2);
+    color: var(--text-silver);
+    opacity: 0.5;
   }
 
   .elite-input:focus {

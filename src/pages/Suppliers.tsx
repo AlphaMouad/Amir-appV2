@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
-import { getAllTrades, getProjects, addPayment, updateTrade, getPayments, deleteTrade, deletePayment, deleteSupplier } from '../services/api';
+import { getAllTrades, getProjects, addPayment, updateTrade, getPayments, deleteTrade, deletePayment, deleteSupplier, addTrade } from '../services/api';
 import { Trade, Project, Payment, PaymentType } from '../types';
-import { Building2, Search, Wallet, Plus, AlertCircle, User, Trash2 } from 'lucide-react';
+import { Building2, Search, Wallet, Plus, AlertCircle, User, Trash2, X } from 'lucide-react';
 import { format } from 'date-fns';
 import { ImageUpload } from '../components/ui/ImageUpload';
 import { LazyImage } from '../components/ui/LazyImage';
@@ -33,8 +33,11 @@ export default function Suppliers() {
   const [selectedTrade, setSelectedTrade] = useState<Trade | null>(null);
   const [payments, setPayments] = useState<Payment[]>([]);
   const [addingPayment, setAddingPayment] = useState(false);
+  const [addingTrade, setAddingTrade] = useState(false);
+  const [newTrade, setNewTrade] = useState({ designation: '', amount: '', supplierName: '', projectId: '' });
+  const [isSavingTrade, setIsSavingTrade] = useState(false);
   const [newPayment, setNewPayment] = useState({
-    amount: 0,
+    amount: '',
     date: new Date().toISOString().substring(0, 10),
     designation: '',
     type: 'material_expense' as PaymentType,
@@ -68,6 +71,33 @@ export default function Suppliers() {
     }
   }, [trades]);
 
+  const handleAddTrade = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user || !newTrade.designation || !newTrade.projectId) return;
+    const amount = Number(newTrade.amount);
+    if (amount <= 0) return alert('Enter a valid budget.');
+    setIsSavingTrade(true);
+    try {
+      await addTrade(newTrade.projectId, {
+        designation: newTrade.designation,
+        budget: amount,
+        amount: amount,
+        supplierName: newTrade.supplierName,
+        ownerId: user.uid,
+        totalClientAdvances: 0,
+        totalAdvances: 0,
+        totalLaborExpenses: 0,
+        totalMaterialExpenses: 0,
+      });
+      setAddingTrade(false);
+      setNewTrade({ designation: '', amount: '', supplierName: '', projectId: '' });
+    } catch (err: any) {
+      alert(err.message);
+    } finally {
+      setIsSavingTrade(false);
+    }
+  };
+
   const handleAddPayment = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user || !selectedTrade) return;
@@ -93,7 +123,7 @@ export default function Suppliers() {
 
       setAddingPayment(false);
       setNewPayment({
-        amount: 0,
+        amount: '',
         date: new Date().toISOString().substring(0, 10),
         designation: '',
         type: 'material_expense',
@@ -195,8 +225,15 @@ export default function Suppliers() {
                   </div>
                   <div>
                     <label className="block text-[9px] font-bold uppercase tracking-[0.22em] mb-2.5" style={{ color: 'rgba(255,255,255,0.38)' }}>{t('detail_field_amount')}</label>
-                    <input type="number" step="any" required placeholder="0" className="elite-input"
-                      value={newPayment.amount || ''} onChange={(e) => setNewPayment({ ...newPayment, amount: Number(e.target.value) })} />
+                    <input
+                      type="number"
+                      step="any"
+                      required
+                      placeholder="0"
+                      className="elite-input"
+                      value={newPayment.amount}
+                      onChange={(e) => setNewPayment({ ...newPayment, amount: e.target.value })}
+                    />
                   </div>
                   <div className={newPayment.type === 'labor_expense' ? 'md:col-span-1' : 'md:col-span-2'}>
                     <label className="block text-[9px] font-bold uppercase tracking-[0.22em] mb-2.5" style={{ color: 'rgba(255,255,255,0.38)' }}>{t('detail_field_ref')}</label>
@@ -302,24 +339,68 @@ export default function Suppliers() {
       {/* Header */}
       <motion.div
         variants={item}
-        className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-6"
+        className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 pb-6"
         style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}
       >
         <div>
           <h1 className="text-4xl font-playfair font-black uppercase tracking-[0.05em] text-white mb-2">{t('sup_title')}</h1>
           <p className="elite-text-silver tracking-wide">{t('sup_subtitle')}</p>
         </div>
-        <div className="relative w-full md:w-80">
-          <Search size={15} className="absolute left-0 top-1/2 -translate-y-1/2" style={{ color: 'rgba(255,255,255,0.2)' }} />
-          <input
-            type="text"
-            placeholder={t('sup_search')}
-            className="elite-input pl-7 uppercase tracking-[0.08em]"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full md:w-auto">
+          <div className="relative w-full sm:w-64">
+            <Search size={15} className="absolute left-0 top-1/2 -translate-y-1/2" style={{ color: 'rgba(128,128,128,0.4)' }} />
+            <input
+              type="text"
+              placeholder={t('sup_search')}
+              className="elite-input pl-7 uppercase tracking-[0.08em]"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+          <button
+            onClick={() => setAddingTrade(!addingTrade)}
+            className="elite-button px-6 py-3 flex items-center justify-center gap-2 text-[10px] uppercase tracking-widest"
+          >
+            {addingTrade ? <X size={14} /> : <Plus size={14} />}
+            {addingTrade ? t('proj_cancel') : t('detail_add_trade')}
+          </button>
         </div>
       </motion.div>
+
+      {/* Add Trade Form */}
+      {addingTrade && (
+        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="elite-card p-8">
+          <form onSubmit={handleAddTrade} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 items-end">
+            <div>
+              <label className="block text-[9px] font-bold uppercase tracking-widest mb-2 opacity-40">{t('sup_th_project')}</label>
+              <select
+                required
+                className="elite-input"
+                value={newTrade.projectId}
+                onChange={e => setNewTrade({ ...newTrade, projectId: e.target.value })}
+              >
+                <option value="">Select Project</option>
+                {projects.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="block text-[9px] font-bold uppercase tracking-widest mb-2 opacity-40">{t('detail_trade_designation')}</label>
+              <input required className="elite-input" value={newTrade.designation} onChange={e => setNewTrade({ ...newTrade, designation: e.target.value })} />
+            </div>
+            <div>
+              <label className="block text-[9px] font-bold uppercase tracking-widest mb-2 opacity-40">{t('detail_trade_supplier')}</label>
+              <input required className="elite-input" value={newTrade.supplierName} onChange={e => setNewTrade({ ...newTrade, supplierName: e.target.value })} />
+            </div>
+            <div>
+              <label className="block text-[9px] font-bold uppercase tracking-widest mb-2 opacity-40">{t('detail_trade_budget')}</label>
+              <input type="number" step="any" required className="elite-input" value={newTrade.amount} onChange={e => setNewTrade({ ...newTrade, amount: e.target.value })} />
+            </div>
+            <button disabled={isSavingTrade} type="submit" className="elite-button py-3 text-[10px] uppercase tracking-widest">
+              {isSavingTrade ? t('detail_trade_saving') : t('detail_trade_deploy')}
+            </button>
+          </form>
+        </motion.div>
+      )}
 
       <motion.div variants={container} className="space-y-6">
         <AnimatePresence>
@@ -399,20 +480,33 @@ export default function Suppliers() {
                         <div key={trade.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
                           <div className="p-5 flex flex-col gap-4" style={isExpanded ? { background: 'rgba(212,175,55,0.03)' } : {}}>
                             <div className="flex justify-between items-start">
-                              <div>
+                              <div className="flex-1">
                                 <p className="font-playfair font-black text-white text-[1rem] uppercase tracking-[0.03em]">{trade.designation}</p>
                                 <p className="text-[9px] uppercase tracking-[0.18em] mt-1 font-bold" style={{ color: 'rgba(255,255,255,0.35)' }}>{trade.projectName}</p>
                               </div>
-                              <button
-                                className="px-3.5 py-1.5 text-[9px] uppercase tracking-[0.1em] font-bold rounded-lg transition-all duration-200 shrink-0 ml-3"
-                                style={isExpanded
-                                  ? { background: '#D4AF37', color: '#000', border: '1px solid #D4AF37' }
-                                  : { background: 'transparent', color: 'rgba(255,255,255,0.4)', border: '1px solid rgba(255,255,255,0.1)' }
-                                }
-                                onClick={() => { setSelectedTrade(isExpanded ? null : trade); setAddingPayment(false); }}
-                              >
-                                {isExpanded ? t('detail_close') : t('detail_manage')}
-                              </button>
+                              <div className="flex items-center gap-2">
+                                <button
+                                  className="px-3.5 py-1.5 text-[9px] uppercase tracking-[0.1em] font-bold rounded-lg transition-all duration-200 shrink-0"
+                                  style={isExpanded
+                                    ? { background: '#D4AF37', color: '#000', border: '1px solid #D4AF37' }
+                                    : { background: 'transparent', color: 'rgba(128,128,128,0.4)', border: '1px solid rgba(128,128,128,0.1)' }
+                                  }
+                                  onClick={() => { setSelectedTrade(isExpanded ? null : trade); setAddingPayment(false); }}
+                                >
+                                  {isExpanded ? t('detail_close') : t('detail_manage')}
+                                </button>
+                                <button
+                                  onClick={async () => {
+                                    if (confirm('Delete this trade?')) {
+                                      await deleteTrade(trade.projectId, trade.id);
+                                      if (isExpanded) setSelectedTrade(null);
+                                    }
+                                  }}
+                                  className="p-2 text-foreground/20 hover:text-red-500 transition-colors"
+                                >
+                                  <Trash2 size={14} />
+                                </button>
+                              </div>
                             </div>
                             <div className="grid grid-cols-2 gap-3 p-3.5 rounded-lg" style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.03)' }}>
                               <div>
