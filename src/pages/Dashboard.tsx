@@ -98,15 +98,15 @@ export default function Dashboard() {
       label: t('dash_kpi_projects'),
       value: totalProjects,
       sub: `${activeProjects} ${t('dash_kpi_active')}`,
-      subColor: '#D4AF37',
-      icon: <Building size={16} style={{ color: '#D4AF37' }} />,
+      subColor: 'var(--elite-gold)',
+      icon: <Building size={16} style={{ color: 'var(--elite-gold)' }} />,
     },
     {
       label: t('dash_kpi_advances'),
       value: `€${globalAdvances.toLocaleString()}`,
       sub: t('dash_kpi_allocated'),
-      subColor: '#D4AF37',
-      icon: <DollarSign size={16} style={{ color: '#D4AF37' }} />,
+      subColor: 'var(--elite-gold)',
+      icon: <DollarSign size={16} style={{ color: 'var(--elite-gold)' }} />,
     },
     {
       label: t('dash_kpi_expenses'),
@@ -186,7 +186,7 @@ export default function Dashboard() {
                     cursor={{ fill: 'rgba(255,255,255,0.015)' }}
                     contentStyle={{ backgroundColor: 'rgba(5,5,5,0.96)', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.07)', fontSize: '10px' }}
                   />
-                  <Bar dataKey="Advances" fill="#D4AF37" radius={[3, 3, 0, 0]} maxBarSize={22} />
+                  <Bar dataKey="Advances" fill="var(--elite-gold)" radius={[3, 3, 0, 0]} maxBarSize={22} />
                   <Bar dataKey="Expenses" fill="#f87171" radius={[3, 3, 0, 0]} maxBarSize={22} />
                 </BarChart>
               </ResponsiveContainer>

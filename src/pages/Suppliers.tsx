@@ -428,10 +428,10 @@ export default function Suppliers() {
                           <Building2 size={22} className="transition-colors duration-500 group-hover:text-[#D4AF37]" style={{ color: 'rgba(255,255,255,0.2)' }} />
                         </div>
                         <div>
-                          <h2 className="text-2xl md:text-3xl font-playfair font-black text-white uppercase tracking-[0.04em]">
+                          <h2 className="text-2xl md:text-3xl font-playfair font-black text-foreground uppercase tracking-[0.04em]">
                             {supplier.name}
                           </h2>
-                          <p className="text-[9px] font-bold uppercase tracking-[0.2em] mt-1.5" style={{ color: '#D4AF37' }}>
+                          <p className="text-[9px] font-bold uppercase tracking-[0.2em] mt-1.5" style={{ color: 'var(--elite-gold)' }}>
                             {supplier.trades.length} {t('sup_allocations')}
                           </p>
                         </div>
@@ -439,17 +439,17 @@ export default function Suppliers() {
 
                       <div
                         className="flex gap-8 items-center p-5 rounded-xl"
-                        style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.04)' }}
+                        style={{ background: 'var(--body-bg-start)', border: '1px solid var(--card-border)' }}
                       >
                         <div className="text-right">
-                          <p className="text-[9px] uppercase tracking-[0.2em] font-bold mb-1.5" style={{ color: 'rgba(255,255,255,0.38)' }}>
+                          <p className="text-[9px] uppercase tracking-[0.2em] font-bold mb-1.5" style={{ color: 'var(--text-silver)' }}>
                             {t('sup_global_budget')}
                           </p>
-                          <p className="text-2xl font-playfair font-black text-white">€ {supplier.totalBudget.toLocaleString()}</p>
+                          <p className="text-2xl font-playfair font-black text-foreground">€ {supplier.totalBudget.toLocaleString()}</p>
                         </div>
-                        <div className="w-px h-10" style={{ background: 'rgba(255,255,255,0.08)' }} />
+                        <div className="w-px h-10" style={{ background: 'var(--card-border)' }} />
                         <div className="text-right">
-                          <p className="text-[9px] uppercase tracking-[0.2em] font-bold mb-1.5" style={{ color: 'rgba(255,255,255,0.38)' }}>
+                          <p className="text-[9px] uppercase tracking-[0.2em] font-bold mb-1.5" style={{ color: 'var(--text-silver)' }}>
                             {t('detail_expenses_card')}
                           </p>
                           <p className="text-2xl font-playfair font-black text-[#f87171]">
@@ -491,10 +491,10 @@ export default function Suppliers() {
                               </div>
                               <div className="flex items-center gap-2">
                                 <button
-                                  className="px-3.5 py-1.5 text-[9px] uppercase tracking-[0.1em] font-bold rounded-lg transition-all duration-200 shrink-0"
+                                  className="px-3.5 py-1.5 text-[9px] uppercase tracking-[0.1em] font-bold rounded-lg transition-all duration-200 shrink-0 ml-3"
                                   style={isExpanded
-                                    ? { background: '#D4AF37', color: '#000', border: '1px solid #D4AF37' }
-                                    : { background: 'transparent', color: 'rgba(128,128,128,0.4)', border: '1px solid rgba(128,128,128,0.1)' }
+                                    ? { background: 'var(--elite-gold)', color: 'var(--primary-foreground)', border: '1px solid var(--elite-gold)' }
+                                    : { background: 'transparent', color: 'var(--text-silver)', border: '1px solid var(--card-border)' }
                                   }
                                   onClick={() => { setSelectedTrade(isExpanded ? null : trade); setAddingPayment(false); }}
                                 >
@@ -578,7 +578,7 @@ export default function Suppliers() {
                                   {trade.designation}
                                 </td>
                                 <td className="px-7 py-5 whitespace-nowrap text-sm font-bold text-white text-right">€ {budget.toLocaleString()}</td>
-                                <td className="px-7 py-5 whitespace-nowrap text-sm font-bold text-right" style={{ color: '#D4AF37' }}>
+                                <td className="px-7 py-5 whitespace-nowrap text-sm font-bold text-right" style={{ color: 'var(--elite-gold)' }}>
                                   € {advances.toLocaleString()}
                                 </td>
                                 <td className="px-7 py-5 whitespace-nowrap text-sm font-bold text-right" style={{ color: '#f87171' }}>
@@ -592,8 +592,8 @@ export default function Suppliers() {
                                     <button
                                       className="px-5 py-2 text-[9px] uppercase tracking-[0.1em] font-bold transition-all duration-200 rounded-lg"
                                       style={isExpanded
-                                        ? { background: '#D4AF37', color: '#000', border: '1px solid #D4AF37' }
-                                        : { background: 'transparent', color: 'rgba(255,255,255,0.4)', border: '1px solid rgba(255,255,255,0.1)' }
+                                        ? { background: 'var(--elite-gold)', color: 'var(--primary-foreground)', border: '1px solid var(--elite-gold)' }
+                                        : { background: 'transparent', color: 'var(--text-silver)', border: '1px solid var(--card-border)' }
                                       }
                                       onClick={() => { setSelectedTrade(isExpanded ? null : trade); setAddingPayment(false); }}
                                     >

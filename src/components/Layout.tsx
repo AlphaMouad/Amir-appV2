@@ -26,9 +26,9 @@ export default function Layout() {
           onClick={() => setLang(l)}
           className={`${compact ? 'px-2.5 py-1' : 'flex-1 py-1.5'} rounded-lg text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-200`}
           style={{
-            background: lang === l ? 'rgba(212,175,55,0.12)' : 'rgba(128,128,128,0.05)',
-            border: `1px solid ${lang === l ? 'rgba(212,175,55,0.3)' : 'rgba(128,128,128,0.1)'}`,
-            color: lang === l ? '#D4AF37' : 'var(--text-silver)',
+              background: lang === l ? 'var(--body-bg-start)' : 'rgba(128,128,128,0.05)',
+              border: `1px solid ${lang === l ? 'var(--elite-gold-muted)' : 'rgba(128,128,128,0.1)'}`,
+              color: lang === l ? 'var(--elite-gold)' : 'var(--text-silver)',
           }}
         >
           {l}
@@ -40,7 +40,7 @@ export default function Layout() {
         style={{
           background: 'rgba(128,128,128,0.05)',
           border: '1px solid rgba(128,128,128,0.1)',
-          color: '#D4AF37',
+          color: 'var(--elite-gold)',
         }}
       >
         {theme === 'dark' ? <Sun size={13} /> : <Moon size={13} />}
@@ -119,7 +119,7 @@ export default function Layout() {
                 )}
                 <item.icon
                   className="h-4.5 w-4.5 relative z-10 shrink-0 transition-colors duration-200"
-                  style={{ color: isActive ? '#D4AF37' : 'var(--text-silver)' }}
+                  style={{ color: isActive ? 'var(--elite-gold)' : 'var(--icon-muted)' }}
                   size={18}
                 />
                 <span className="relative z-10 tracking-wide">{item.label}</span>
@@ -249,11 +249,11 @@ export default function Layout() {
                 <item.icon
                   className="relative z-10 transition-colors duration-200"
                   size={20}
-                  style={{ color: isActive ? '#D4AF37' : 'var(--text-silver)' }}
+                  style={{ color: isActive ? 'var(--elite-gold)' : 'var(--icon-muted)' }}
                 />
                 <span
                   className="text-[9px] font-bold uppercase tracking-[0.1em] relative z-10 transition-colors duration-200"
-                  style={{ color: isActive ? '#D4AF37' : 'var(--text-silver)' }}
+                  style={{ color: isActive ? 'var(--elite-gold)' : 'var(--icon-muted)' }}
                 >
                   {item.label}
                 </span>

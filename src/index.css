@@ -52,9 +52,9 @@
     --input: 0 0% 7%;
     --ring: 43 65% 55%;
     --radius: 0.75rem;
-    /* Safe area variables — resolved at render time */
-    --safe-bottom: env(safe-area-inset-bottom, 0px);
-    --safe-top: env(safe-area-inset-top, 0px);
+
+    --elite-gold: #D4AF37;
+    --elite-gold-muted: rgba(212, 175, 55, 0.4);
 
     --body-bg-start: rgba(212,175,55,0.05);
     --body-bg-end: #060604;
@@ -64,27 +64,32 @@
     --card-shadow: rgba(0, 0, 0, 0.9);
     --text-silver: rgba(160, 155, 145, 0.85);
     --input-border: rgba(255, 255, 255, 0.12);
+    --icon-muted: rgba(255, 255, 255, 0.2);
   }
 
   :root.light {
     --background: 34 25% 98%;
-    --foreground: 20 10% 12%;
-    --primary: 43 65% 45%;
+    --foreground: 20 15% 10%;
+    --primary: 43 70% 42%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 34 30% 94%;
-    --secondary-foreground: 20 10% 25%;
-    --border: 34 20% 88%;
+    --secondary: 34 30% 92%;
+    --secondary-foreground: 20 15% 20%;
+    --border: 34 25% 85%;
     --input: 34 25% 98%;
-    --ring: 43 65% 45%;
+    --ring: 43 70% 42%;
 
-    --body-bg-start: rgba(212,175,55,0.1);
-    --body-bg-end: #faf9f6;
-    --glass-bg: rgba(250, 249, 246, 0.88);
-    --card-bg: #ffffff;
-    --card-border: rgba(212, 175, 55, 0.12);
-    --card-shadow: rgba(43, 38, 25, 0.08);
-    --text-silver: rgba(90, 85, 75, 0.8);
-    --input-border: rgba(212, 175, 55, 0.2);
+    --elite-gold: #B8860B;
+    --elite-gold-muted: rgba(184, 134, 11, 0.35);
+
+    --body-bg-start: rgba(212,175,55,0.12);
+    --body-bg-end: #FDFCF9;
+    --glass-bg: rgba(253, 252, 249, 0.9);
+    --card-bg: #FFFFFF;
+    --card-border: rgba(184, 134, 11, 0.15);
+    --card-shadow: rgba(60, 50, 30, 0.06);
+    --text-silver: rgba(85, 80, 70, 0.85);
+    --input-border: rgba(184, 134, 11, 0.25);
+    --icon-muted: rgba(0, 0, 0, 0.15);
   }
 
   html {
@@ -193,11 +198,11 @@
   }
 
   .elite-card:hover {
-    border-color: rgba(212, 175, 55, 0.2);
+    border-color: var(--elite-gold-muted);
     box-shadow:
       0 1px 0 0 rgba(255, 255, 255, 0.05) inset,
       0 16px 48px var(--card-shadow),
-      0 0 0 1px rgba(212, 175, 55, 0.055);
+      0 0 0 1px var(--elite-gold-muted);
   }
 
   /* ── Gold Text ───────────────────────────────────────────────── */

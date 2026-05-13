@@ -195,7 +195,7 @@ export default function ProjectDetail() {
               {project.name}
             </h1>
             <p className="text-[10px] font-medium mt-2 uppercase tracking-[0.2em]" style={{ color: 'var(--text-silver)' }}>
-              {t('detail_client')}: <span style={{ color: '#D4AF37' }}>{project.clientName}</span>
+              {t('detail_client')}: <span style={{ color: 'var(--elite-gold)' }}>{project.clientName}</span>
               {project.contractorName && (
                 <span style={{ color: 'var(--text-silver)' }}> &nbsp;·&nbsp; {t('detail_contractor')}: {project.contractorName}</span>
               )}
@@ -229,7 +229,7 @@ export default function ProjectDetail() {
               </h3>
             </div>
             <div className="relative z-10">
-              <div className="text-3xl font-playfair font-black tracking-tight" style={{ color: '#D4AF37' }}>
+              <div className="text-3xl font-playfair font-black tracking-tight" style={{ color: 'var(--elite-gold)' }}>
                 € {totalClientAdvances.toLocaleString()}
               </div>
             </div>
@@ -372,15 +372,15 @@ export default function ProjectDetail() {
                 <div className="flex justify-between items-start">
                   <div>
                     <h3 className="font-playfair font-black text-foreground text-[1.05rem] uppercase tracking-[0.04em]">{trade.designation}</h3>
-                    <p className="text-[9px] font-bold uppercase tracking-[0.2em] mt-1" style={{ color: '#D4AF37' }}>
+                <p className="text-[9px] font-bold uppercase tracking-[0.2em] mt-1" style={{ color: 'var(--elite-gold)' }}>
                       {trade.supplierName || 'Unknown Entity'}
                     </p>
                   </div>
                   <button
                     className="px-3.5 py-1.5 text-[9px] uppercase tracking-[0.1em] font-bold rounded-lg transition-all duration-200"
                     style={isSelected
-                      ? { background: '#D4AF37', color: '#000', border: '1px solid #D4AF37' }
-                      : { background: 'transparent', color: 'rgba(255,255,255,0.4)', border: '1px solid rgba(255,255,255,0.1)' }
+                  ? { background: 'var(--elite-gold)', color: 'var(--primary-foreground)', border: '1px solid var(--elite-gold)' }
+                  : { background: 'transparent', color: 'var(--text-silver)', border: '1px solid var(--card-border)' }
                     }
                     onClick={() => setSelectedTrade(isSelected ? null : trade)}
                   >
@@ -395,7 +395,7 @@ export default function ProjectDetail() {
                   </div>
                   <div>
                     <p className="text-[9px] font-bold uppercase tracking-[0.2em] mb-1.5" style={{ color: 'var(--text-silver)' }}>{t('detail_th_advances')}</p>
-                    <p className="font-bold text-sm" style={{ color: '#D4AF37' }}>€ {advances.toLocaleString()}</p>
+                    <p className="font-bold text-sm" style={{ color: 'var(--elite-gold)' }}>€ {advances.toLocaleString()}</p>
                   </div>
                   <div>
                     <p className="text-[9px] font-bold uppercase tracking-[0.2em] mb-1.5" style={{ color: 'var(--text-silver)' }}>{t('detail_th_expenses')}</p>
@@ -476,7 +476,7 @@ export default function ProjectDetail() {
                       <td className="px-7 py-5 whitespace-nowrap text-sm font-bold text-foreground text-right">
                         € {budget.toLocaleString()}
                       </td>
-                      <td className="px-7 py-5 whitespace-nowrap text-sm font-bold text-right" style={{ color: '#D4AF37' }}>
+                      <td className="px-7 py-5 whitespace-nowrap text-sm font-bold text-right" style={{ color: 'var(--elite-gold)' }}>
                         € {advances.toLocaleString()}
                       </td>
                       <td className="px-7 py-5 whitespace-nowrap text-sm font-bold text-right" style={{ color: '#f87171' }}>
@@ -503,8 +503,8 @@ export default function ProjectDetail() {
                           <button
                             className="px-5 py-2 text-[9px] uppercase tracking-[0.1em] font-bold transition-all duration-200 rounded-lg"
                             style={isSelected
-                              ? { background: '#D4AF37', color: '#000', border: '1px solid #D4AF37' }
-                              : { background: 'transparent', color: 'rgba(255,255,255,0.4)', border: '1px solid rgba(255,255,255,0.1)' }
+                            ? { background: 'var(--elite-gold)', color: 'var(--primary-foreground)', border: '1px solid var(--elite-gold)' }
+                            : { background: 'transparent', color: 'var(--text-silver)', border: '1px solid var(--card-border)' }
                             }
                             onClick={() => setSelectedTrade(isSelected ? null : trade)}
                           >
@@ -572,7 +572,7 @@ export default function ProjectDetail() {
                 <button
                   onClick={() => setAddingPayment(!addingPayment)}
                   className="flex items-center gap-2.5 px-7 py-3.5 font-bold text-[10px] uppercase tracking-[0.12em] rounded-xl transition-all duration-200"
-                  style={{ background: 'white', color: '#000' }}
+                  style={{ background: 'var(--foreground)', color: 'var(--background)' }}
                 >
                   <Plus size={14} /> {t('detail_record_payment')}
                 </button>
@@ -671,8 +671,8 @@ export default function ProjectDetail() {
 
               {/* Income Section */}
               <div className="mb-10">
-                <h3 className="text-[10px] font-black uppercase tracking-[0.25em] mb-6 flex items-center gap-3" style={{ color: '#D4AF37' }}>
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]" />
+                <h3 className="text-[10px] font-black uppercase tracking-[0.25em] mb-6 flex items-center gap-3" style={{ color: 'var(--elite-gold)' }}>
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]" style={{ backgroundColor: 'var(--elite-gold)' }} />
                   {t('detail_income_section')}
                 </h3>
                 <div className="space-y-4">
@@ -743,7 +743,7 @@ function PaymentCard({ payment, t, onImageClick, onDelete }: { payment: Payment,
         <div className="flex items-center gap-5">
           <div
             className="h-11 w-11 rounded-xl bg-background flex items-center justify-center shrink-0"
-            style={{ border: '1px solid var(--card-border)', color: isIncome ? '#D4AF37' : '#f87171' }}
+            style={{ border: '1px solid var(--card-border)', color: isIncome ? 'var(--elite-gold)' : '#f87171' }}
           >
             {payment.type === 'labor_expense' ? <User size={18} /> : <Wallet size={18} />}
           </div>
@@ -751,7 +751,7 @@ function PaymentCard({ payment, t, onImageClick, onDelete }: { payment: Payment,
             <p className="text-[1rem] font-playfair font-black text-foreground uppercase tracking-[0.04em]">
               {typeLabel}
             </p>
-            <p className="text-[9px] font-bold uppercase tracking-[0.2em] mt-1.5" style={{ color: isIncome ? '#D4AF37' : '#f87171' }}>
+            <p className="text-[9px] font-bold uppercase tracking-[0.2em] mt-1.5" style={{ color: isIncome ? 'var(--elite-gold)' : '#f87171' }}>
                 {payment.date instanceof Date ? format(payment.date, 'MMM d, yyyy') : '—'}
               {payment.designation && <span style={{ opacity: 0.5 }}> · {payment.designation}</span>}
               {payment.workerNames && <span style={{ opacity: 0.5 }}> · Workers: {payment.workerNames}</span>}
