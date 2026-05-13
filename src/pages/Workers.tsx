@@ -93,74 +93,7 @@ export default function Workers() {
     );
   }
 
-  const PaymentPanel = ({ worker }: { worker: typeof workers[0] }) => {
-    const isExpanded = selectedWorker === worker.name;
-    return (
-      <AnimatePresence>
-        {isExpanded && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.35 }}
-          >
-            <div
-              className="p-7 md:p-10 relative overflow-hidden"
-              style={{ background: 'rgba(128,128,128,0.05)', borderTop: '1px solid rgba(212,175,55,0.2)' }}
-            >
-              <div className="mb-6">
-                <h4 className="font-playfair font-black text-foreground text-2xl uppercase tracking-[0.04em]">
-                  {(t as any)('workers_payments') || 'Payments'}
-                </h4>
-              </div>
 
-              <div className="space-y-3 relative z-10">
-                {worker.payments.map((payment) => {
-                  return (
-                    <div key={payment.id} className="flex flex-col p-6 rounded-xl transition-colors duration-200"
-                      style={{ border: '1px solid var(--card-border)', background: 'var(--card-border)' }}
-                    >
-                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
-                        <div className="flex items-center gap-4">
-                          <div className="h-10 w-10 rounded-xl bg-background flex items-center justify-center shrink-0"
-                            style={{ border: '1px solid var(--card-border)', color: '#D4AF37' }}>
-                            <Wallet size={16} />
-                          </div>
-                          <div>
-                            <p className="font-playfair font-black text-foreground uppercase tracking-[0.04em]">
-                              {payment.projectName}
-                            </p>
-                            <p className="text-[9px] font-bold uppercase tracking-[0.2em] mt-1" style={{ color: '#D4AF37' }}>
-                              {payment.date instanceof Date ? format(payment.date, 'MMM d, yyyy') : '—'}
-                              {payment.designation && <span style={{ color: 'var(--text-silver)' }}> · {payment.designation}</span>}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-4">
-                          <span className="font-playfair font-black text-2xl" style={{ color: '#f87171' }}>
-                            € {payment.amount.toLocaleString()}
-                          </span>
-                        </div>
-                      </div>
-                      {payment.receiptUrl && (
-                        <button
-                          className="mt-4 w-32 h-32 rounded-xl overflow-hidden group relative text-left"
-                          style={{ border: '1px solid var(--card-border)' }}
-                          onClick={() => setLightboxSrc(payment.receiptUrl!)}
-                        >
-                          <LazyImage src={payment.receiptUrl} alt={t('img_receipt')} className="w-full h-full" />
-                        </button>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    );
-  };
 
   return (
     <motion.div variants={container} initial="hidden" animate="show" className="space-y-8 pb-10">
@@ -257,7 +190,12 @@ export default function Workers() {
                       </div>
                     </div>
                   </div>
-                  <PaymentPanel worker={worker} />
+                  <PaymentPanel 
+                    worker={worker} 
+                    isExpanded={isExpanded} 
+                    setLightboxSrc={setLightboxSrc} 
+                    t={t} 
+                  />
                 </div>
               </motion.div>
             );
@@ -267,5 +205,82 @@ export default function Workers() {
 
       <ImageLightbox src={lightboxSrc} onClose={() => setLightboxSrc(null)} />
     </motion.div>
-  );
 }
+
+const PaymentPanel = ({ 
+  worker, 
+  isExpanded, 
+  setLightboxSrc, 
+  t 
+}: { 
+  worker: { name: string; totalPaid: number; payments: (Payment & { projectName: string })[] }; 
+  isExpanded: boolean; 
+  setLightboxSrc: (src: string | null) => void; 
+  t: any; 
+}) => {
+  return (
+    <AnimatePresence>
+      {isExpanded && (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          exit={{ opacity: 0, height: 0 }}
+          transition={{ duration: 0.35 }}
+        >
+          <div
+            className="p-7 md:p-10 relative overflow-hidden"
+            style={{ background: 'rgba(128,128,128,0.05)', borderTop: '1px solid rgba(212,175,55,0.2)' }}
+          >
+            <div className="mb-6">
+              <h4 className="font-playfair font-black text-foreground text-2xl uppercase tracking-[0.04em]">
+                {(t as any)('workers_payments') || 'Payments'}
+              </h4>
+            </div>
+
+            <div className="space-y-3 relative z-10">
+              {worker.payments.map((payment) => {
+                return (
+                  <div key={payment.id} className="flex flex-col p-6 rounded-xl transition-colors duration-200"
+                    style={{ border: '1px solid var(--card-border)', background: 'var(--card-border)' }}
+                  >
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
+                      <div className="flex items-center gap-4">
+                        <div className="h-10 w-10 rounded-xl bg-background flex items-center justify-center shrink-0"
+                          style={{ border: '1px solid var(--card-border)', color: '#D4AF37' }}>
+                          <Wallet size={16} />
+                        </div>
+                        <div>
+                          <p className="font-playfair font-black text-foreground uppercase tracking-[0.04em]">
+                            {payment.projectName}
+                          </p>
+                          <p className="text-[9px] font-bold uppercase tracking-[0.2em] mt-1" style={{ color: '#D4AF37' }}>
+                            {payment.date instanceof Date ? format(payment.date, 'MMM d, yyyy') : '—'}
+                            {payment.designation && <span style={{ color: 'var(--text-silver)' }}> · {payment.designation}</span>}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-4">
+                        <span className="font-playfair font-black text-2xl" style={{ color: '#f87171' }}>
+                          € {payment.amount.toLocaleString()}
+                        </span>
+                      </div>
+                    </div>
+                    {payment.receiptUrl && (
+                      <button
+                        className="mt-4 w-32 h-32 rounded-xl overflow-hidden group relative text-left"
+                        style={{ border: '1px solid var(--card-border)' }}
+                        onClick={() => setLightboxSrc(payment.receiptUrl!)}
+                      >
+                        <LazyImage src={payment.receiptUrl} alt={t('img_receipt')} className="w-full h-full" />
+                      </button>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
