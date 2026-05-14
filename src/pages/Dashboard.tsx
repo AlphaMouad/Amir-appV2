@@ -279,7 +279,7 @@ export default function Dashboard() {
                     return (
                       <div 
                         key={trade.id} 
-                        onClick={() => navigate(`/project/${trade.projectId}?tradeId=${trade.id}`)}
+                        onClick={() => navigate(`/projects/${trade.projectId}?tradeId=${trade.id}`)}
                         className="p-4 rounded-lg bg-background/50 border border-border border-l-[#f87171] border-l-2 cursor-pointer hover:bg-background/80 transition-colors"
                       >
                         <p className="text-[9px] font-bold tracking-widest text-[#f87171] uppercase mb-1">{projectName}</p>
